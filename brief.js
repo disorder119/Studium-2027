@@ -77,6 +77,11 @@
       pf.ownTask ? `<b>Zusätzlich:</b> ${esc(pf.ownTask)}` : ""
     ]);
 
+    /* Zugang und Vorpraktikum */
+    const zug = (p.requirements || []).filter(r => /^ZUGANG/i.test(r)).map(r => esc(r.replace(/^ZUGANG:\s*/i, "")));
+    const ip = p.internship || {};
+    const prakRow = ip.required === true ? li([`<b class="bf-must">Pflicht:</b> ${esc(ip.text)}`, "Das ist für viele die größte Hürde. Früh planen oder bei der Studienberatung fragen, ob deine Erfahrung zählt."])
+      : ip.required === false ? "Nicht nötig." : (ip.text ? esc(ip.text) : "");
     /* Prüfung, Hausaufgabe, Praktikum */
     const pruef = li([
       p.aptitudeTest && p.aptitudeTest.text ? esc(p.aptitudeTest.text) : "",
@@ -100,6 +105,8 @@
         ${row("Deutsch", li(langItems))}
         ${row("Zeugnis", zugang)}
         ${row("Mappe", mappe)}
+        ${zug.length ? row("Zugang", li(zug), "bf-warn") : ""}
+        ${row("Vorpraktikum", prakRow, ip.required === true ? "bf-warn" : "")}
         ${row("Prüfung", pruef)}
         ${row("Kosten", p.fees ? esc(p.fees) : "")}
         ${(p.warnings || []).length ? row("Achtung", li(p.warnings.map(esc)), "bf-warn") : ""}

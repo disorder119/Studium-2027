@@ -125,6 +125,16 @@
     "tl.ukraine.3": "Потрібний рівень німецької для заявки дуже різний: від A2 до C1. Таблиця показує його для кожного вишу.",
     "tl.checkliste.1": "Ці документи потрібні майже скрізь. Почни рано з перекладів і завірень – це триває найдовше.",
     "tl.checkliste.2": "Позначки зберігаються автоматично.",
+    "nav.mine": "Мої списки", "mi.eyebrow": "Лише для тебе", "mi.title": "Мої списки й нотатки",
+    "mi.help": "Записуй тут те, що хочеш запам’ятати, і створюй власні чек-листи. До кожної заявки є ще окремий список завдань у вікні програми.",
+    "bs.h": "Тут вперше? Як відбувається вступ до мистецького вишу",
+    "bs.1": "Портфоліо замість оцінок. У мистецьких і дизайнерських вишах вирішує насамперед портфоліо: добірка твоїх власних робіт у PDF.",
+    "bs.2": "Вступний іспит. Якщо портфоліо сподобалося, тебе запрошують: зазвичай творчі завдання й розмова про твої роботи.",
+    "bs.3": "Термін. Після терміну нічого не можна подати. Час теж важливий: деякі виші закривають прийом уже опівдні.",
+    "bs.4": "Атестат і диплом. Виш перевіряє, чи діє твій документ у Німеччині. Деякі роблять це самі, інші через uni-assist (оцінка документів, 4–6 тижнів).",
+    "bs.5": "Зарахування. Із запрошенням ти записуєшся («immatrikulieren»): документи, дозвіл на проживання, медичне страхування і семестровий внесок.",
+    "bs.6": "Витрати. Плати за навчання майже ніде немає. Ти платиш семестровий внесок, зазвичай разом із проїзним.",
+    "bs.7": "Семестр. Семестр – це півроку навчання. Зимовий починається восени, літній – навесні.",
     "tab.start": "Початок", "tab.prog": "Програми", "tab.kosten": "Витрати", "tab.editor": "Редактор", "tab.more": "Ще"
   });
   const L = () => (S().lang === "ua" ? "ua" : "de");
@@ -442,7 +452,7 @@
     el.innerHTML = `<div class="cp-head"><div><p class="eyebrow">${esc(D.cities[c].name)}</p><h3>${ps.length} ${ps.length === 1 ? "Studiengang" : "Studiengänge"}</h3>
       <p class="small muted">${esc(T("km")(km(D.home, D.cities[c])))} · ${st.next ? `nächste Frist <b>${esc(dmy(st.next.applicationDeadline))}</b> (${esc(countdown(st.next.applicationDeadline, st.next.deadlineTime))})` : "nächste Frist noch nicht veröffentlicht"}</p></div>
       <button type="button" class="text-btn" data-clear-city>× ${esc(T("cityRemove"))}</button></div>
-      <ul class="cp-list">${ps.map(p => `<li><button type="button" data-open="${p.id}"><span class="cp-match">${p._match.score}%</span><span><b>${esc(p.course)}</b><small>${esc(p.universityShort)} · ${esc(deadlineShort(p))}</small></span></button></li>`).join("")}</ul>`;
+      <ul class="cp-list">${ps.map(p => `<li><button type="button" data-open="${p.id}"><span class="cp-match">${p._match.score}%</span><span><b>${esc(p.course)}</b><small>${esc(p.universityShort)} · ${esc(deadlineShort(p))}</small></span></button></li>`).join("")}</ul>${window.Howto ? window.Howto.cityPanel(c) : ""}`;
   }
   function setCity(c) {
     mapState.city = mapState.city === c ? null : c;
@@ -620,6 +630,8 @@
         </div>
       </header>
 
+      ${window.Howto ? window.Howto.program(p) : ""}
+
       <section class="dlg-sec deadline-sec ${st}">
         <h3>Frist</h3>
         <p class="big-deadline"><span class="r-badge ${st}">${esc(STATE_LABEL(st))}</span> ${esc(p.deadlineText)}${exact ? ` <em>(${esc(countdown(p.applicationDeadline, p.deadlineTime))})</em>` : ""}</p>
@@ -679,6 +691,7 @@
 
       ${evs.length ? `<section class="dlg-sec"><h3>Mappenberatung &amp; Termine</h3><ul class="ev-mini">${evs.map(e => `<li class="${e.date && isPast(e.endDate || e.date, e.time) ? "past" : ""}"><b>${e.date ? esc(dmy(e.date)) + (e.time ? " · " + esc(e.time) : "") : esc(e.recurring)}</b> ${esc(e.title)} <span class="muted">(${esc(e.mode)})</span>${e.registration ? `<br><small>${esc(e.registration)}</small>` : ""}</li>`).join("")}</ul></section>` : ""}
 
+      ${window.Mine ? window.Mine.progBlock(p.id) : ""}
       <section class="dlg-sec cockpit-sec">
         <h3>Mein Cockpit</h3>
         <label class="field"><span>${esc(T("statusLabel"))}</span>
@@ -828,6 +841,7 @@
     if (window.StimmenUI) window.StimmenUI.render();
     if (window.Motion) window.Motion.render();
     if (window.TopPicks) window.TopPicks.render();
+    if (window.Mine) window.Mine.render();
   }
   function refreshAfterStateChange() { renderStats(); renderRadar(); renderPrograms(); renderCockpit(); renderEvents(); }
 

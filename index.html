@@ -42,7 +42,9 @@
         <a href="#karte" data-i18n="nav.map">Karte</a>
         <a href="#cockpit" data-i18n="nav.cockpit">Mein Stand</a>
         <a href="#ukraine" data-i18n="nav.ukraine">Ukraine &amp; § 24</a>
-        <a href="#checkliste" data-i18n="nav.checklist">Checkliste</a>
+        <a href="#meine" data-i18n="nav.mine">Meine Listen</a>
+        <a href="#meine" data-i18n="nav.mine">Meine Listen</a>
+    <a href="#checkliste" data-i18n="nav.checklist">Checkliste</a>
         <a href="#termine" data-i18n="nav.events">Termine</a>
         <a href="#glossar" data-i18n="nav.glossary">Glossar</a>
         <a href="#quellen" data-i18n="nav.sources">Quellen</a>
@@ -105,6 +107,18 @@
         <li><a class="start-card" href="#kosten"><span class="start-n">3</span><b data-i18n="start.c3t">Kosten und Geld klären</b><span class="d" data-i18n="start.c3d">Gebühren, BAföG, Wohnen und was für dich mit § 24 gilt, in einfachen Worten.</span><span class="go" data-i18n="start.c3g">Kosten →</span></a></li>
         <li><a class="start-card" href="./editor.html"><span class="start-n">4</span><b data-i18n="start.c4t">Mappe zusammenstellen</b><span class="d" data-i18n="start.c4d">Bilder hochladen, Texte schreiben und alles als PDF speichern.</span><span class="go" data-i18n="start.c4g">Editor öffnen →</span></a></li>
       </ol>
+      <details class="basics">
+        <summary data-i18n="bs.h">Neu hier? So läuft eine Bewerbung an einer Kunsthochschule</summary>
+        <ol>
+          <li data-i18n="bs.1"><b>Mappe statt Noten.</b> An Kunst- und Designhochschulen entscheidet vor allem deine Mappe: eine Sammlung deiner eigenen Arbeiten als PDF.</li>
+          <li data-i18n="bs.2"><b>Eignungsprüfung.</b> Wenn die Mappe gefällt, wirst du eingeladen: meist künstlerische Aufgaben und ein Gespräch über deine Arbeit.</li>
+          <li data-i18n="bs.3"><b>Frist.</b> Nach der Frist geht nichts mehr. Auch die Uhrzeit zählt: Manche Hochschulen schließen schon mittags.</li>
+          <li data-i18n="bs.4"><b>Zeugnis.</b> Die Hochschule prüft, ob dein Abschluss in Deutschland gilt. Manche machen das selbst, andere über uni-assist (Zeugnisbewertung, 4–6 Wochen).</li>
+          <li data-i18n="bs.5"><b>Zusage und Einschreibung.</b> Mit der Zusage schreibst du dich ein (das heißt „immatrikulieren“): Zeugnis, Aufenthaltstitel, Krankenversicherung und Semesterbeitrag.</li>
+          <li data-i18n="bs.6"><b>Kosten.</b> Studiengebühren gibt es fast nirgends. Du zahlst den Semesterbeitrag, meist mit Semesterticket.</li>
+          <li data-i18n="bs.7"><b>Semester.</b> Ein Semester ist ein halbes Studienjahr. Das Wintersemester beginnt im Herbst, das Sommersemester im Frühjahr.</li>
+        </ol>
+      </details>
       <p class="start-hint" data-i18n="start.hint">Alles, was du anklickst oder einträgst, wird automatisch auf diesem Gerät gespeichert. Du kannst jederzeit zurückkommen.</p>
     </section>
 
@@ -315,6 +329,15 @@
       <div id="stimmenRoot"></div>
     </section>
 
+    <!-- ======================================================== MEINE LISTEN -->
+    <section id="meine" class="section wrap" aria-labelledby="meineTitle">
+      <div class="section-head">
+        <div><p class="eyebrow" data-i18n="mi.eyebrow">Nur für dich</p><h2 id="meineTitle" data-i18n="mi.title">Meine Listen und Notizen</h2></div>
+        <p data-i18n="mi.help">Schreib hier auf, was du dir merken willst, und leg eigene Checklisten an. Zu jeder Bewerbung gibt es außerdem eine eigene Aufgabenliste im Studiengang-Fenster.</p>
+      </div>
+      <div id="mineRoot"></div>
+    </section>
+
     <!-- ======================================================== EVENTS -->
     <section id="termine" class="section wrap" aria-labelledby="eventsTitle">
       <div class="section-head">
@@ -426,6 +449,8 @@
   <script src="./kosten-ui.js"></script>
   <script src="./stimmen-ui.js"></script>
   <script src="./brief.js"></script>
+  <script src="./howto.js"></script>
+  <script src="./mine.js"></script>
   <script src="./top.js"></script>
   <script src="./motion.js"></script>
   <script src="./app.js"></script>

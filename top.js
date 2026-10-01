@@ -33,9 +33,6 @@
         warn: "Knapp: Ohne fertige Zeugnisbewertung (VPD) von uni-assist wird es eng, weil die mehrere Wochen dauert. Dann lieber jetzt beantragen und die UdK im nächsten Durchgang einplanen." },
       ua: { tag: "термін найперший", why: "Фігура й костюм – твоя найсильніша сторона, а UdK хоче щонайбільше 20 сторінок. Більшість із них у тебе вже є. Початок навчання – літній семестр 2027.",
         warn: "Тісно: без готової оцінки атестата (VPD) від uni-assist буде складно, бо вона триває кілька тижнів. Тоді краще подати на VPD зараз і планувати UdK на наступний набір." } },
-    { id: "dresden-kostuemgestaltung", need: "b2", ukraineException: true,
-      de: { tag: "passt sehr genau", why: "Kostümbau mit historischer Schnitttechnik, Färben und viel Handarbeit. Das ist fast eine Beschreibung deiner handgenähten Stücke." },
-      ua: { tag: "дуже точно пасує", why: "Виготовлення костюмів з історичним кроєм, фарбуванням і великою часткою ручної роботи. Це майже опис твоїх зшитих вручну речей." } },
     { id: "weissensee-textil", need: "a2",
       de: { tag: "Textil als Kunst", why: "Weißensee denkt Textil als Material und Oberfläche. Rost, Wachs und Malerei auf Leinen sind hier genau richtig. Die Frist endet mittags um 12 Uhr." },
       ua: { tag: "текстиль як мистецтво", why: "У Вайсензее текстиль – це матеріал і поверхня. Іржа, віск і живопис на льоні тут саме доречні. Термін спливає опівдні, о 12:00." } },
@@ -45,6 +42,11 @@
     { id: "hfg-offenbach-kunst", need: "b2", english: true,
       de: { tag: "nah an zu Hause", why: "Der Fachbereich Kunst hat ein eigenes Lehrgebiet Mode, und du kannst zwischen Malerei, Bühne und Mode wechseln. Du könntest in Aschaffenburg wohnen bleiben." },
       ua: { tag: "близько до дому", why: "На факультеті мистецтва є власний напрям «Мода», і можна переходити між живописом, сценою та модою. Ти могла б і далі жити в Ашаффенбурзі." } },
+    { id: "hannover-ske", uni: true,
+      de: { tag: "Kostüm und Objekt", why: "Kostüm und experimentelle Gestaltung: Kleidung als Objekt, Figur und freie Arbeit im Raum. Deine Hüte und Gewänder sind genau das, Skulptur zwischen Körper und Szene.",
+        warn: "Du brauchst ein 6-wöchiges Zugangspraktikum, die Sprachstufe steht nicht auf der Fakultätsseite (nachfragen), und das Zeugnis läuft über uni-assist bis 31.05. Die Frist für die Arbeitsproben ist aber erst der 15.03.2027." },
+      ua: { tag: "костюм і об’єкт", why: "Костюм і експериментальний дизайн: одяг як об’єкт, фігура й вільна робота в просторі. Твої капелюхи й вбрання – саме це.",
+        warn: "Потрібна 6-тижнева практика перед вступом, рівень мови на сторінці факультету не вказано (запитати), а документи йдуть через uni-assist до 31.05. Термін для робіт – лише 15.03.2027." } },
     { id: "haw-kostuemdesign", need: "c1", uni: true,
       de: { tag: "mit deinem Deutsch möglich", why: "Kostümdesign in Hamburg erlaubt viel Erzählung, Figur und Experiment. Der C1-Nachweis schreckt viele ab, für dich ist er kein Hindernis.",
         warn: "Die aktuelle Runde endet schon am 11.10.2026. Ohne fertige VPD ist das kaum zu schaffen. Die nächste Runde ist laut HAW wieder Ende September/Anfang Oktober 2027." },
@@ -54,14 +56,14 @@
 
   const TX = {
     de: { lvl: "Dein Deutsch heute", vpd: "Zeugnisbewertung (VPD) von uni-assist", unknown: "weiß nicht", c1: "C1 oder besser", a2: "A1–A2",
-      have: "habe ich", notyet: "noch nicht", frist: "Frist", sprache: "Deutsch zur Bewerbung", start: "Deutsch bis Studienbeginn", mappe: "Mappe",
+      have: "habe ich", notyet: "noch nicht", frist: "Frist", sprache: "Deutsch zur Bewerbung", start: "Deutsch bis Studienbeginn", mappe: "Mappe", prakt: "Vorpraktikum",
       ready: (a, b) => `${a} von ${b} Blättern hast du schon`, read: "Alles dazu lesen", build: "Mappe bauen", left: d => `noch ${d} Tage`, over: "vorbei",
       fits: "passt zu deinem Deutsch", need: n => `du brauchst noch ${n}`, needSoft: n => `${n} für die Prüfung empfohlen`, needEn: "du brauchst B2 (Deutsch oder Englisch)",
       exc: "Ausnahme für die Ukraine: B2 darf nachgereicht werden", vpdTodo: "VPD bei uni-assist beantragen, das dauert mehrere Wochen",
       sum: (n, t) => `Mit deinem Deutsch kannst du dich heute bei ${n} von ${t} bewerben.`, hint: "Stell hier dein Deutsch ein, dann siehst du bei jeder Hochschule, ob es schon reicht.",
       legend: "Wird nur auf diesem Gerät gespeichert." },
     ua: { lvl: "Твоя німецька зараз", vpd: "Оцінка атестата (VPD) від uni-assist", unknown: "не знаю", c1: "C1 або краще", a2: "A1–A2",
-      have: "так, є", notyet: "ще ні", frist: "Термін", sprache: "Німецька для заявки", start: "Німецька до початку навчання", mappe: "Портфоліо",
+      have: "так, є", notyet: "ще ні", frist: "Термін", sprache: "Німецька для заявки", start: "Німецька до початку навчання", mappe: "Портфоліо", prakt: "Практика",
       ready: (a, b) => `${a} з ${b} аркушів уже є`, read: "Усе про це", build: "Створити портфоліо", left: d => `ще ${d} дн.`, over: "минув",
       fits: "твоєї німецької достатньо", need: n => `потрібно ще ${n}`, needSoft: n => `для іспиту рекомендовано ${n}`, needEn: "потрібно B2 (німецька або англійська)",
       exc: "Виняток для України: B2 можна донести пізніше", vpdTodo: "подати на VPD в uni-assist – це триває кілька тижнів",
@@ -81,7 +83,7 @@
   function check(x, st, t) {
     const out = [], mine = LV[st.lvl];
     let ok = null;
-    if (mine) {
+    if (mine && x.need) {
       if (x.ukraineException) { ok = true; out.push(["ok", t.exc]); }
       else if (mine >= LV[x.need]) { ok = true; out.push(["ok", t.fits]); }
       else { ok = x.soft ? true : false; out.push([x.soft ? "info" : "warn", x.english ? t.needEn : x.soft ? t.needSoft(LV_NAME[x.need]) : t.need(LV_NAME[x.need])]); }
@@ -110,7 +112,8 @@
       const langApp = lr.application && lr.application.replace(/\s*\(Bewerbung mit [^)]*\)/, "");
       const dist = D.home && D.cities[p.city] ? km(D.home, D.cities[p.city]) : null;
       const plan = M && M.plans[p.id];
-      const showWarn = tx.warn && st.vpd !== "yes";
+      const showWarn = tx.warn && (st.vpd !== "yes" || !x.uni);
+      const ip = p.internship || {}, pr = ip.required === true ? { txt: L === "ua" ? "обов’язкова: " + ip.text : "Pflicht: " + ip.text, cls: "dl-soon" } : ip.required === false ? { txt: L === "ua" ? "не потрібна" : "keins nötig", cls: "dl-ok" } : { txt: L === "ua" ? "уточнити" : "bitte klären", cls: "dl-vague" };
       return `<li class="top-card${x.c.ok === false ? " is-later" : ""}">
         <span class="top-rank" aria-hidden="true">${i + 1}</span>
         <div class="top-main">
@@ -124,6 +127,7 @@
             <div><dt>${esc(t.frist)}</dt><dd class="dl-${dl.cls}">${esc(dl.txt)}</dd></div>
             ${langApp ? `<div><dt>${esc(t.sprache)}</dt><dd>${esc(langApp)}</dd></div>` : ""}
             ${lr.start ? `<div><dt>${esc(t.start)}</dt><dd>${esc(lr.start)}</dd></div>` : ""}
+            <div><dt>${esc(t.prakt)}</dt><dd class="${pr.cls}">${esc(pr.txt)}</dd></div>
             ${plan ? `<div><dt>${esc(t.mappe)}</dt><dd>${esc(t.ready(plan.sum.w + plan.sum.m, plan.sum.total))}</dd></div>` : ""}
           </dl>
         </div>
