@@ -287,8 +287,7 @@
     events.forEach(e => lines.push(...icsEvent(e)));
     lines.push("END:VCALENDAR");
     const blob = new Blob([lines.map(fold).join("\r\n") + "\r\n"], { type: "text/calendar;charset=utf-8" });
-    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = filename; document.body.appendChild(a); a.click();
-    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+    window.VH.save(filename, blob).then(r => { if (r === "rejected") toast("Kalenderdateien kann dieser Link nicht speichern. Öffne den Guide über start.sh/start.bat, dann klappt es."); });
   }
   /** Nur verifizierte, konkrete Fristen werden exportiert. */
   function deadlineIcs(p, ms) {
@@ -906,7 +905,7 @@
   });
   $("#exportData").addEventListener("click", () => {
     const blob = new Blob([JSON.stringify(Object.assign({ exported: new Date().toISOString() }, S()), null, 2)], { type: "application/json" });
-    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `studium-2027-sicherung-${todayISO()}.json`; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+    window.VH.save(`studium-2027-sicherung-${todayISO()}.json`, blob).then(r => { if (r === "saved") toast("Sicherung gespeichert."); });
   });
   const dlg = $("#programDialog");
   dlg.addEventListener("click", e => { if (e.target === dlg) closeDialog(); }); // Klick auf den Hintergrund

@@ -983,7 +983,7 @@ body { line-height: 1.65; }
 .bf-row ul { margin: 0; padding-left: 18px; display: grid; gap: 3px; }
 .bf-row li { overflow-wrap: anywhere; }
 .bf-row a { color: var(--accent-2); font-weight: 600; }
-.bf-days { color: var(--bad); white-space: nowrap; } .bf-days.past { color: var(--closed); }
+.bf-days { color: var(--accent-2); white-space: nowrap; } .bf-days.soon { color: var(--bad); } .bf-days.past { color: var(--closed); }
 .bf-you { display: block; margin-top: 2px; padding: 6px 10px; border-radius: var(--radius-s); background: rgba(47, 125, 79, .09); color: var(--cream); }
 .bf-you b { color: var(--ok); }
 .bf-must { color: var(--bad); }
@@ -1001,3 +1001,9 @@ body { line-height: 1.65; }
 .ed-side .bf-row { grid-template-columns: 1fr; gap: 2px; }
 .ed-app-title { margin: 0 0 8px; display: flex; flex-direction: column; } .ed-app-title b { font-size: 18px; } .ed-app-title span { color: var(--muted); font-size: 14px; }
 .ed-howto { margin: 0 0 12px; padding-left: 20px; display: grid; gap: 8px; font-size: 15px; line-height: 1.5; }
+
+/* Eigene Rückfrage (statt Browser-confirm) */
+.vh-confirm { max-width: min(440px, calc(100% - 32px)); padding: 22px; border: 1px solid var(--line-2); border-radius: var(--radius); background: var(--surface); color: var(--cream); box-shadow: var(--shadow); }
+.vh-confirm::backdrop { background: rgba(31, 41, 51, .45); }
+.vh-confirm p { margin: 0 0 16px; font-size: 16px; line-height: 1.5; }
+.vh-confirm-act { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }

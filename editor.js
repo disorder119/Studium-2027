@@ -34,6 +34,7 @@
   /* ------------------------------------------------------------ Zustand */
   const S = { projects: [], cur: null, page: 0, sel: -1, uploads: [], tab: "page", libTab: "cat", libFilter: "all", libQ: "", exp: { name: "HorytskaVeronika", q: 1, limit: 0 } };
   const proj = () => S.projects.find(p => p.id === S.cur);
+  const inArtifact = !!(window.claude && typeof window.claude.use === "function");
   const pgNow = () => proj().pages[S.page];
   const upMap = () => Object.fromEntries(S.uploads.map(u => [u.id, u]));
   const imgSrc = b => (b.up ? (upMap()[b.up] || {}).data || "" : b.src || "");
@@ -296,9 +297,11 @@
       <label class="ed-field"><span>Schrift</span><select id="ffSel"><option value="serif"${b.ff === "serif" ? " selected" : ""}>Serif (Garamond/Georgia)</option><option value="sans"${b.ff === "sans" ? " selected" : ""}>Sans (Systemschrift)</option><option value="mono"${b.ff === "mono" ? " selected" : ""}>Monospace</option></select></label>`;
   }
   function panelOut() {
-    const p = proj(), issues = checkIssues();
+    const p = proj(), issues = checkIssues(), prog = p && p.planId ? D.programs.find(x => x.id === p.planId) : null;
+    const maxSize = prog && prog.portfolio && prog.portfolio.maxSize && !/keine Angabe/i.test(prog.portfolio.maxSize) ? prog.portfolio.maxSize : "";
     $("#panelOut").innerHTML = `
       <h4>PDF herunterladen</h4>
+      ${prog ? `<p class="small">Für <b>${esc(prog.universityShort)}</b>: ${maxSize ? `Größe höchstens <b>${esc(maxSize)}</b>.` : "keine Größenvorgabe genannt."}${prog.portfolio && prog.portfolio.count ? ` Umfang: ${esc(prog.portfolio.count)}.` : ""}</p>` : ""}
       <label class="ed-field"><span>Dateiname</span><input type="text" id="expName" value="${esc(S.exp.name)}"></label>
       <label class="ed-field"><span>Qualität</span><select id="expQ"><option value="0"${S.exp.q === 0 ? " selected" : ""}>Hoch (ca. 170 dpi)</option><option value="1"${S.exp.q === 1 ? " selected" : ""}>Mittel</option><option value="2"${S.exp.q === 2 ? " selected" : ""}>Klein (Bildschirm)</option></select></label>
       <label class="ed-field"><span>Größenlimit der Hochschule</span><select id="expLimit">${[[0, "kein Limit"], [5, "5 MB"], [12, "12 MB (KH Mainz)"], [30, "30 MB (HfBK Dresden)"], [40, "40 MB (HS Pforzheim)"], [50, "50 MB (BURG, HTW, Weißensee)"]].map(([v, l]) => `<option value="${v}"${S.exp.limit === v ? " selected" : ""}>${l}</option>`).join("")}</select></label>
@@ -306,9 +309,9 @@
       <button type="button" class="btn primary" id="btnPdf">PDF herunterladen</button>
       <div class="ed-prog" id="expProg" hidden><b></b></div>
       <p class="small muted" id="expMsg" aria-live="polite">Das PDF besteht aus Bildern der Seiten (Text nicht markierbar), damit Schrift und Layout überall gleich aussehen. Unter dem Limit wird die Qualität automatisch gesenkt.</p>
-      <h4>Alternative</h4>
+      ${inArtifact ? "" : `<h4>Alternative</h4>
       <button type="button" class="btn ghost" id="btnPrint">Drucken / Vektor-PDF (Browser)</button>
-      <p class="small muted">Im Druckdialog „Als PDF speichern“ wählen; Text bleibt markierbar, Dateien sind oft kleiner.</p>
+      <p class="small muted">Im Druckdialog „Als PDF speichern“ wählen; Text bleibt markierbar, Dateien sind oft kleiner.</p>`}
       <h4>Projekt sichern</h4>
       <div class="ed-row"><button type="button" class="btn ghost sm" id="btnSaveFile">Als Datei speichern</button><label class="btn ghost sm file-btn">Datei laden<input type="file" id="loadFile" accept="application/json,.json" class="sr-only"></label></div>`;
   }
@@ -338,8 +341,8 @@
     else if (act === "dup") { const c = JSON.parse(JSON.stringify(p.pages[i])); c.id = uid(); p.pages.splice(i + 1, 0, c); S.page = i + 1; }
     else if (act === "del") {
       if (p.pages.length === 1) { toast("Die letzte Seite kann nicht gelöscht werden."); return; }
-      if (!confirm(`Seite ${i + 1} löschen? (Mit Strg+Z rückgängig zu machen)`)) return;
       p.pages.splice(i, 1); S.page = Math.min(S.page, p.pages.length - 1);
+      toast(`Seite ${i + 1} gelöscht. Mit ↶ oben holst du sie zurück.`);
     } else return;
     S.sel = -1; commit(); renderPages(); renderStage(); renderPanels();
   }
@@ -349,8 +352,8 @@
     let ii = 0, ti = 0;
     const nb = slots.map(s => (s[0] === "img" ? (oldImgs[ii++] || mkBlock(s)) : (oldTxt[ti++] || mkBlock(s))));
     const lostImg = oldImgs.slice(ii).some(b => imgSrc(b)), lostTxt = oldTxt.slice(ti).some(b => plain(b.html));
-    if ((lostImg || lostTxt) && !confirm("Dieses Layout hat weniger Plätze – nicht untergebrachte Bilder/Texte gehen von dieser Seite verloren (Strg+Z holt sie zurück). Fortfahren?")) return;
     pg.layout = id; pg.blocks = nb; S.sel = -1;
+    if (lostImg || lostTxt) toast("Das Layout hat weniger Plätze. Was nicht passt, holst du mit ↶ oben zurück.");
     commit(); renderPages(); renderStage(); renderPanels();
   }
   function placeImage(data) {
@@ -473,7 +476,7 @@
     const p = proj(), o = p.o, d = DIM[o];
     if (!window.html2canvas || !window.jspdf) { toast("PDF-Bibliotheken nicht geladen."); return; }
     const issues = checkIssues();
-    if (issues.length && !confirm(`Noch offen:\n\n${issues.slice(0, 8).join("\n")}${issues.length > 8 ? "\n…" : ""}\n\nTrotzdem exportieren?`)) return;
+    if (issues.length && !(await window.VH.confirm(`Noch offen: ${issues.slice(0, 5).join(" · ")}${issues.length > 5 ? " …" : ""}. Trotzdem als PDF speichern?`, "Ja, PDF speichern", "Erst fertig machen"))) return;
     const prog = $("#expProg"), bar = $("#expProg b"), msg = $("#expMsg"), btn = $("#btnPdf");
     btn.disabled = true; prog.hidden = false; bar.style.width = "0";
     const host = $("#exportHost"), jpegs = [];
@@ -505,7 +508,9 @@
       const doc = new jsPDF({ orientation: o === "l" ? "landscape" : "portrait", unit: "mm", format: "a4", compress: true });
       final.forEach((u, i) => { if (i) doc.addPage("a4", o === "l" ? "landscape" : "portrait"); doc.addImage(u, "JPEG", 0, 0, d.mm[0], d.mm[1], undefined, "FAST"); bar.style.width = (50 + Math.round(50 * (i + 1) / final.length)) + "%"; });
       const name = (S.exp.name || "Mappe").replace(/[^\wÄÖÜäöüß.-]+/g, "_").replace(/\.pdf$/i, "") + ".pdf";
-      doc.save(name);
+      msg.textContent = "PDF ist fertig. Bitte das Speichern bestätigen …";
+      const res = await window.VH.save(name, doc.output("blob"));
+      if (res !== "saved") { msg.textContent = res === "declined" ? "Speichern abgebrochen. Du kannst es jederzeit noch einmal versuchen." : "Speichern hat nicht geklappt. Bitte noch einmal versuchen."; return; }
       const mb = bytes(final) / 1048576;
       msg.textContent = `Fertig: ${name} · ${p.pages.length} Seiten · ca. ${mb.toFixed(1)} MB${limit && mb * 1048576 > limit ? " – Limit trotz niedrigster Stufe überschritten, bitte Seiten oder Bilder verringern." : used > S.exp.q ? " (Qualität automatisch gesenkt, um das Limit einzuhalten)" : ""}`;
       if (limit && mb * 1048576 > limit) toast("Limit überschritten – siehe Hinweis im Export-Tab.");
@@ -527,8 +532,7 @@
     const p = proj(), used = new Set();
     p.pages.forEach(pg => pg.blocks.forEach(b => { if (b.up) used.add(b.up); }));
     const blob = new Blob([JSON.stringify({ app: "vh-mappe", v: 1, project: p, uploads: S.uploads.filter(u => used.has(u.id)) })], { type: "application/json" });
-    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = (p.name.replace(/[^\wÄÖÜäöüß.-]+/g, "_") || "mappe") + ".mappe.json"; document.body.appendChild(a); a.click();
-    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+    window.VH.save((p.name.replace(/[^\wÄÖÜäöüß.-]+/g, "_") || "mappe") + ".mappe.json", blob).then(r => { if (r === "saved") toast("Projekt als Datei gespeichert."); });
   }
   function loadFile(file) {
     const fr = new FileReader();
@@ -598,9 +602,11 @@
     const or = t.closest("[data-orient]"); if (or) { proj().o = or.dataset.orient; commit(); renderAll(); return; }
     if (t.closest("#projDup")) { const c = JSON.parse(JSON.stringify(proj())); c.id = uid(); c.name += " (Kopie)"; S.projects.push(c); S.cur = c.id; S.page = 0; S.sel = -1; histReset(); renderAll(); save(); return; }
     if (t.closest("#projDel")) {
-      if (!confirm(`Projekt „${proj().name}“ endgültig löschen?`)) return;
-      S.projects = S.projects.filter(p => p.id !== S.cur);
-      if (!S.projects.length) newProject("Meine Mappe", blankPages()); else { S.cur = S.projects[0].id; S.page = 0; S.sel = -1; histReset(); renderAll(); save(); }
+      window.VH.confirm(`Projekt „${proj().name}“ endgültig löschen?`, "Ja, löschen", "Behalten").then(ok => {
+        if (!ok) return;
+        S.projects = S.projects.filter(p => p.id !== S.cur);
+        if (!S.projects.length) newProject("Meine Mappe", blankPages()); else { S.cur = S.projects[0].id; S.page = 0; S.sel = -1; histReset(); renderAll(); save(); }
+      });
       return;
     }
     const fit = t.closest("[data-fit]"); if (fit) { const b = selBlock(); if (b) { b.fit = fit.dataset.fit; commit(); renderPages(); renderStage(); renderPanels(); } return; }
@@ -612,8 +618,9 @@
     const du = t.closest("[data-del-up]");
     if (du) {
       const id = du.dataset.delUp, used = S.projects.some(p => p.pages.some(pg => pg.blocks.some(b => b.up === id)));
-      if (used && !confirm("Dieses Bild wird in einem Projekt verwendet. Trotzdem löschen? (Der Bildplatz bleibt dann leer.)")) return;
-      S.uploads = S.uploads.filter(u => u.id !== id); save(); renderPanels(); renderStage(); renderPages(); return;
+      const del = () => { S.uploads = S.uploads.filter(u => u.id !== id); save(); renderPanels(); renderStage(); renderPages(); };
+      if (used) window.VH.confirm("Dieses Bild wird in einer Mappe verwendet. Trotzdem löschen? Der Bildplatz bleibt dann leer.", "Ja, löschen", "Behalten").then(ok => { if (ok) del(); }); else del();
+      return;
     }
     if (t.closest("#upDrop")) { $("#upFile").click(); return; }
     const cmd = t.closest("[data-cmd]");
@@ -653,7 +660,7 @@
   $(".ed-side").addEventListener("drop", e => { if (e.target.closest("#upDrop")) { e.preventDefault(); $("#upDrop").classList.remove("over"); addUploads(e.dataTransfer.files, false); } });
 
   $("#projSelect").addEventListener("change", e => { S.cur = e.target.value; S.page = 0; S.sel = -1; histReset(); renderAll(); save(); });
-  $("#btnNew").addEventListener("click", () => { const n = prompt("Name des neuen Projekts:", "Neue Mappe"); if (n) { newProject(n.slice(0, 80), blankPages()); setTab("page"); } });
+  $("#btnNew").addEventListener("click", () => { newProject(`Neue Mappe ${S.projects.length + 1}`, blankPages()); setTab("app"); toast("Neue Mappe angelegt. Den Namen änderst du unter „Seite“."); });
   $("#btnUndo").addEventListener("click", () => histGo(-1));
   $("#btnRedo").addEventListener("click", () => histGo(1));
   $("#btnExportTop").addEventListener("click", () => setTab("out"));
@@ -690,7 +697,7 @@
     const [pr, up, cur] = await Promise.all([store.get("projects"), store.get("uploads"), store.get("cur")]);
     S.projects = Array.isArray(pr) ? pr : []; S.uploads = Array.isArray(up) ? up : [];
     S.cur = S.projects.some(p => p.id === cur) ? cur : (S.projects[0] && S.projects[0].id);
-    const m = location.hash.match(/^#plan=([\w-]+)/);
+    const m = location.hash.match(/^#(?:plan=)?([\w-]+)/); // „#plan=id“ lokal, „#id“ im Artefakt (dort sind nur einfache Anker erlaubt)
     if (m && M.plans[m[1]]) {
       const ex = S.projects.find(p => p.planId === m[1]);
       if (ex) { S.cur = ex.id; histReset(); renderAll(); } else loadPlan(m[1]);

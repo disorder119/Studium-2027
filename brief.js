@@ -42,7 +42,7 @@
 
     /* Frist */
     let frist = esc(p.deadlineText || "noch nicht veröffentlicht");
-    if (p.applicationDeadline && p.deadlineExact) { const d = daysUntil(p.applicationDeadline); frist += d >= 0 ? ` <b class="bf-days">noch ${d} Tage</b>` : ` <b class="bf-days past">vorbei</b>`; }
+    if (p.applicationDeadline && p.deadlineExact) { const d = daysUntil(p.applicationDeadline); frist += d >= 0 ? ` <b class="bf-days${d <= 30 ? " soon" : ""}">noch ${d} Tage</b>` : ` <b class="bf-days past">vorbei</b>`; }
     const fristBody = li([frist, p.applicationOpenText ? `Start der Bewerbung: ${esc(p.applicationOpenText)}` : "", p.startSemester ? `Studienbeginn: ${esc(p.startSemester)}` : ""]);
 
     /* Wo bewerben */

@@ -78,8 +78,8 @@
   async function exportAll() {
     const data = { app: "vh-studium-all", v: 1, at: new Date().toISOString(), local: { [K_MAIN]: read(K_MAIN), [K_KOSTEN]: read(K_KOSTEN), [K_TOP]: read(K_TOP) }, editor: { projects: await idb.get("projects"), uploads: await idb.get("uploads"), cur: await idb.get("cur") } };
     const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
-    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `studium-2027-komplett-${new Date().toISOString().slice(0, 10)}.json`; document.body.appendChild(a); a.click();
-    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 600);
+    const r = await window.VH.save(`studium-2027-komplett-${new Date().toISOString().slice(0, 10)}.json`, blob);
+    if (r !== "saved") { toast(r === "declined" ? "Sicherung abgebrochen." : "Sicherung hat nicht geklappt. Bitte noch einmal versuchen."); return; }
     write(K_BACKUP, Date.now()); info(); toast("Komplett-Sicherung gespeichert – bewahre die Datei sicher auf.");
   }
   function importAll(file) {
@@ -88,7 +88,7 @@
       try {
         const o = JSON.parse(fr.result);
         if (!o || o.app !== "vh-studium-all" || !o.local) throw new Error("format");
-        if (!confirm("Alles laden? Dein aktueller Fortschritt in diesem Browser wird durch die Sicherung ersetzt.")) return;
+        if (!(await window.VH.confirm("Alles laden? Dein aktueller Fortschritt in diesem Browser wird durch die Sicherung ersetzt.", "Ja, laden", "Abbrechen"))) return;
         Object.entries(o.local).forEach(([k, v]) => { if ([K_MAIN, K_KOSTEN, K_TOP].includes(k) && v && typeof v === "object") write(k, v); });
         if (o.editor) {
           if (Array.isArray(o.editor.projects)) await idb.set("projects", o.editor.projects);
