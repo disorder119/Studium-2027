@@ -435,7 +435,7 @@
   function loadPlan(planId) {
     const prog = D.programs.find(p => p.id === planId); if (!prog || !M.plans[planId]) return;
     const { pages, skipped } = buildFromPlan(prog), pl = M.plans[planId];
-    newProject(`${prog.universityShort} · ${prog.course}`, pages, { planId, target: pl.count });
+    newProject(`${prog.universityShort} · ${prog.course}`, pages, { planId, target: pl.count, pn: !planId.startsWith("weissensee-"), footer: planId.startsWith("weissensee-") ? "" : "Veronika Horytska" });
     S.exp.name = "HorytskaVeronika";
     setTab("page");
     toast(`Mappe „${prog.universityShort}“ angelegt: ${pages.length} Seiten.${skipped.length ? " Eigene Dateien (nicht enthalten): " + skipped.join(", ") + "." : ""}`);

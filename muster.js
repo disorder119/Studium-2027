@@ -211,8 +211,8 @@
       S("Haltung (Malerei, 2 Blätter)", [w("yak-ii"), w("die-jagd")]),
       S("Forschung sichtbar (neu)", [n("material", "Eine Materialtafel mit 12–20 Proben: Rost, Wachs, Pigment, Färbung", true), n("recherche", "Museumsfoto neben deiner Zeichnung: Trypillja-Figurine")])
     ],
-    docs: [],
-    tips: ["Frist 05.01.2027, 12:00 Uhr. Danach Zugangsprüfung vor Ort (Ende Januar): Materialaufgaben + Gespräch.", "Zur Prüfung mitbringen: Materialtafel im Original und ein Stück aus dem Futter-Konvolut (Haptik überzeugt).", "Kein Vorpraktikum nötig."]
+    docs: [d("werkliste", "Übersichtsblatt: je Arbeit Titel, Medium, Größe, Datum, Kontext – kurz und stichwortartig")],
+    tips: ["Weißensee-Tipps (für Mode-Design formuliert, Stand 2020/21): Die Kommission bewertet „die Arbeiten, nicht deren Präsentation“ – keine Passepartouts, Typografie, GIFs, Clipart; die wichtigste Arbeit eröffnet die Mappe; Videos, Websites, Instagram und externe Links lassen sich nicht öffnen. Aktuelle Vorgaben im Portal prüfen.", "Frist 05.01.2027, 12:00 Uhr. Danach Zugangsprüfung vor Ort (Ende Januar): Materialaufgaben + Gespräch.", "Zur Prüfung mitbringen: Materialtafel im Original und ein Stück aus dem Futter-Konvolut (Haptik überzeugt).", "Kein Vorpraktikum nötig."]
   });
 
   P("weissensee-mode", {
@@ -225,8 +225,8 @@
       S("Figur im Bild", [w("group-portrait-of-monks"), w("liturgy"), w("haubus"), w("paladins")]),
       S("Entwurf (neu)", [n("figurine", "Figurinen zu Mantel und Weste", true), n("silhouetten", "Sechs Silhouetten", true), n("toile", "Schnitt/Toile eines Stücks")])
     ],
-    docs: [d("hausaufgabe")],
-    tips: ["Frist 05.01.2027, 12:00 Uhr. Praktikum mindestens 6 Wochen – Nachweis darf bis Studienbeginn nachgereicht werden.", "Die Zugangsprüfung (Ende Januar) bespricht Mappe und Motivation: Statement im Kopf haben."]
+    docs: [d("hausaufgabe"), d("werkliste", "Übersichtsblatt: je Arbeit Titel, Medium, Größe, Datum, Kontext – kurz und stichwortartig")],
+    tips: ["Weißensee-Tipps (Mode-Design, Stand 2020/21): Die Kommission – Modedesigner:innen, Lehrende und Studierende – will sehen, wofür du dich interessierst und wie du schon arbeitest; ein „Roter Faden“ ist nicht nötig, die Arbeiten werden bewertet, nicht die Präsentation. Aktuelle Vorgaben im Portal prüfen.", "Frist 05.01.2027, 12:00 Uhr. Praktikum mindestens 6 Wochen – Nachweis darf bis Studienbeginn nachgereicht werden.", "Die Zugangsprüfung (Ende Januar) bespricht Mappe und Motivation: Statement im Kopf haben."]
   });
 
   P("weissensee-buehne", {
@@ -238,7 +238,7 @@
       S("Hybrid und Tier", [w("yak-ii"), w("yak-rider")]),
       S("Raum (neu)", [n("buehne", "Raumcollage oder Mini-Modell aus Figuren deiner Gemälde", true), n("szene", "Szenische Fotoserie: Kostüm in Raum und Licht", true), n("figurine", "Figurine mit Bewegung")])
     ],
-    docs: [d("statement", "kurze dramaturgische Notiz zu einer Figur")],
+    docs: [d("statement", "kurze dramaturgische Notiz zu einer Figur"), d("werkliste", "Übersichtsblatt: je Arbeit Titel, Medium, Größe, Datum, Kontext")],
     tips: ["Frist 05.01.2027, 12:00 Uhr; Zugangsprüfung Ende Januar mit Aufgaben + Gespräch.", "Bereite im Gespräch eine Figur (z. B. Pidsvichnyk) mit Geschichte und Raum vor."]
   });
 
@@ -252,21 +252,21 @@
       S("Brücke zum Textil (2)", [w("pidsvichnyk-kerzenhalter"), w("vershnyky")]),
       S("Vorstudien (neu)", [n("skizzenbuch", "Vorstudien zu Die Jagd und Yak II", true), n("figur", "Zeichnungen nach Modell")])
     ],
-    docs: [],
+    docs: [d("werkliste", "Übersichtsblatt: je Arbeit Titel, Medium, Größe, Datum, Kontext")],
     tips: ["Frist 05.01.2027, 12:00 Uhr. Zugangsprüfung Ende Januar mit Aufgaben + Gespräch.", "Zeige die Reihe in zeitlicher Folge – die Entwicklung ist dein Argument."]
   });
 
   P("burg-textile-kuenste", {
     fit: "sehr hoch", count: [18, 20],
-    strategy: "Bis zu 20 Arbeiten, keine Vorgaben zu Technik – gewünscht sind Skizzenbücher, Naturstudien, Raum und freie Arbeiten. Die BURG liest Textil als Kunst: Zeige die Verbindung zwischen Malerei und Textil ausdrücklich (derselbe Hut, gemalt und gebaut).",
+    strategy: "Bis zu 20 Arbeiten, keine Vorgaben zu Technik – gewünscht sind Skizzenbücher, Naturstudien, Raum und freie Arbeiten. Die BURG liest Textil als Kunst: Zeige die Verbindung zwischen Malerei und Textil ausdrücklich (derselbe Hut, gemalt und gebaut). Nur Arbeiten, die nicht älter als 2 Jahre sind.",
     sections: [
       S("Eine Bildwelt (Auftakt)", [w("group-portrait-of-monks"), m("bruecke", "Brücke: derselbe Hut gemalt und gebaut"), w("liturgy")]),
       S("Textil als Kunstwerk", [w("lituus-i"), w("skythisches-gold"), w("vershnyky"), w("vershnyky-detail"), w("dyki-bizony"), w("pipes-getragen"), w("trypillische-madonnen"), w("pidsvichnyk-kerzenhalter")]),
       S("Material und Prozess", [w("prozess-futterdetail"), w("prozess-knoepfe"), n("material", "Proben aus Wachs, Rost, Pigment, Färbung", true)]),
-      S("Raum, Serie, Studie", [m("hutfamilie"), n("skizzenbuch", "Skizzenbuchseiten: woher Bison, Reiter, Madonna?", true), n("natur", "Naturstudien (Pflanzen, Stoffe)"), w("yak-ii"), w("die-jagd"), w("kerzberg")])
+      S("Raum, Serie, Studie", [m("hutfamilie"), n("skizzenbuch", "Skizzenbuchseiten: woher Bison, Reiter, Madonna?", true), n("natur", "Naturstudien (Pflanzen, Stoffe)"), w("yak-ii"), w("die-jagd"), w("the-shoemakers")])
     ],
     docs: [d("werkliste")],
-    tips: ["Mappe als PDF bis 50 MB; Frist Mitte Februar – Anfang März 2027 (genaues Datum noch nicht veröffentlicht).", "Aufnahmeprüfung 2027 digital und vor Ort; Termine nach der Mappensichtung."]
+    tips: ["Wichtig: „Arbeitsproben, die nicht älter als 2 Jahre sind“ (BURG-Bewerberinfo, Stand 12.02.2026). Bei Abgabe Feb./März 2027 zählen also nur Arbeiten ab etwa Frühjahr 2025 – deshalb sind hier nur 2025–26er Werke gewählt.", "Mappe als PDF bis 50 MB; Frist Mitte Februar – Anfang März 2027 (genaues Datum noch nicht veröffentlicht).", "Aufnahmeprüfung 2027 digital und vor Ort; Termine nach der Mappensichtung."]
   });
 
   P("burg-textildesign", {
@@ -280,20 +280,20 @@
       S("Zeichnung (neu)", [n("natur", "Natur- und Farbstudien zur Flächengestaltung"), n("skizzenbuch")])
     ],
     docs: [d("werkliste")],
-    tips: ["Vorpraktikum 3 Monate in Textildruck, Weberei, Stickerei, Strickerei oder Textilatelier – früh anfragen.", "Lies die Richtlinien-PDF der Studienrichtung, bevor du die Mappe fixierst."]
+    tips: ["Arbeitsproben dürfen laut BURG nicht älter als 2 Jahre sein (Stand 12.02.2026): hier nur 2025–26er Werke.", "Vorpraktikum 3 Monate in Textildruck, Weberei, Stickerei, Strickerei oder Textilatelier – früh anfragen.", "Lies die Richtlinien-PDF der Studienrichtung, bevor du die Mappe fixierst."]
   });
 
   P("burg-modedesign", {
     fit: "mittel", count: [16, 22],
-    strategy: "Die Mappe hat starke Looks, aber die BURG-Mode fragt nach Form-, Farb- und Materialempfinden plus Entwurf. Entscheidend ist das Vorpraktikum: 3 Monate in Schneiderei, Näherei, Konfektion oder Theaterwerkstatt (oder Anrechnung auf Antrag).",
+    strategy: "Die BURG sagt ausdrücklich: „Zeigt uns was wir sehen sollen, nicht was wir sehen wollen“ – und Modeentwürfe oder -illustrationen sind kein Aufnahmekriterium und sollen nicht der Hauptteil sein. Gefragt ist Vielseitigkeit mit Zeichnung, Malerei, Fotografie, Skizzenbuch und Experimenten. Deine genähten Stücke sind der Beweis für Interesse an Mode; die Lücke ist die Zeichnung (bekleidete Figur, Naturstudie). Nur Arbeiten, die nicht älter als 2 Jahre sind. Entscheidend bleibt das Vorpraktikum: 3 Monate in Schneiderei, Näherei, Konfektion oder Theaterwerkstatt (oder Anrechnung auf Antrag).",
     sections: [
-      S("Looks", [w("pipes-getragen"), w("bronzezeit-getragen"), w("skythisches-gold"), w("dyki-bizony"), w("leinenmantel"), w("weste-und-schuerze"), m("lineup")]),
+      S("Looks (Interesse an Mode sichtbar)", [w("pipes-getragen"), w("bronzezeit-getragen"), w("skythisches-gold"), w("dyki-bizony"), w("leinenmantel"), w("weste-und-schuerze"), m("lineup")]),
       S("Form, Farbe, Material", [w("pipes-weste"), w("vershnyky"), w("vershnyky-detail"), w("dem-tier-auf-der-spur"), w("prozess-rueckenteil"), w("prozess-knoepfe")]),
-      S("Figur im Bild", [w("haubus"), w("uims"), w("group-portrait-of-monks"), w("paladins")]),
-      S("Entwurf (neu)", [n("figurine", "Figurinen und Farbstudien", true), n("silhouetten", "Silhouetten-Varianten", true), n("toile", "Schnitt/Toile"), n("skizzenbuch")])
+      S("Malerei 2025–26", [w("group-portrait-of-monks"), w("paladins"), w("die-jagd"), w("selbstportraet")]),
+      S("Zeichnung und Skizzenbuch (neu, Vielseitigkeit zeigen)", [n("skizzenbuch", "Auszüge aus einem Skizzenbuch (max. eines pro Bewerbung)", true), n("figur", "Akt / bekleidete Figur: Proportionen, Technik, Bildaufbau", true), n("natur", "Naturstudien")])
     ],
     docs: [d("werkliste")],
-    tips: ["Praktikumsnachweis klären, bevor du Zeit in die Mappe steckst.", "Lies die „Richtlinien für die Mappengestaltung“ der Studienrichtung."]
+    tips: ["Arbeitsproben dürfen laut BURG nicht älter als 2 Jahre sein: Haubus, Tanz, Rot u. a. (2023–24) bleiben deshalb draußen.", "Die BURG empfiehlt: nicht chronologisch, sondern erzählerisch aufbauen, wirkungsvoller Anfang und Ende, Titel und Kurzbeschreibungen; bei 3D-Arbeiten Größe angeben.", "Auch unfertige Arbeiten und Experimente sind ausdrücklich willkommen. Lies die „Richtlinien für die Mappengestaltung“ der Studienrichtung."]
   });
 
   P("udk-modedesign", {

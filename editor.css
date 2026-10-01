@@ -129,3 +129,12 @@
   #printRoot .pg:last-child { page-break-after: auto; }
   .pg { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
+
+@media (prefers-reduced-motion: no-preference) {
+  #stageInner > .pg { animation: pgIn .45s cubic-bezier(.2, .7, .2, 1); }
+  @keyframes pgIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  .th { transition: transform .2s, border-color .2s, box-shadow .2s; }
+  .th:hover { transform: translateX(3px); }
+  .lib-grid img { transition: transform .2s; } .lib-grid button:hover img { transform: scale(1.04); }
+  .ed-panel > * { animation: pgIn .35s both; }
+}

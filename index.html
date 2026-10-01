@@ -7,10 +7,16 @@
   <meta name="referrer" content="no-referrer">
   <meta name="theme-color" content="#0c0a08">
   <meta name="color-scheme" content="dark">
+  <meta property="og:title" content="Studium 2027 · Veronika Horytska">
+  <meta property="og:description" content="Fristen, Musterbewerbungen und Mappen-Editor für Textil, Mode, Kostüm und Freie Kunst.">
+  <meta property="og:type" content="website">
+  <noscript><style>.rv,.stag>*{opacity:1!important;transform:none!important}</style></noscript>
   <title>Studium 2027 · Veronika Horytska</title>
   <meta name="description" content="Persönlicher Studien- und Bewerbungsnavigator für Veronika Horytska – Textil, Mode, Kostüm und Freie Kunst in Deutschland.">
   <link rel="icon" href="./img/vvh.webp" type="image/webp">
-  <link rel="apple-touch-icon" href="./img/vvh.webp">
+  <link rel="apple-touch-icon" href="./img/icon-192.png">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./fonts/fonts.css">
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
@@ -22,17 +28,24 @@
       <span class="brand-text"><span class="brand-name">Veronika Horytska</span><span class="brand-sub">Studium 2027</span></span>
     </a>
     <nav class="topnav" aria-label="Bereiche">
+      <a href="#mut" data-i18n="nav.plan">Plan</a>
       <a href="#radar" data-i18n="nav.radar">Fristen</a>
-      <a href="#karte" data-i18n="nav.map">Karte</a>
       <a href="#programme" data-i18n="nav.programs">Studiengänge</a>
-      <a href="#cockpit" data-i18n="nav.cockpit">Cockpit</a>
-      <a href="#mappe" data-i18n="nav.portfolio">Mappe</a>
       <a href="#analyse" data-i18n="nav.analysis">Analyse</a>
       <a href="#muster" data-i18n="nav.muster">Muster</a>
+      <a href="#kosten" data-i18n="nav.kosten">Kosten</a>
+      <a href="#stimmen" data-i18n="nav.stimmen">Stimmen</a>
       <a href="./editor.html" data-i18n="nav.editor">Editor</a>
-      <a href="#termine" data-i18n="nav.events">Termine</a>
-      <a href="#ukraine" data-i18n="nav.ukraine">Ukraine</a>
-      <a href="#glossar" data-i18n="nav.glossary">Glossar</a>
+      <details class="more"><summary data-i18n="nav.more">Mehr</summary><div class="more-menu">
+        <a href="#karte" data-i18n="nav.map">Karte</a>
+        <a href="#cockpit" data-i18n="nav.cockpit">Cockpit</a>
+        <a href="#mappe" data-i18n="nav.portfolio">Mappe</a>
+        <a href="#termine" data-i18n="nav.events">Termine</a>
+        <a href="#ukraine" data-i18n="nav.ukraine">Ukraine</a>
+        <a href="#checkliste" data-i18n="nav.checklist">Checkliste</a>
+        <a href="#glossar" data-i18n="nav.glossary">Glossar</a>
+        <a href="#quellen" data-i18n="nav.sources">Quellen</a>
+      </div></details>
     </nav>
     <div class="lang" role="group" aria-label="Sprache der Erklärungen">
       <button type="button" class="lang-btn" data-lang="de" aria-pressed="true">DE</button>
@@ -43,14 +56,17 @@
     </button>
   </header>
   <nav id="mobileNav" class="mobile-nav" aria-label="Bereiche (mobil)" hidden>
+    <a href="#mut" data-i18n="nav.plan">Plan</a>
     <a href="#radar" data-i18n="nav.radar">Fristen</a>
     <a href="#karte" data-i18n="nav.map">Karte</a>
     <a href="#programme" data-i18n="nav.programs">Studiengänge</a>
-    <a href="#cockpit" data-i18n="nav.cockpit">Cockpit</a>
-    <a href="#mappe" data-i18n="nav.portfolio">Mappe</a>
     <a href="#analyse" data-i18n="nav.analysis">Analyse</a>
     <a href="#muster" data-i18n="nav.muster">Muster</a>
+    <a href="#kosten" data-i18n="nav.kosten">Kosten</a>
+    <a href="#stimmen" data-i18n="nav.stimmen">Stimmen</a>
     <a href="./editor.html" data-i18n="nav.editor">Editor</a>
+    <a href="#cockpit" data-i18n="nav.cockpit">Cockpit</a>
+    <a href="#mappe" data-i18n="nav.portfolio">Mappe</a>
     <a href="#termine" data-i18n="nav.events">Termine</a>
     <a href="#ukraine" data-i18n="nav.ukraine">Ukraine</a>
     <a href="#checkliste" data-i18n="nav.checklist">Checkliste</a>
@@ -66,6 +82,7 @@
         <h1 id="heroTitle">Studium <em>2027</em></h1>
         <p class="hero-sub" data-i18n="hero.sub">Persönlicher Studien- und Bewerbungsnavigator</p>
         <p class="hero-lead" data-i18n="hero.lead">Welche Studiengänge passen zu deinen Arbeiten, wo bewirbst du dich, bis wann, was brauchst du – und was ist der nächste Schritt? Alle Fristen stammen aus offiziellen Hochschulquellen.</p>
+        <p class="hero-cta"><a class="btn primary pulse" href="#mut">Dein Plan für 2027</a> <a class="btn ghost" href="./editor.html">Mappe im Editor bauen</a></p>
         <dl class="stats" id="stats" aria-live="polite"></dl>
       </div>
       <figure class="hero-art" aria-hidden="true">
@@ -89,6 +106,10 @@
         <li><a href="#cockpit"><span>5</span><b data-i18n="q5">Was ist mein nächster Schritt?</b></a></li>
         <li><a href="#programme"><span>6</span><b data-i18n="q6">Wo klicke ich, um zu starten?</b></a></li>
       </ol>
+    </section>
+
+    <section id="mut" class="section wrap mut" aria-label="Dein Plan">
+      <div id="mutRoot"></div>
     </section>
 
     <div class="wrap stale-banner" id="staleBanner" hidden role="status"></div>
@@ -252,10 +273,28 @@
       <div id="musterRoot"></div>
     </section>
 
+    <!-- ======================================================== KOSTEN -->
+    <section id="kosten" class="section wrap" aria-labelledby="kostenTitle">
+      <div class="section-head">
+        <div><p class="eyebrow">08 · <span data-i18n="ko.eyebrow">Geld und alles drumherum</span></p><h2 id="kostenTitle" data-i18n="ko.title">Kosten und Finanzierung</h2></div>
+        <p data-i18n="ko.help">Semesterbeitrag, Miete, BAföG, Versicherung, Aufenthalt, Stipendien – zugeschnitten auf dich als Ukrainerin mit § 24. Jede Zahl mit Quelle und Stand.</p>
+      </div>
+      <div id="kostenRoot"></div>
+    </section>
+
+    <!-- ======================================================== STIMMEN -->
+    <section id="stimmen" class="section wrap" aria-labelledby="stimmenTitle">
+      <div class="section-head">
+        <div><p class="eyebrow">09 · <span data-i18n="sv.eyebrow">Erfahrungen und Tipps</span></p><h2 id="stimmenTitle" data-i18n="sv.title">Stimmen von Studierenden</h2></div>
+        <p data-i18n="sv.help">Was Studierende, Bewerber:innen und die Hochschulen selbst sagen – mit Herkunft und Link. Nichts erfunden.</p>
+      </div>
+      <div id="stimmenRoot"></div>
+    </section>
+
     <!-- ======================================================== EVENTS -->
     <section id="termine" class="section wrap" aria-labelledby="eventsTitle">
       <div class="section-head">
-        <div><p class="eyebrow">08 · <span data-i18n="ev.eyebrow">Beratung</span></p><h2 id="eventsTitle" data-i18n="ev.title">Mappenberatung &amp; Termine</h2></div>
+        <div><p class="eyebrow">10 · <span data-i18n="ev.eyebrow">Beratung</span></p><h2 id="eventsTitle" data-i18n="ev.title">Mappenberatung &amp; Termine</h2></div>
         <p data-i18n="ev.help">Mappenberatung vor der Abgabe ist an Kunst- und Designhochschulen normal und sehr sinnvoll. Vergangene Termine werden ausgegraut.</p>
       </div>
       <div class="radar-tools">
@@ -269,7 +308,7 @@
     <!-- ======================================================== UKRAINE -->
     <section id="ukraine" class="section wrap" aria-labelledby="uaTitle">
       <div class="section-head">
-        <div><p class="eyebrow">09 · <span data-i18n="ua.eyebrow">Ukrainisches Zeugnis</span></p><h2 id="uaTitle" data-i18n="ua.title">Zeugnis, Zugang, Sprache</h2></div>
+        <div><p class="eyebrow">11 · <span data-i18n="ua.eyebrow">Ukrainisches Zeugnis</span></p><h2 id="uaTitle" data-i18n="ua.title">Zeugnis, Zugang, Sprache</h2></div>
         <p id="uaIntro"></p>
       </div>
       <ol class="ua-steps" id="uaSteps"></ol>
@@ -281,7 +320,7 @@
     <!-- ======================================================== CHECKLIST -->
     <section id="checkliste" class="section wrap" aria-labelledby="checkTitle">
       <div class="section-head">
-        <div><p class="eyebrow">10 · <span data-i18n="ck.eyebrow">Unterlagen</span></p><h2 id="checkTitle" data-i18n="ck.title">Allgemein vorbereiten</h2></div>
+        <div><p class="eyebrow">12 · <span data-i18n="ck.eyebrow">Unterlagen</span></p><h2 id="checkTitle" data-i18n="ck.title">Allgemein vorbereiten</h2></div>
         <p data-i18n="ck.help">Nicht jedes Dokument wird überall verlangt. Was eine Hochschule konkret fordert, steht im Studiengang unter „Von dieser Hochschule verlangt“.</p>
       </div>
       <div class="check-progress" id="checkProgress"></div>
@@ -291,7 +330,7 @@
     <!-- ======================================================== GLOSSARY -->
     <section id="glossar" class="section wrap" aria-labelledby="glossTitle">
       <div class="section-head">
-        <div><p class="eyebrow">11 · <span data-i18n="gl.eyebrow">Deutsch einfach</span></p><h2 id="glossTitle" data-i18n="gl.title">Glossar</h2></div>
+        <div><p class="eyebrow">13 · <span data-i18n="gl.eyebrow">Deutsch einfach</span></p><h2 id="glossTitle" data-i18n="gl.title">Glossar</h2></div>
         <p data-i18n="gl.help">Die wichtigsten Wörter rund um die Bewerbung – in einfachem Deutsch, mit ukrainischer Kurzbeschreibung.</p>
       </div>
       <dl id="glossary" class="glossary"></dl>
@@ -300,7 +339,7 @@
     <!-- ======================================================== SOURCES -->
     <section id="quellen" class="section wrap source-note" aria-labelledby="srcTitle">
       <div class="section-head">
-        <div><p class="eyebrow">12 · <span data-i18n="src.eyebrow">Datenqualität</span></p><h2 id="srcTitle" data-i18n="src.title">Vor dem Absenden immer noch einmal klicken</h2></div>
+        <div><p class="eyebrow">14 · <span data-i18n="src.eyebrow">Datenqualität</span></p><h2 id="srcTitle" data-i18n="src.title">Vor dem Absenden immer noch einmal klicken</h2></div>
         <p id="srcText"></p>
       </div>
       <div class="src-grid">
@@ -328,6 +367,14 @@
     <a href="#top" data-i18n="toTop">Nach oben ↑</a>
   </footer>
 
+  <nav class="tabbar" aria-label="Schnellzugriff">
+    <a href="#mut"><i aria-hidden="true">◈</i><span>Plan</span></a>
+    <a href="#muster"><i aria-hidden="true">▦</i><span>Muster</span></a>
+    <a href="#kosten"><i aria-hidden="true">€</i><span>Kosten</span></a>
+    <a href="./editor.html"><i aria-hidden="true">✎</i><span>Editor</span></a>
+    <button type="button" data-tab-menu aria-label="Menü"><i aria-hidden="true">≡</i><span>Mehr</span></button>
+  </nav>
+
   <dialog id="programDialog" class="program-dialog" aria-labelledby="dlgTitle">
     <div class="dlg-bar">
       <span class="dlg-crumb" id="dlgCrumb"></span>
@@ -346,7 +393,13 @@
   <script src="./map-data.js"></script>
   <script src="./data.js"></script>
   <script src="./muster.js"></script>
+  <script src="./kosten.js"></script>
+  <script src="./stimmen.js"></script>
   <script src="./muster-ui.js"></script>
+  <script src="./kosten-ui.js"></script>
+  <script src="./stimmen-ui.js"></script>
+  <script src="./motion.js"></script>
   <script src="./app.js"></script>
+  <script src="./progress.js"></script>
 </body>
 </html>

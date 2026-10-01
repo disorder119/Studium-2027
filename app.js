@@ -31,7 +31,7 @@
   const I18N = {
     de: {},
     ua: {
-      "skip": "До змісту", "nav.radar": "Терміни", "nav.map": "Мапа", "nav.programs": "Програми", "nav.cockpit": "Кокпіт", "nav.portfolio": "Портфоліо", "nav.analysis": "Аналіз", "nav.muster": "Зразки", "nav.editor": "Редактор", "nav.events": "Події", "nav.ukraine": "Україна", "nav.glossary": "Словник", "nav.checklist": "Чекліст", "nav.sources": "Джерела",
+      "skip": "До змісту", "nav.radar": "Терміни", "nav.map": "Мапа", "nav.programs": "Програми", "nav.cockpit": "Кокпіт", "nav.portfolio": "Портфоліо", "nav.analysis": "Аналіз", "nav.muster": "Зразки", "nav.plan": "План", "nav.kosten": "Витрати", "nav.stimmen": "Голоси", "nav.more": "Ще", "nav.editor": "Редактор", "nav.events": "Події", "nav.ukraine": "Україна", "nav.glossary": "Словник", "nav.checklist": "Чекліст", "nav.sources": "Джерела",
       "hero.sub": "Особистий навігатор для вступу та навчання",
       "hero.lead": "Які програми підходять до твоїх робіт, куди подавати, до якого числа, що потрібно – і який наступний крок? Усі терміни взято з офіційних сайтів вишів.",
       "today.eyebrow": "Що робити далі?", "today.title": "Сьогодні в фокусі",
@@ -42,7 +42,7 @@
       "prog.eyebrow": "Що мені підходить?", "prog.title": "Програми навчання", "prog.help": "Portfolio-Match = наскільки зміст програми збігається з твоїми роботами. Це НЕ шанс на вступ.", "prog.sort": "Сортувати", "prog.search": "Пошук",
       "cockpit.eyebrow": "Твої заявки", "cockpit.title": "Кокпіт заявок", "cockpit.help": "Статус, обране та нотатки зберігаються лише в цьому браузері на цьому пристрої.", "cockpit.showAll": "показати всі програми", "cockpit.export": "Зберегти дані (.json)", "cockpit.import": "Завантажити копію",
       "pf.eyebrow": "Твоє портфоліо 2023–2026", "pf.title": "Портфоліо та оцінка", "pf.help": "Не оцінка мистецтва. Оцінка того, що вже сильне для різних типів вступу і чого бракує. Без прогнозу, чи тебе приймуть.", "pf.profile": "Твій профіль (основа Portfolio-Match)", "pf.strong": "Сильні сторони", "pf.gapDesign": "Можливі прогалини – дизайн", "pf.gapArt": "Можливі прогалини – вільне мистецтво", "pf.todo": "Допоможе майже всюди – ще створити", "pf.gallery": "Твої роботи в рекомендаціях",
-      "an.eyebrow": "Погляд професора", "an.title": "Аналіз портфоліо", "an.help": "Кожну роботу з PDF-портфоліо розглянуто окремо: сильні сторони, прогалини, ключові роботи. Фахова оцінка, не оцінка і не прогноз вступу.", "mu.eyebrow": "Мапа для кожного вишу", "mu.title": "Зразки заявок", "mu.help": "Для кожної програми – сітка: які роботи, в якому порядку, що вже є і чого бракує. Торкнись рядка, щоб побачити всю мапу.", "ev.eyebrow": "Консультації", "ev.title": "Консультації з портфоліо та події", "ev.help": "Консультація перед подачею – це нормально і дуже корисно. Минулі події позначені сірим.", "ev.past": "показати минулі", "ev.fav": "лише обране", "ev.icsAll": "Усі майбутні події в календар (.ics)",
+      "an.eyebrow": "Погляд професора", "an.title": "Аналіз портфоліо", "an.help": "Кожну роботу з PDF-портфоліо розглянуто окремо: сильні сторони, прогалини, ключові роботи. Фахова оцінка, не оцінка і не прогноз вступу.", "ko.eyebrow": "Гроші та все навколо", "ko.title": "Витрати та фінансування", "ko.help": "Семестровий внесок, оренда, BAföG, страхування, статус, стипендії – для тебе як українки з § 24. Кожна цифра з джерелом і датою.", "sv.eyebrow": "Досвід і поради", "sv.title": "Голоси студентів", "sv.help": "Що кажуть студенти, абітурієнти та самі виші – з джерелом і посиланням. Нічого не вигадано.", "mu.eyebrow": "Мапа для кожного вишу", "mu.title": "Зразки заявок", "mu.help": "Для кожної програми – сітка: які роботи, в якому порядку, що вже є і чого бракує. Торкнись рядка, щоб побачити всю мапу.", "ev.eyebrow": "Консультації", "ev.title": "Консультації з портфоліо та події", "ev.help": "Консультація перед подачею – це нормально і дуже корисно. Минулі події позначені сірим.", "ev.past": "показати минулі", "ev.fav": "лише обране", "ev.icsAll": "Усі майбутні події в календар (.ics)",
       "ua.eyebrow": "Український атестат", "ua.title": "Атестат, право на вступ, мова", "ua.langTable": "Вимоги до мови – порівняння",
       "ck.eyebrow": "Документи", "ck.title": "Підготувати загалом", "ck.help": "Не кожен документ потрібен всюди. Що вимагає конкретний виш – дивись у програмі в розділі «Вимоги цього вишу».",
       "gl.eyebrow": "Простою мовою", "gl.title": "Словник", "gl.help": "Найважливіші слова про вступ – простою німецькою з коротким поясненням українською.",
@@ -626,6 +626,9 @@
         ${p.warnings.length ? `<ul class="warn-list">${p.warnings.map(w => `<li>⚠ ${esc(w)}</li>`).join("")}</ul>` : ""}
       </section>
 
+      ${window.KostenUI ? window.KostenUI.block(p) : ""}
+      ${window.StimmenUI ? window.StimmenUI.block(p) : ""}
+
       <section class="dlg-sec">
         <h3>Von dieser Hochschule verlangt</h3>
         <ul class="req-list">${p.requirements.map((r, i) => `<li><label><input type="checkbox" data-req="${p.id}" data-idx="${i}"${reqDone[i] ? " checked" : ""}> <span>${esc(r)}</span></label></li>`).join("")}</ul>
@@ -778,6 +781,9 @@
     renderFilters(); renderPrograms(); renderCockpit(); renderPortfolio(); renderEvents(); renderUkraine();
     renderChecklist(); renderGlossary(); renderSources();
     if (window.MusterUI) window.MusterUI.renderAll();
+    if (window.KostenUI) window.KostenUI.render();
+    if (window.StimmenUI) window.StimmenUI.render();
+    if (window.Motion) window.Motion.render();
   }
   function refreshAfterStateChange() { renderStats(); renderRadar(); renderPrograms(); renderCockpit(); renderEvents(); }
 
@@ -817,6 +823,7 @@
     if (t.closest("[data-howmatch]")) { howMatch(); return; }
     if (t.closest("[data-cockpit-all]")) { $("#cockpitAll").checked = true; renderCockpit(); return; }
     const lb = t.closest(".lang-btn"); if (lb) { S().lang = lb.dataset.lang; store.save(); rerenderAll(); return; }
+    if (t.closest("[data-tab-menu]")) { const nav = $("#mobileNav"), mbtn = $(".menu-btn"); const open = nav.hidden; nav.hidden = !open; mbtn.setAttribute("aria-expanded", String(open)); window.scrollTo({ top: 0, behavior: "smooth" }); return; }
     const mb = t.closest(".menu-btn");
     if (mb) { const nav = $("#mobileNav"); const open = nav.hidden; nav.hidden = !open; mb.setAttribute("aria-expanded", String(open)); return; }
     if (t.closest("#mobileNav a")) { $("#mobileNav").hidden = true; $(".menu-btn").setAttribute("aria-expanded", "false"); }
@@ -833,9 +840,9 @@
   }, true);
   document.addEventListener("change", e => {
     const t = e.target;
-    if (t.matches("[data-status]")) { const s = S(); if (t.value) s.status[t.dataset.status] = t.value; else delete s.status[t.dataset.status]; store.save(); toast(T("saved")); refreshAfterStateChange(); return; }
+    if (t.matches("[data-status]")) { const s = S(); if (t.value) s.status[t.dataset.status] = t.value; else delete s.status[t.dataset.status]; store.save(); toast(T("saved")); refreshAfterStateChange(); if (window.Motion) { window.Motion.refreshProgress(); if (["abgeschickt", "einladung", "zusage"].includes(t.value)) window.Motion.celebrate(); } return; }
     if (t.matches("[data-req]")) { const s = S(); s.req[t.dataset.req] = s.req[t.dataset.req] || {}; if (t.checked) s.req[t.dataset.req][t.dataset.idx] = true; else delete s.req[t.dataset.req][t.dataset.idx]; store.save(); return; }
-    if (t.matches("[data-check]")) { const s = S(); if (t.checked) s.check[t.dataset.check] = true; else delete s.check[t.dataset.check]; store.save(); renderChecklist(); $(`[data-check="${t.dataset.check}"]`).focus(); return; }
+    if (t.matches("[data-check]")) { const s = S(); if (t.checked) s.check[t.dataset.check] = true; else delete s.check[t.dataset.check]; store.save(); if (window.Motion) { window.Motion.refreshProgress(); if (t.checked && D.checklist.every(c => s.check[c.id])) window.Motion.celebrate(); } renderChecklist(); $(`[data-check="${t.dataset.check}"]`).focus(); return; }
     if (t.id === "sortSelect") { filt.sort = t.value; renderPrograms(); return; }
     if (t.id === "radarFavOnly") { renderRadar(); return; }
     if (t.id === "evPast" || t.id === "evFav") { renderEvents(); return; }
