@@ -87,9 +87,9 @@
     },
     {
       id: "bafoeg-hoehe", tag: "Geld", status: "geplant", title: "BAföG-Höhe zu deinem Studienstart: Erhöhung geplant, noch nicht beschlossen",
-      text: "Heute gilt ein Höchstsatz von 992 € (Grundbedarf 475 €, Wohnpauschale 380 €, Zuschläge für Kranken- und Pflegeversicherung 137 €). Der Kabinettsentwurf vom 12.08.2026 sieht ab 01.04.2027 eine Wohnpauschale von 440 € (Höchstsatz ca. 1.075 €) und ab 01.08.2027 einen Grundbedarf von 503 € (Höchstsatz ca. 1.103 €) vor. Das ist ein Entwurf: Bundestag und Bundesrat müssen noch zustimmen.",
+      text: "Heute gilt ein Höchstsatz von 992 € (Grundbedarf 475 €, Wohnpauschale 380 €, Zuschläge für Kranken- und Pflegeversicherung 137 €). Der Kabinettsentwurf vom 12.08.2026 sieht ab 01.04.2027 eine Wohnpauschale von 440 € (Höchstsatz ca. 1.075 €) und ab 01.08.2027 einen Grundbedarf von 503 € (Höchstsatz ca. 1.103 €) vor, ab Sommersemester 2029 dann 563 €. Das ist ein Entwurf: Bundestag und Bundesrat sollen im Herbst 2026 darüber beraten.",
       todo: ["Im Kosten-Rechner beide Varianten ansehen", "Nicht mit dem Höchstsatz fest rechnen – er gilt nur bei niedrigem Elterneinkommen"],
-      src: [L("studierenplus.de: BAföG-Reform 2027", "https://www.studierenplus.de/bafoeg/bafoeg-reform-2027"), L("Finanztip: BAföG", "https://finanztip.de/bafoeg/")]
+      src: [L("Forschung & Lehre: Reform im Kabinett beschlossen", "https://www.forschung-und-lehre.de/politik/reform-im-kabinett-beschlossen-7839"), L("studierenplus.de: BAföG-Reform 2027", "https://www.studierenplus.de/bafoeg/bafoeg-reform-2027"), L("Finanztip: BAföG", "https://finanztip.de/bafoeg/")]
     },
     {
       id: "aufenthalt", tag: "Aufenthalt", status: "klaeren", title: "Aufenthaltstitel: gültig bis 04.03.2027, EU-Schutz bis 04.03.2028 verlängert",

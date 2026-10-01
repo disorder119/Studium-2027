@@ -73,7 +73,7 @@
     const docs = (pl.docs || []).length ? `<div class="mu-sec"><h4>Dokumente zur Bewerbung <span>${pl.docs.length}</span></h4><ul class="mu-docs">${pl.docs.map(dc => { const x = M.DOC[dc.key]; return `<li><b>${esc(x[0])}</b><span>${esc(dc.note || x[1])}</span><em>${days(x[2])}</em></li>`; }).join("")}</ul></div>` : "";
     return `<section class="dlg-sec muster" id="musterSec">
       <h3>Musterbewerbung <small>– Raster der Mappe</small></h3>
-      <p class="reco-note">Unsere Zusammenstellung aus Veronikas vorhandenen Arbeiten, abgestimmt auf die veröffentlichten Angaben dieser Hochschule – <b>keine Zulassungsgarantie</b>.</p>
+      <p class="reco-note">Unsere Zusammenstellung aus deinen vorhandenen Arbeiten, abgestimmt auf die veröffentlichten Angaben dieser Hochschule – <b>keine Zulassungsgarantie</b>.</p>
       <div class="mu-facts">
         <div><b>${esc(String(p.portfolio.count || "–")).slice(0, 90)}</b><small>Vorgabe der Hochschule</small></div>
         <div><b>${s.total} Blätter</b><small>${s.w} vorhanden · ${s.m} Montage · ${s.n} neu</small></div>
@@ -115,7 +115,7 @@
         <span class="mu-row-fit"><span class="mu-badge ${FIT_CLS[pl.fit]}">${esc(pl.fit)}</span><span class="mu-badge ${f.cls}">${esc(f.label)}</span></span></li>`;
     }).join("");
     root.innerHTML = `
-      <div class="note mu-disclaimer"><b>So ist das gemeint:</b> Zu jedem der ${plansList().length} Studiengänge gibt es eine Musterbewerbung als Raster – die Auswahl und Reihenfolge der vorhandenen Arbeiten, die zu Anzahl, Format und Pflichtinhalten der Hochschule passen. <b>Garantieren kann das niemand:</b> Aufnahmeprüfungen sind Auswahlverfahren mit mehr Bewerbungen als Plätzen. „Passung“ heißt: wie gut Veronikas Unterlagen zu dem passen, was die Hochschule veröffentlicht – keine Wahrscheinlichkeit.</div>
+      <div class="note mu-disclaimer"><b>So ist das gemeint:</b> Zu jedem der ${plansList().length} Studiengänge gibt es eine Musterbewerbung als Raster – die Auswahl und Reihenfolge der vorhandenen Arbeiten, die zu Anzahl, Format und Pflichtinhalten der Hochschule passen. <b>Garantieren kann das niemand:</b> Aufnahmeprüfungen sind Auswahlverfahren mit mehr Bewerbungen als Plätzen. „Passung“ heißt: wie gut deine Unterlagen zu dem passen, was die Hochschule veröffentlicht – keine Wahrscheinlichkeit.</div>
       <div class="toolbar"><div class="chips" role="group" aria-label="Kategorie">${cats.map(([k, l]) => `<button type="button" class="chip${ov.cat === k ? " on" : ""}" data-mu-cat="${k}" aria-pressed="${ov.cat === k}">${esc(l)}</button>`).join("")}</div>
         <div class="toolbar-row"><span class="muted small">${ps.length} Musterbewerbungen · Machbarkeit grob gerechnet: halbe Zeit bis zur Frist</span>
         <label class="sort"><span>Sortieren</span><select id="muSort"><option value="frist"${ov.sort === "frist" ? " selected" : ""}>Frist</option><option value="passung"${ov.sort === "passung" ? " selected" : ""}>Passung</option><option value="aufwand"${ov.sort === "aufwand" ? " selected" : ""}>Aufwand</option></select></label></div></div>
@@ -153,8 +153,15 @@
     }).join("");
     const keys = Object.values(C).filter(c => c.stars === 3);
     const strip = (ids, cls) => `<ul class="an-strip ${cls || ""}">${ids.map(id => `<li><button type="button" data-mu-work="${id}"><img src="${imgOf(id)}" alt="${esc(C[id].title)}" loading="lazy" width="120" height="130"><span>${esc(C[id].title)}</span></button></li>`).join("")}</ul>`;
+    const H = A.honest;
+    const honest = H ? `<section class="an-honest" aria-label="${esc(H.title)}">
+        <div class="an-honest-text"><p class="eyebrow">${esc(H.title)}</p><p class="an-verdict">${esc(A.verdict)}</p><p>${esc(H.text)}</p></div>
+        <div class="an-levels-box"><h3 class="h4">Wo deine Mappe heute steht</h3>
+          <ul class="an-levels">${H.levels.map(([dir, lab, lv, txt]) => `<li class="lv-${lv}"><div class="an-lv-head"><b>${esc(dir)}</b><span class="an-lv">${esc(lab)}</span></div><p>${esc(txt)}</p></li>`).join("")}</ul>
+          <p class="small muted">${esc(H.note)}</p></div>
+      </section>` : `<p class="an-verdict">${esc(A.verdict)}</p>`;
     root.innerHTML = `
-      <p class="an-verdict">${esc(A.verdict)}</p>
+      ${honest}
       <div class="pf-grid">
         <article class="pf-card"><h3>Bewertung nach Bereichen</h3><div class="bars">${bars}</div>
           <p class="small muted mt">Skala 1–5 = fachliche Einschätzung des heutigen Stands, keine Note und keine Zulassungschance.</p></article>

@@ -44,7 +44,7 @@
     freieKunst: { v: 0.80, label: "Freie künstlerische Position", note: "Eigene Bildsprache; textile Arbeiten sind keine Produkte, sondern Werke." },
     material:   { v: 0.70, label: "Materialexperiment", note: "Vorhanden (Wachs, Rost, Pigment), aber noch nicht als Versuchsreihe dokumentiert." },
     szene:      { v: 0.60, label: "Figur / Szene / Raum", note: "Starke Figurengruppen (Kerzberg, Group Portrait of Monks), aber kaum Bühnen-, Raum- oder Bewegungskontext gezeigt." },
-    zeichnung:  { v: 0.30, label: "Zeichnung / Studien", note: "Im Portfolio-PDF (64 Seiten) gibt es kein Zeichenblatt und keine Naturstudie – nur Kopf- und Porträtstudien in Öl." },
+    zeichnung:  { v: 0.35, label: "Zeichnung / Studien", note: "Sicherer Tuschestrich auf Stoff (Lituus I, Pipes, Leinenmantel), aber kein eigenes Zeichenblatt, keine Akt- oder Naturstudie." },
     kollektion: { v: 0.40, label: "Serie / Kollektion", note: "Einzelstücke dominieren; zusammenhängende Looks sind noch nicht als Kollektion gezeigt." },
     prozess:    { v: 0.40, label: "Entwurfsprozess", note: "Drei Prozessblätter (Knöpfe, Rückenteil, Futter) vorhanden; Skizzen, Varianten, Schnitt und Toiles fehlen." }
   };
@@ -950,14 +950,14 @@
     aptitudeTest: { required: true, text: "Einladung ca. 3 Wochen nach Fristende; Gespräche vor Ort Ende Mai/Anfang Juni, Online-Eignungsprüfung Mitte Juni. Gilt für das Zulassungsjahr und das Folgejahr." },
     homework: { required: false, text: "Keine Hausaufgabe genannt." },
     internship: { required: false, text: "Kein Vorpraktikum genannt." },
-    languageRequirements: { application: "B2 bis 15.04. (Voraussetzung für die Prüfung)", start: "C1 bis 15.09. – DSH 2, TestDaF 4, telc Deutsch C1 oder Goethe C1", text: "Ohne C1 bis 15. September keine Einschreibung." },
+    languageRequirements: { application: "B2 in Deutsch ODER Englisch reicht, um zur Prüfung zugelassen zu werden (Aufnahmesatzung § 2)", start: "Deutsch C1 bis 15.09. – DSH 2, TestDaF 4, telc Deutsch C1 Hochschule oder Goethe C1 (Sprachsatzung)", text: "Zur Prüfung reicht B2 (Deutsch oder Englisch). Für die Einschreibung brauchst du Deutsch C1." },
     internationalApplication: { route: "hochschule", text: "Zeugnisse als beglaubigte Kopien mit offizieller Übersetzung ins Deutsche oder Englische. APS nur für China, Vietnam, Indien." },
     withoutHZB: null,
     fees: "In Hessen keine Studiengebühren – nur Semesterbeitrag.",
-    requirements: ["Mappe als ein PDF (≥ 30 Arbeiten + Skizzen)", "Motivationsschreiben", "Hochschulzugangsberechtigung (digital)", "Ausführlicher Lebenslauf", "B2 bis 15.04., C1 bis 15.09.", "Beglaubigte Kopien + Übersetzung"],
+    requirements: ["Mappe als ein PDF (≥ 30 Arbeiten + Skizzen)", "Motivationsschreiben", "Hochschulzugangsberechtigung (digital)", "Ausführlicher Lebenslauf", "B2 (Deutsch oder Englisch) zur Prüfung, Deutsch C1 zur Einschreibung", "Beglaubigte Kopien + Übersetzung"],
     steps: [
       { title: "Jetzt: Mappenberatung mittwochs 12 Uhr", text: "Online oder im Isenburger Schloss – nur ca. 30 km von Aschaffenburg." },
-      { title: "Deutsch B2 bis April sichern", text: "C1 bis 15.09.2027." },
+      { title: "B2-Nachweis bis April sichern", text: "Deutsch oder Englisch B2 reicht für die Prüfung; Deutsch C1 bis 15.09.2027 für die Einschreibung." },
       { title: "Mappe: ≥ 30 Arbeiten + Skizzen als ein PDF", text: "Textil, Malerei, Skizzen, Videos (als Link)." },
       { title: "Upload 01.–15.04.2027", text: "" },
       { title: "Gespräch + Online-Prüfung", text: "Ende Mai bis Mitte Juni." }
@@ -985,7 +985,7 @@
     applicationOpen: null, applicationOpenText: "Bewerbung zur Eignungsprüfung läuft",
     applicationDeadline: "2026-10-31", deadlineTime: null, deadlineExact: true, deadlineBasis: "published",
     deadlineText: "Sommersemester 2027: bis 31.10.2026", deadlineSortHint: null,
-    deadlineNote: "Die Seite nennt für das Wintersemester 2027/28 „30.04.2026“ – offensichtlich eine Vorjahresangabe. Die WiSe-Frist 2027 bitte erneut prüfen. Nach bestandener Eignungsprüfung ist zusätzlich die Studienplatzbewerbung an der JGU Mainz nötig.",
+    deadlineNote: "Für das Wintersemester zeigt die Seite noch die Vorjahresrunde (Bewerbungsschluss 30.04.2026, Mappenprüfung 25.05.2026, Gespräche 11./12.06.2026). Die Termine fürs Wintersemester 2027/28 sind noch nicht veröffentlicht. Nach bestandener Eignungsprüfung musst du dich zusätzlich an der JGU Mainz um den Studienplatz bewerben (Sommersemester bis 15.01., Wintersemester bis 15.07.).",
     milestones: [],
     portfolio: { required: true, type: "digital (strukturiertes PDF) oder analog (Originale)", count: "Dokumentation von 10–20 künstlerischen Arbeiten", format: "PDF; je Arbeit Titel, Jahr, Maße, Material", maxSize: "12 MB (Mappe) · 300 MB (zeitbasierte Arbeiten)",
       video: "zeitbasierte Arbeiten: max. 10 Minuten aus bis zu 3 Arbeiten", process: "Skizzenbuch bis 10 Seiten", sketchbook: "ja, bis 10 Seiten", ownTask: "Motivationsschreiben", deadlineText: "31.10.2026" },
@@ -1009,7 +1009,7 @@
     suggestedWorks: ["holding-the-young-yak", "liturgy", "die-jagd", "kerzberg", "yak-ii", "lituus-i", "pidsvichnyk-kerzenhalter"],
     supplement: "", supplementWorks: [],
     missingPortfolioElements: ["Skizzenbuchseiten (bis 10)", "Serien statt Einzelbilder"],
-    counselling: [],
+    counselling: ["mz-2901"],
     warnings: ["Nur 12 MB für die Mappe – Bilder stark komprimieren."],
     portal: null,
     officialUrl: "https://kunsthochschule-mainz.de/bewerbung/bewerben/",
@@ -1390,6 +1390,7 @@
      (kein Kalender-Export). exact=false = kein konkretes Datum veröffentlicht.
      ========================================================================== */
   const events = [
+     { id: "mz-2901", date: "2027-01-29", time: null, exact: true, title: "Individuelle Studien- und Mappenberatung", kind: "mappenberatung", mode: "Ablauf auf der Hochschulseite", place: "", university: "KH Mainz", city: "mainz", programIds: ["mainz-freie-kunst"], registration: "Anmeldung laut Hochschulseite", url: "https://kunsthochschule-mainz.de/bewerbung/bewerben/" },
     { id: "tr-2909", date: "2026-09-29", time: "11:00", exact: true, title: "Mappenberatung Modedesign (telefonisch)", kind: "mappenberatung", mode: "telefonisch", place: "", university: "HS Trier", city: "trier", programIds: ["trier-modedesign"], registration: "Anmeldung per E-Mail: mode.sekretariat@hochschule-trier.de", url: "https://www.hochschule-trier.de/gestaltung/studiengang-modedesign/studium-bewerbung/bewerben/bewerbung-bachelor-modedesign-1" },
     { id: "tr-2010", date: "2026-10-20", time: "12:00", exact: true, title: "Mappenberatung Modedesign (telefonisch)", kind: "mappenberatung", mode: "telefonisch", place: "", university: "HS Trier", city: "trier", programIds: ["trier-modedesign"], registration: "Anmeldung per E-Mail: mode.sekretariat@hochschule-trier.de", url: "https://www.hochschule-trier.de/gestaltung/studiengang-modedesign/studium-bewerbung/bewerben/bewerbung-bachelor-modedesign-1" },
     { id: "tr-2710", date: "2026-10-27", time: "15:15", exact: true, title: "Mappenberatung Modedesign", kind: "mappenberatung", mode: "vor Ort", place: "Raum Q 106, Campus Gestaltung Trier", university: "HS Trier", city: "trier", programIds: ["trier-modedesign"], registration: "Anmeldung per E-Mail: mode.sekretariat@hochschule-trier.de", url: "https://www.hochschule-trier.de/gestaltung/studiengang-modedesign/studium-bewerbung/bewerben/bewerbung-bachelor-modedesign-1" },

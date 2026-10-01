@@ -898,3 +898,61 @@ body::before { background: radial-gradient(70% 45% at 10% -5%, rgba(42, 127, 142
 .stats { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
 .stat dd { font-size: clamp(22px, 2.4vw, 28px); overflow-wrap: anywhere; }
 .stat dd small, .stat dd .d, .stat dd span { font-size: 15px; }
+
+/* ============================================================ Kurz gesagt */
+.tldr { margin: 0 0 26px; padding: 16px 20px; border-radius: var(--radius); background: rgba(42, 127, 142, .07); border: 1px solid rgba(42, 127, 142, .18); max-width: 880px; }
+.tldr-h { margin: 0 0 6px; font-weight: 700; font-size: 15px; color: var(--accent-2); }
+.tldr ul { margin: 0; padding-left: 20px; display: grid; gap: 4px; }
+.tldr li { font-size: 17px; line-height: 1.5; color: var(--cream); }
+.tldr li::marker { color: var(--accent); }
+.radar-block .tldr { margin-top: 4px; }
+
+/* ============================================================ Meine Empfehlung */
+.top { padding-block: 36px 8px; }
+.top-lead { margin: 0; max-width: 68ch; color: var(--cream-2); font-size: 18px; }
+.top-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.top-card { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 18px 22px; align-items: start; padding: 22px 24px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); box-shadow: 0 1px 2px rgba(31, 41, 51, .05); transition: border-color .2s, box-shadow .2s; }
+.top-card:hover { border-color: rgba(42, 127, 142, .5); box-shadow: var(--shadow); }
+.top-rank { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 700; font-size: 19px; }
+.top-main { min-width: 0; }
+.top-tag { margin: 0 0 2px; font-size: 14px; font-weight: 650; color: var(--accent-2); }
+.top-title { font-size: 22px; margin: 0; }
+.top-uni { margin: 2px 0 10px; color: var(--muted); font-size: 16px; }
+.top-why { margin: 0 0 12px; max-width: 70ch; font-size: 17px; line-height: 1.55; }
+.top-facts { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 0; }
+.top-facts div { min-width: 0; }
+.top-facts dt { font-size: 13px; color: var(--muted); }
+.top-facts dd { margin: 0; font-size: 15px; font-weight: 600; }
+.top-facts dd.dl-soon { color: var(--bad); }
+.top-facts dd.dl-ok { color: var(--ok); }
+.top-facts dd.dl-vague { color: var(--warn); font-weight: 500; }
+.top-act { display: flex; flex-direction: column; gap: 8px; }
+@media (max-width: 760px) {
+  .top-card { grid-template-columns: auto minmax(0, 1fr); padding: 18px; }
+  .top-act { grid-column: 1 / -1; flex-direction: row; flex-wrap: wrap; }
+  .top-rank { width: 36px; height: 36px; font-size: 16px; }
+}
+
+/* ============================================================ Ehrliche Einschätzung */
+.an-honest { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 28px; margin: 0 0 34px; padding: 28px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); box-shadow: 0 1px 2px rgba(31, 41, 51, .05); }
+.an-honest .an-verdict { font-size: 20px; line-height: 1.55; margin-bottom: 14px; font-weight: 500; }
+.an-honest-text p:not(.eyebrow):not(.an-verdict) { margin: 0; font-size: 17px; line-height: 1.6; color: var(--cream-2); }
+.an-levels-box h3 { margin-bottom: 12px; }
+.an-levels { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 10px; }
+.an-levels li { padding: 12px 14px; border-radius: var(--radius-s); border: 1px solid var(--line); background: var(--bg); }
+.an-lv-head { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.an-lv { font-size: 13px; font-weight: 700; padding: 2px 10px; border-radius: 99px; }
+.lv-hoch .an-lv { background: rgba(47, 125, 79, .12); color: var(--ok); }
+.lv-mittel .an-lv { background: rgba(42, 127, 142, .12); color: var(--accent-2); }
+.lv-niedrig .an-lv { background: rgba(165, 106, 18, .14); color: var(--warn); }
+.lv-hoch { border-left: 3px solid var(--ok) !important; } .lv-mittel { border-left: 3px solid var(--accent) !important; } .lv-niedrig { border-left: 3px solid var(--warn) !important; }
+.an-levels p { margin: 4px 0 0; font-size: 15px; line-height: 1.5; color: var(--cream-2); }
+@media (max-width: 900px) { .an-honest { grid-template-columns: 1fr; padding: 20px; } }
+
+/* ============================================================ Lesbarkeit */
+body { line-height: 1.65; }
+.section-head p { max-width: 62ch; }
+@media (min-width: 761px) { .section { padding-block: 72px; } }
+.mut-title { font-size: clamp(32px, 4.6vw, 54px); line-height: 1.1; }
+.mut-lead { max-width: 64ch; }
+.top-warn { margin: -4px 0 12px; padding: 8px 12px; max-width: 70ch; border-left: 3px solid var(--warn); background: rgba(183, 121, 31, .07); font-size: 15px; line-height: 1.5; }

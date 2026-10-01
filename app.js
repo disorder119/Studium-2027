@@ -566,7 +566,7 @@
         <p class="eyebrow">${esc(p.university)}</p>
         <h2 id="dlgTitle">${esc(p.course)}</h2>
         <dl class="dlg-facts">
-          ${row("Hochschule", p.university)}${row("Studiengang", p.course + (p.courseNote ? " – " + p.courseNote : ""))}${row("Abschluss", p.degree)}${row("Stadt", `${cityName(p.city)} · ${T("km")(p._km)}`)}${row("Startsemester", p.startSemester)}
+          ${p.languageRequirements && p.languageRequirements.application ? row("Deutsch zur Bewerbung", p.languageRequirements.application) : ""}${row("Studiengang", p.course + (p.courseNote ? " – " + p.courseNote : ""))}${row("Abschluss", p.degree)}${row("Stadt", `${cityName(p.city)} · ${T("km")(p._km)}`)}${row("Startsemester", p.startSemester)}
         </dl>
         ${L() === "ua" ? `<p class="ua-note">${esc(T("uaNote"))}</p>` : ""}
         <div class="dlg-actions">
@@ -586,7 +586,7 @@
       </section>
 
       <section class="dlg-sec">
-        <h3>Warum passt das zu Veronika?</h3>
+        <h3>Warum passt das zu dir?</h3>
         <p>${esc(p.why)}</p>
         <div class="match-box">
           <div class="mb-score"><b>${m.score}%</b><span>${esc(T("match"))}</span></div>

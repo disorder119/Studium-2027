@@ -48,7 +48,8 @@
       step = `<article class="mut-today mut-block"><div class="mut-today-l"><span class="eyebrow">Dein nächster Schritt · heute</span>
         <h3>${esc(today.p.course)} · ${esc(today.p.universityShort)}</h3>
         <p class="mut-today-what">${nx ? "Fang an mit: " : ""}<b>${esc(what)}</b></p>
-        <p class="muted small">Frist ${esc(dmy(today.p.applicationDeadline))} · noch ${daysUntil(today.p.applicationDeadline)} Tage · ${today.pl.sum.w + today.pl.sum.m} von ${today.pl.sum.total} Blättern stehen schon.</p></div>
+        <p class="muted small">Frist ${esc(dmy(today.p.applicationDeadline))} · noch ${daysUntil(today.p.applicationDeadline)} Tage · ${today.pl.sum.w + today.pl.sum.m} von ${today.pl.sum.total} Blättern stehen schon.</p>
+        ${today.p.languageRequirements && today.p.languageRequirements.application ? `<p class="small">Deutsch zur Bewerbung: <b>${esc(today.p.languageRequirements.application)}</b>. Wenn du das noch nicht hast, nimm die nächste Frist in der Liste.</p>` : ""}</div>
         <div class="mut-today-r"><a class="btn primary pulse" href="./editor.html#plan=${esc(today.p.id)}">Jetzt im Editor weitermachen</a>
         <button type="button" class="btn ghost" data-open="${esc(today.p.id)}" data-muster="1">Musterbewerbung ansehen</button></div></article>`;
     }
@@ -65,8 +66,8 @@
     root.innerHTML = `
       <div class="mut-hero mut-block">
         <p class="eyebrow">Du kannst das</p>
-        <h2 class="mut-title">Deine Mappe ist weiter,<br>als du denkst.</h2>
-        <p class="mut-lead">Drei Jahre Malerei, handgenähte Mäntel und Hüte, ukrainische Schrift im Futter: Das ist kein Anfänger-Portfolio, das ist eine <b>Handschrift</b>. Eine Zusage kann niemand versprechen – aber eine Bewerbung, die nicht abgeschickt wird, hat sicher keine Chance. Die meisten Mappen stehen schon. Der nächste Schritt dauert weniger als zwei Stunden.</p>
+        <h2 class="mut-title">Deine Mappe ist weiter, als du denkst.</h2>
+        <p class="mut-lead">Drei Jahre Malerei, handgenähte Mäntel und Hüte, ukrainische Schrift im Futter: Das ist kein Anfänger-Portfolio, das ist eine <b>Handschrift</b>. Eine Zusage kann niemand versprechen – aber eine Bewerbung, die nicht abgeschickt wird, hat sicher keine Chance. Die meisten Mappen stehen schon. Was als Nächstes dran ist, steht direkt hier drunter.</p>
       </div>
       <div class="mut-stats mut-grid">
         <div class="mut-stat"><b data-count="${nWorks}">0</b><small>Werke dokumentiert</small></div>

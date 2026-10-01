@@ -564,20 +564,21 @@
 
   /* ---------- Gesamtanalyse (Kunstprofessor) ---------- */
   const analysis = {
-    verdict: "Veronika arbeitet an einer seltenen Verbindung: Ihre Malerei und ihre Kleidung sind keine zwei Portfolios, sondern ein Werk. Dieselben Figuren – die Maske, der breite schwarze Hut, das Tier – erscheinen als Öl auf Leinwand und als genähte, getragene Objekte. Handwerk (alles von Hand, Knöpfe selbst geformt), Material (Rost, Wachs, Pigment) und Quellen (Skythen, Trypillja, Bronzezeit, ukrainische Schrift) sind für ihr Stadium ungewöhnlich reif. Schwach ist nicht das Werk, sondern das, was die Mappe um das Werk herum noch nicht zeigt: Zeichnung, Entwurf, Prozess.",
+    verdict: "Deine Malerei und deine Kleidung sind keine zwei Portfolios, sondern ein Werk. Dieselben Figuren – die Maske, der breite schwarze Hut, das Tier – tauchen als Ölbild und als genähtes, getragenes Stück auf. Handwerk, Material und Quellen (Skythen, Trypillja, Bronzezeit, ukrainische Schrift) sind für eine Bewerbung ungewöhnlich reif.",
     scores: [
       { label: "Bildsprache und Wiedererkennbarkeit", v: 5, note: "Hut, Maske, Tier, Schwarz: In einem Blick erkennbar." },
       { label: "Textile Handwerkskunst", v: 5, note: "Alles von Hand genäht, Knöpfe einzeln modelliert, Hüte frei geformt." },
-      { label: "Malerische Qualität", v: 4, note: "Group Portrait of Monks und Paladins sind auf hohem Niveau; frühe Blätter und kleine Studien schwächer." },
+      { label: "Malerische Qualität", v: 4, note: "Group Portrait of Monks, Paladins und Portrait of Deacons sind stark: Licht, Hände, Gruppe. Die flachen Acrylbilder (Rot, Schrei, Der weiße Schuh) sind als Idee stark, malerisch aber dünn." },
       { label: "Konzept und Quellen", v: 4, note: "Archäologie, Schrift, Erinnerung – belegt durch Material. Ein Statement in Worten fehlt." },
       { label: "Material und Oberfläche", v: 4, note: "Rost, Wachs, Pigment, Tinte; als Versuchsreihe noch nicht gezeigt." },
       { label: "Dokumentation (Fotografie)", v: 3, note: "Hintergründe wechseln, einige Ölfotos zu dunkel, Kerzberg gedreht." },
       { label: "Entwurfsprozess", v: 2, note: "Drei Prozessblätter, aber keine Skizze, Figurine oder Schnittidee." },
+      { label: "Schnitt und Form", v: 2, note: "Die Stücke folgen klassischen Grundformen (Mantel, Weste, Kittel). Das Eigene liegt in Oberfläche und Bild, noch nicht in der Silhouette." },
       { label: "Serie / Kollektion", v: 2, note: "Sieben vollständige Looks existieren, sind aber nie gemeinsam gezeigt." },
-      { label: "Zeichnung und Studien", v: 1, note: "Im gesamten Konvolut kein einziges Zeichenblatt oder keine Naturstudie." }
+      { label: "Zeichnung und Studien", v: 2, note: "Zeichnen kann sie: Die Tuschefiguren auf Lituus I, Pipes und dem Leinenmantel sitzen sicher. Es fehlen aber eigene Blätter: Akt, Natur, Stofffalten, Skizzenbuch." }
     ],
     strengths: [
-      ["Eine Ikonografie, die man wiedererkennt", "Der breite Hut ist ihr Zeichen: in Haubus, Liturgy, Die Jagd und Portrait of Deacons gemalt, als Bronzezeit-, Pidsvichnyk- und Strilez-Hut gebaut. Jurys suchen genau diese Handschrift."],
+      ["Eine Ikonografie, die man wiedererkennt", "Der breite Hut ist dein Zeichen: in Haubus, Liturgy, Die Jagd und Portrait of Deacons gemalt, als Bronzezeit-, Pidsvichnyk- und Strilez-Hut gebaut. Jurys suchen genau diese Handschrift."],
       ["Figur als Fläche und als Form", "Die Acrylbilder trennen Fläche und Plastizität (flacher Körper, modelliertes Gesicht). Das ist eine Entscheidung, kein Zufall – und dieselbe Logik zeigt ihr Kostüm: Silhouette zuerst."],
       ["Mensch-Tier-Verwandlung mit Tiefe", "Yak, Yak II, Holding the Young Yak: Mensch und Tier verschmelzen. Ein Thema (Steppe, Ritual, Verwandlung), das nicht illustrativ bleibt."],
       ["Material, das etwas bedeutet", "Rostgefärbte Futter, Wachs, Tinte, altes Nähgarn. Das Futter trägt Handschrift, verborgen vor dem Betrachter. „Kleidung trägt Erinnerung“ ist durch das Material belegt, nicht nur behauptet."],
@@ -585,15 +586,28 @@
       ["Malerische Entwicklung", "2023 flächig-expressiv → 2025 tonal-grau mit Hybridwesen → 2026 Öl mit Hell-Dunkel und Gruppenbildern. Group Portrait of Monks und Paladins zeigen Anatomie, Hände und Raum."]
     ],
     risks: [
-      ["Keine Zeichnung", "Im gesamten Konvolut gibt es kein Zeichenblatt, keine Aktstudie, keine Naturstudie. Trier, Schneeberg, Hof, ABK Stuttgart, Reutlingen und die Prüfung der HAW verlangen das. Das ist die größte Lücke."],
+      ["Keine eigenen Zeichenblätter", "Gezeichnet wird bisher nur auf Stoff. Es gibt kein Blatt Papier mit Aktstudie, Naturstudie oder Stofffalten. Trier, Schneeberg, Hof, ABK Stuttgart, Reutlingen und die Prüfung der HAW verlangen genau das. Das ist die größte Lücke, und sie lässt sich in wenigen Wochen schließen."],
       ["Entwurfsprozess fehlt", "Drei Prozessblätter (Knöpfe, Rückenteil, Futter), aber keine Skizze, Figurine oder Schnittidee. Mode- und Kostümjurys wollen sehen, wie ein Stück entsteht."],
       ["Kollektion nicht gezeigt", "Mindestens sieben vollständige Looks (Pipes, Bronzezeit, Skythisches Gold, Dyki Bizony, Leinenmantel, Vershnyky, Lituus I) – nie nebeneinander. Ein Line-up beweist „Serie“ in einem Blick."],
       ["Fotografie uneinheitlich", "Teils freigestellt auf Schwarz, teils vor Tuch oder Wand; einige Ölfotos viel zu dunkel (Hermits, Holding the Young Yak, Warten). In der Jury-Ansicht verschwinden Details."],
       ["Ausrichtung prüfen", "Kerzberg ist im PDF und auf der Website um 90° gedreht. Bewusst? Dann in der Werkliste vermerken; sonst korrigieren."],
       ["Texte nennen Technik, nicht die Frage", "Die Bildtexte nennen Material und Verfahren (gut), aber nie, warum Pfeife, Reiter, Bison. Ein Statement von drei Sätzen fehlt."],
+      ["Immer dasselbe Gesicht", "Fast alle Figuren tragen das gleiche blasse Maskengesicht. Das ist Handschrift, kann über 20 Blätter aber wie eine Formel wirken. Study of the Head und das Selbstporträt zeigen, dass du auch anders kannst: Nimm davon eins in jede Mappe."],
+      ["Mode: Form noch klassisch", "Für reines Modedesign fragt eine Jury: Wo ist die neue Silhouette? Die Mäntel und Westen sind schön gemacht, aber im Schnitt konventionell. Für Textil, Kostüm und freie Kunst ist das kein Problem, für Mode schon."],
       ["Schwächere Blätter verwässern", "Schatten, Warten, Der weiße Schuh und Hermits sind gut, aber nicht auf dem Niveau der Gruppe. In einer 15-Blatt-Mappe nicht zeigen."]
     ],
-    jury: "In den ersten 60 Sekunden sieht eine Jury: Hut, Maske, Schwarz – sofort eine Handschrift. Dann Hände (Group Portrait of Monks, Paladins): sie kann malen. Dann den Mantel mit Pfeife auf dem Foto: sie kann nähen. Die offene Frage ist: Kann sie auch zeichnen und entwerfen? Genau darauf antworten die neuen Blätter in den Musterbewerbungen.",
+    honest: {
+      title: "Ehrlich gesagt",
+      text: "Die meisten Bewerber*innen zeigen gute Übungen. Du zeigst eine eigene Welt mit eigenen Figuren, eigenem Material und eigener Geschichte. Fertig ist die Mappe trotzdem noch nicht: Es fehlen eigene Zeichenblätter, sichtbare Entwurfsschritte und ein Line-up deiner Looks. Diese drei Lücken kannst du schließen, und sie entscheiden, ob die Mappe bei Mode genauso gut ankommt wie bei Textil, Kostüm und freier Kunst.",
+      levels: [
+        ["Textil und Material", "stark", "hoch", "Rost, Wachs, Malerei auf Leinen, handgeformte Knöpfe: genau das suchen Weißensee, BURG und ABK. Hier ist die Mappe schon heute konkurrenzfähig."],
+        ["Kostüm und Bühne", "stark", "hoch", "Figuren, Hüte und Gewänder, die wie Rollen wirken, dazu die Gruppenbilder. Für UdK, Dresden und Hamburg fehlen vor allem Figurinen und ein Blatt mit Raum."],
+        ["Freie Kunst", "gut", "mittel", "Die Malerei hat eine eigene Bildwelt. Für eine Akademie muss sie sich klar als künstlerische Position zeigen, mit Statement und weniger Einzelblättern."],
+        ["Modedesign", "mit Lücken", "niedrig", "Handwerk und Handschrift überzeugen. Es fehlen Schnitt, Entwurfsreihen und eine Kollektion im Line-up. Mit 4–6 neuen Blättern gut machbar, ohne sie eher schwer."]
+      ],
+      note: "Das ist eine fachliche Einschätzung des heutigen Stands, keine Garantie. Auch starke Mappen werden abgelehnt, weil es überall mehr Bewerbungen als Plätze gibt. Deshalb lohnt es sich, an mehreren Hochschulen gleichzeitig zu bewerben."
+    },
+    jury: "In den ersten 60 Sekunden sieht eine Jury: Hut, Maske, Schwarz – sofort eine Handschrift. Dann Hände (Group Portrait of Monks, Paladins): du kannst malen. Dann den Mantel mit Pfeife auf dem Foto: du kannst nähen. Die offene Frage ist: Kannst du auch zeichnen und entwerfen? Genau darauf antworten die neuen Blätter in den Musterbewerbungen.",
     types: [
       ["Freie Kunst (HfG Offenbach, Mainz, Nürnberg, Dresden Bildende Kunst, Weißensee Malerei)", "Malerei und Textil als ein Werk zeigen, mit einem Statement. Weniger Details, mehr große Positionen; Skizzen als Nebenblatt."],
       ["Mode (HAW, Weißensee, UdK, HTW, BURG, Pforzheim, Trier, Bielefeld)", "Looks, Konstruktion, Figurinen, Line-up. Malerei als Beleg fürs Figurgefühl (2–5 Blätter)."],
