@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#0c0a08">
+  <meta name="color-scheme" content="dark">
+  <title>Mappen-Editor · Veronika Horytska</title>
+  <link rel="icon" href="./img/vvh.webp" type="image/webp">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./editor.css">
+</head>
+<body class="ed-body">
+  <header class="ed-top">
+    <a class="brand" href="./index.html" aria-label="Zurück zum Guide">
+      <img src="./img/vvh.webp" alt="VVH" width="34" height="32">
+      <span class="brand-text"><span class="brand-name">Mappen-Editor</span><span class="brand-sub">Studium 2027</span></span>
+    </a>
+    <label class="ed-proj"><span class="sr-only">Projekt</span><select id="projSelect"></select></label>
+    <div class="ed-tools" role="toolbar" aria-label="Projekt">
+      <button type="button" class="btn ghost sm" id="btnNew">Neu</button>
+      <button type="button" class="btn ghost sm" id="btnPlan">Aus Musterbewerbung …</button>
+      <button type="button" class="btn ghost sm" id="btnUndo" title="Rückgängig (Strg+Z)" aria-label="Rückgängig">↶</button>
+      <button type="button" class="btn ghost sm" id="btnRedo" title="Wiederholen (Strg+Umschalt+Z)" aria-label="Wiederholen">↷</button>
+      <button type="button" class="btn primary sm" id="btnExportTop">PDF exportieren</button>
+    </div>
+    <span class="ed-count" id="edCount" aria-live="polite"></span>
+  </header>
+
+  <div class="note ed-warn" id="fileWarn" hidden role="alert">Du hast die Datei direkt geöffnet (file://). Für den PDF-Export bitte den Guide über <b>start.sh</b> / <b>start.bat</b> oder einen Webserver öffnen – sonst blockiert der Browser die Bilder im Export.</div>
+
+  <div class="ed-wrap">
+    <aside class="ed-pages" id="pagesList" aria-label="Seiten"></aside>
+    <main class="ed-stage" id="stage" aria-label="Seitenansicht"><div id="stageSize"><div id="stageInner"></div></div></main>
+    <aside class="ed-side" aria-label="Werkzeuge">
+      <div class="ed-tabs" role="tablist">
+        <button type="button" role="tab" data-tab="page" aria-selected="true">Seite</button>
+        <button type="button" role="tab" data-tab="img" aria-selected="false">Bild</button>
+        <button type="button" role="tab" data-tab="txt" aria-selected="false">Text</button>
+        <button type="button" role="tab" data-tab="out" aria-selected="false">Export</button>
+      </div>
+      <div class="ed-panel" id="panelPage"></div>
+      <div class="ed-panel" id="panelImg" hidden></div>
+      <div class="ed-panel" id="panelTxt" hidden></div>
+      <div class="ed-panel" id="panelOut" hidden></div>
+    </aside>
+  </div>
+
+  <dialog id="planDlg" class="program-dialog ed-dlg" aria-labelledby="planTitle">
+    <div class="dlg-bar"><span class="dlg-crumb">Musterbewerbung laden</span><button class="dialog-close" type="button" aria-label="Schließen" data-close-dlg>×</button></div>
+    <div class="dlg-body">
+      <h2 id="planTitle" class="h3">Mappe aus einer Musterbewerbung bauen</h2>
+      <p class="muted small">Es entsteht ein neues Projekt: Deckblatt, eine Seite je Arbeit (mit Bild und Legende), leere Plätze für noch Fehlendes sowie Seiten für Statement, Werkliste und Inhaltsverzeichnis. Alles bleibt editierbar.</p>
+      <label class="search"><span class="sr-only">Suchen</span><input type="search" id="planSearch" placeholder="Hochschule oder Studiengang suchen …" autocomplete="off"></label>
+      <ul class="ed-planlist" id="planList"></ul>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div id="printRoot" aria-hidden="true"></div>
+  <div id="exportHost" aria-hidden="true"></div>
+
+  <script src="./vendor/html2canvas.min.js"></script>
+  <script src="./vendor/jspdf.umd.min.js"></script>
+  <script src="./data.js"></script>
+  <script src="./muster.js"></script>
+  <script src="./editor.js"></script>
+</body>
+</html>

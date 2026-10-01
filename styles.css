@@ -615,3 +615,4 @@ h3, .h3 { font-size: 26px; } .h4 { font-size: 21px; }
   .program-dialog * { color: #000 !important; background: transparent !important; }
   .mu-img { border: 1px solid #888 !important; }
 }
+.ed-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}

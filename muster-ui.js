@@ -85,7 +85,7 @@
       ${rasters}${docs}
       <div class="mu-sec"><h4>Hinweise <span>${pl.tips.length}</span></h4><ul class="todo-list">${pl.tips.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div>
       <div class="mu-legend"><span><i class="lg w"></i>vorhanden</span><span><i class="lg m"></i>Montage aus Vorhandenem</span><span><i class="lg n"></i>neu erstellen</span><span><i class="lg c"></i>Pflicht der Hochschule</span></div>
-      <button type="button" class="btn ghost" data-mu-print>Muster drucken / als PDF speichern</button>
+      <div class="ed-row"><a class="btn primary" href="./editor.html#plan=${p.id}">Im Editor öffnen (mit PDF-Export)</a><button type="button" class="btn ghost" data-mu-print>Muster drucken</button></div>
     </section>`;
   }
 

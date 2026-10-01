@@ -31,7 +31,7 @@
   const I18N = {
     de: {},
     ua: {
-      "skip": "До змісту", "nav.radar": "Терміни", "nav.map": "Мапа", "nav.programs": "Програми", "nav.cockpit": "Кокпіт", "nav.portfolio": "Портфоліо", "nav.analysis": "Аналіз", "nav.muster": "Зразки", "nav.events": "Події", "nav.ukraine": "Україна", "nav.glossary": "Словник", "nav.checklist": "Чекліст", "nav.sources": "Джерела",
+      "skip": "До змісту", "nav.radar": "Терміни", "nav.map": "Мапа", "nav.programs": "Програми", "nav.cockpit": "Кокпіт", "nav.portfolio": "Портфоліо", "nav.analysis": "Аналіз", "nav.muster": "Зразки", "nav.editor": "Редактор", "nav.events": "Події", "nav.ukraine": "Україна", "nav.glossary": "Словник", "nav.checklist": "Чекліст", "nav.sources": "Джерела",
       "hero.sub": "Особистий навігатор для вступу та навчання",
       "hero.lead": "Які програми підходять до твоїх робіт, куди подавати, до якого числа, що потрібно – і який наступний крок? Усі терміни взято з офіційних сайтів вишів.",
       "today.eyebrow": "Що робити далі?", "today.title": "Сьогодні в фокусі",
