@@ -125,7 +125,11 @@
     "tl.ukraine.3": "Потрібний рівень німецької для заявки дуже різний: від A2 до C1. Таблиця показує його для кожного вишу.",
     "tl.checkliste.1": "Ці документи потрібні майже скрізь. Почни рано з перекладів і завірень – це триває найдовше.",
     "tl.checkliste.2": "Позначки зберігаються автоматично.",
-    "nav.mine": "Мої списки", "mi.eyebrow": "Лише для тебе", "mi.title": "Мої списки й нотатки",
+    "nav.mine": "Мої списки", "nav.bt": "Консультація", "bt.eyebrow": "Для кожної програми", "bt.title": "Консультація щодо портфоліо",
+    "bt.help": "Обери програму. Побачиш зразок портфоліо, справжні приклади й поради вишів, а також що розповідають студенти: плюси й мінуси.",
+    "bt.tl1": "Зразок: сторінка за сторінкою, що має бути в портфоліо і що в тебе вже є.",
+    "bt.tl2": "Приклади: справжні прийняті портфоліо рідко публікують. Тут те, що ми знайшли, і офіційні поради вишів.",
+    "bt.tl3": "Відгуки: що студенти хвалять і критикують. Усе з джерелом і власними словами.", "mi.eyebrow": "Лише для тебе", "mi.title": "Мої списки й нотатки",
     "mi.help": "Записуй тут те, що хочеш запам’ятати, і створюй власні чек-листи. До кожної заявки є ще окремий список завдань у вікні програми.",
     "bs.h": "Тут вперше? Як відбувається вступ до мистецького вишу",
     "bs.1": "Портфоліо замість оцінок. У мистецьких і дизайнерських вишах вирішує насамперед портфоліо: добірка твоїх власних робіт у PDF.",
@@ -631,6 +635,7 @@
       </header>
 
       ${window.Howto ? window.Howto.program(p) : ""}
+      <p class="bt-link"><button type="button" class="btn ghost sm" data-bt-go="${p.id}" data-bt-tab="r">Reviews von Studierenden lesen</button> <button type="button" class="btn ghost sm" data-bt-go="${p.id}" data-bt-tab="b">Beispiele und Hinweise</button></p>
 
       <section class="dlg-sec deadline-sec ${st}">
         <h3>Frist</h3>
@@ -842,6 +847,7 @@
     if (window.Motion) window.Motion.render();
     if (window.TopPicks) window.TopPicks.render();
     if (window.Mine) window.Mine.render();
+    if (window.Beratung) window.Beratung.render();
   }
   function refreshAfterStateChange() { renderStats(); renderRadar(); renderPrograms(); renderCockpit(); renderEvents(); }
 

@@ -11,7 +11,7 @@
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const esc = (s = "") => String(s).replace(/[&<>'"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[c]));
-  const K_MAIN = "vh-studium-2027", K_KOSTEN = "vh-kosten", K_TOP = "vh-top", K_MINE = "vh-mine", K_VISIT = "vh-visit", K_BACKUP = "vh-backup";
+  const K_MAIN = "vh-studium-2027", K_KOSTEN = "vh-kosten", K_TOP = "vh-top", K_MINE = "vh-mine", K_BT = "vh-beratung", K_VISIT = "vh-visit", K_BACKUP = "vh-backup";
   const read = k => { try { return JSON.parse(localStorage.getItem(k) || "null"); } catch (e) { return null; } };
   const write = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } };
   const toast = msg => { const t = $("#toast"); if (!t) return; t.textContent = msg; t.classList.add("show"); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove("show"), 4200); };
@@ -76,7 +76,7 @@
     async set(k, v) { const db = await this.open(); if (!db) return false; return new Promise(res => { const t = db.transaction("kv", "readwrite"); t.objectStore("kv").put(v, k); t.oncomplete = () => res(true); t.onerror = () => res(false); }); }
   };
   async function exportAll() {
-    const data = { app: "vh-studium-all", v: 1, at: new Date().toISOString(), local: { [K_MAIN]: read(K_MAIN), [K_KOSTEN]: read(K_KOSTEN), [K_TOP]: read(K_TOP), [K_MINE]: read(K_MINE) }, editor: { projects: await idb.get("projects"), uploads: await idb.get("uploads"), cur: await idb.get("cur") } };
+    const data = { app: "vh-studium-all", v: 1, at: new Date().toISOString(), local: { [K_MAIN]: read(K_MAIN), [K_KOSTEN]: read(K_KOSTEN), [K_TOP]: read(K_TOP), [K_MINE]: read(K_MINE), [K_BT]: read(K_BT) }, editor: { projects: await idb.get("projects"), uploads: await idb.get("uploads"), cur: await idb.get("cur") } };
     const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
     const r = await window.VH.save(`studium-2027-komplett-${new Date().toISOString().slice(0, 10)}.json`, blob);
     if (r !== "saved") { toast(r === "declined" ? "Sicherung abgebrochen." : "Sicherung hat nicht geklappt. Bitte noch einmal versuchen."); return; }
@@ -89,7 +89,7 @@
         const o = JSON.parse(fr.result);
         if (!o || o.app !== "vh-studium-all" || !o.local) throw new Error("format");
         if (!(await window.VH.confirm("Alles laden? Dein aktueller Fortschritt in diesem Browser wird durch die Sicherung ersetzt.", "Ja, laden", "Abbrechen"))) return;
-        Object.entries(o.local).forEach(([k, v]) => { if ([K_MAIN, K_KOSTEN, K_TOP, K_MINE].includes(k) && v && typeof v === "object") write(k, v); });
+        Object.entries(o.local).forEach(([k, v]) => { if ([K_MAIN, K_KOSTEN, K_TOP, K_MINE, K_BT].includes(k) && v && typeof v === "object") write(k, v); });
         if (o.editor) {
           if (Array.isArray(o.editor.projects)) await idb.set("projects", o.editor.projects);
           if (Array.isArray(o.editor.uploads)) await idb.set("uploads", o.editor.uploads);

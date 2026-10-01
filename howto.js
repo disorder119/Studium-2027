@@ -108,5 +108,5 @@
     ])}</div>`;
   }
 
-  window.Howto = { program, cityPanel };
+  window.Howto = { program, cityPanel, mappe };
 })();
