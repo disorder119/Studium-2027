@@ -39,12 +39,14 @@
     <main class="ed-stage" id="stage" aria-label="Seitenansicht"><div id="stageSize"><div id="stageInner"></div></div></main>
     <aside class="ed-side" aria-label="Werkzeuge">
       <div class="ed-tabs" role="tablist">
-        <button type="button" role="tab" data-tab="page" aria-selected="true">Seite</button>
+        <button type="button" role="tab" data-tab="app" aria-selected="true">Bewerbung</button>
+        <button type="button" role="tab" data-tab="page" aria-selected="false">Seite</button>
         <button type="button" role="tab" data-tab="img" aria-selected="false">Bild</button>
         <button type="button" role="tab" data-tab="txt" aria-selected="false">Text</button>
         <button type="button" role="tab" data-tab="out" aria-selected="false">Export</button>
       </div>
-      <div class="ed-panel" id="panelPage"></div>
+      <div class="ed-panel" id="panelApp"></div>
+      <div class="ed-panel" id="panelPage" hidden></div>
       <div class="ed-panel" id="panelImg" hidden></div>
       <div class="ed-panel" id="panelTxt" hidden></div>
       <div class="ed-panel" id="panelOut" hidden></div>
@@ -69,6 +71,7 @@
   <script src="./vendor/jspdf.umd.min.js"></script>
   <script src="./data.js"></script>
   <script src="./muster.js"></script>
+  <script src="./brief.js"></script>
   <script src="./editor.js"></script>
   <script>if ("serviceWorker" in navigator && location.protocol !== "file:") window.addEventListener("load", function () { navigator.serviceWorker.register("./sw.js").catch(function () {}); });</script>
 </body>

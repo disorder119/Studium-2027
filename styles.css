@@ -971,3 +971,33 @@ body { line-height: 1.65; }
 .top-card.is-later { background: var(--bg); }
 .top-card.is-later .top-rank { background: var(--closed); }
 @media (max-width: 520px) { .top-pref, .top-pref select { width: 100%; min-width: 0; } }
+
+/* ============================================================ Auf einen Blick (Dialog + Editor) */
+.bf { margin: 18px 0 6px; padding: 16px 18px; border: 1px solid rgba(42, 127, 142, .25); border-radius: var(--radius); background: rgba(42, 127, 142, .05); }
+.bf-h { margin: 0 0 10px; font-weight: 700; font-size: 15px; color: var(--accent-2); }
+.bf-list { margin: 0; display: grid; gap: 0; }
+.bf-row { display: grid; grid-template-columns: 118px minmax(0, 1fr); gap: 4px 14px; padding: 9px 0; border-top: 1px solid var(--line); }
+.bf-row:first-child { border-top: 0; padding-top: 0; }
+.bf-row dt { font-weight: 700; font-size: 15px; color: var(--cream); }
+.bf-row dd { margin: 0; min-width: 0; font-size: 15px; line-height: 1.5; color: var(--cream-2); }
+.bf-row ul { margin: 0; padding-left: 18px; display: grid; gap: 3px; }
+.bf-row li { overflow-wrap: anywhere; }
+.bf-row a { color: var(--accent-2); font-weight: 600; }
+.bf-days { color: var(--bad); white-space: nowrap; } .bf-days.past { color: var(--closed); }
+.bf-you { display: block; margin-top: 2px; padding: 6px 10px; border-radius: var(--radius-s); background: rgba(47, 125, 79, .09); color: var(--cream); }
+.bf-you b { color: var(--ok); }
+.bf-must { color: var(--bad); }
+.bf-warn dt { color: var(--warn); }
+.bf-todo dt { color: var(--accent-2); }
+.bf-req { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+.bf-h2 { margin: 0 0 8px; font-weight: 700; font-size: 15px; display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.bf-count { font-weight: 600; color: var(--accent-2); font-size: 14px; }
+.bf-checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.bf-checks label { display: flex; gap: 10px; align-items: flex-start; font-size: 15px; line-height: 1.45; cursor: pointer; }
+.bf-checks input { width: 20px; height: 20px; flex: none; margin-top: 1px; accent-color: var(--accent); }
+.bf-checks input:checked + span { color: var(--muted); text-decoration: line-through; }
+@media (max-width: 520px) { .bf { padding: 14px; } .bf-row { grid-template-columns: 1fr; gap: 2px; } }
+.ed-side .bf { margin-top: 4px; padding: 12px; }
+.ed-side .bf-row { grid-template-columns: 1fr; gap: 2px; }
+.ed-app-title { margin: 0 0 8px; display: flex; flex-direction: column; } .ed-app-title b { font-size: 18px; } .ed-app-title span { color: var(--muted); font-size: 14px; }
+.ed-howto { margin: 0 0 12px; padding-left: 20px; display: grid; gap: 8px; font-size: 15px; line-height: 1.5; }

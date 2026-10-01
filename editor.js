@@ -199,14 +199,39 @@
   function setTab(t) {
     S.tab = t;
     $$(".ed-tabs button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.tab === t)));
-    ["page", "img", "txt", "out"].forEach(k => { $("#panel" + k[0].toUpperCase() + k.slice(1)).hidden = k !== t; });
+    ["app", "page", "img", "txt", "out"].forEach(k => { $("#panel" + k[0].toUpperCase() + k.slice(1)).hidden = k !== t; });
     renderPanels();
   }
   function renderPanels() {
-    if (S.tab === "page") panelPage();
+    if (S.tab === "app") panelApp();
+    else if (S.tab === "page") panelPage();
     else if (S.tab === "img") panelImg();
     else if (S.tab === "txt") panelTxt();
     else panelOut();
+  }
+  /* Reiter „Bewerbung“: alles, was die Hochschule verlangt, als Stichpunkte */
+  function panelApp() {
+    const p = proj(), prog = p && p.planId ? D.programs.find(x => x.id === p.planId) : null;
+    if (!prog) {
+      const opts = D.programs.filter(x => M.plans[x.id]).sort((a, b) => (a.university + a.course).localeCompare(b.university + b.course))
+        .map(x => `<option value="${esc(x.id)}">${esc(x.universityShort)} · ${esc(x.course)}</option>`).join("");
+      $("#panelApp").innerHTML = `
+        <h4>So geht's</h4>
+        <ol class="ed-howto">
+          <li><b>Hochschule wählen.</b> Oben auf „Aus Musterbewerbung …“ tippen. Dann entsteht eine fertige Mappe aus deinen Werken, in der richtigen Reihenfolge.</li>
+          <li><b>Lücken füllen.</b> Gestrichelte Felder sind Plätze für Arbeiten, die noch fehlen. Feld antippen und unter „Bild“ ein Foto hochladen.</li>
+          <li><b>Texte prüfen.</b> Unter „Text“ Titel, Jahr, Technik und Maße anpassen.</li>
+          <li><b>PDF speichern.</b> Unter „Export“ das Größenlimit der Hochschule wählen und herunterladen.</li>
+        </ol>
+        <p class="small">Hier stehen dann auch alle Voraussetzungen der Hochschule: Frist, Deutsch, Zeugnis, Unterlagen.</p>
+        <button type="button" class="btn primary" id="appPlanBtn">Mappe aus Musterbewerbung bauen</button>
+        <h4>Oder diese Mappe einer Hochschule zuordnen</h4>
+        <label class="ed-field"><span>Hochschule und Studiengang</span><select id="appAssign"><option value="">bitte wählen …</option>${opts}</select></label>
+        <p class="small muted">Die Seiten bleiben, wie sie sind. Es erscheinen nur die Voraussetzungen.</p>`;
+      return;
+    }
+    $("#panelApp").innerHTML = `<p class="ed-app-title"><b>${esc(prog.course)}</b><span>${esc(prog.university)}</span></p>${window.Brief ? window.Brief.html(prog, { title: false }) : ""}
+      <p class="small muted">Alle Angaben aus den offiziellen Seiten, Stand 01.10.2026. Vor dem Abschicken einmal auf der Hochschulseite prüfen.</p>`;
   }
   function layIcon(l, o) {
     return `<span class="lay-i">${slotsOf(l.id, o).map(s => `<i class="${s[0] === "txt" ? "t" : ""}" style="left:${s[1]}%;top:${s[2]}%;width:${s[3]}%;height:${s[4]}%"></i>`).join("")}</span>`;
@@ -437,7 +462,7 @@
     const { pages, skipped } = buildFromPlan(prog), pl = M.plans[planId];
     newProject(`${prog.universityShort} · ${prog.course}`, pages, { planId, target: pl.count, pn: !planId.startsWith("weissensee-"), footer: planId.startsWith("weissensee-") ? "" : "Veronika Horytska" });
     S.exp.name = "HorytskaVeronika";
-    setTab("page");
+    setTab("app");
     toast(`Mappe „${prog.universityShort}“ angelegt: ${pages.length} Seiten.${skipped.length ? " Eigene Dateien (nicht enthalten): " + skipped.join(", ") + "." : ""}`);
   }
 
@@ -632,6 +657,13 @@
   $("#btnUndo").addEventListener("click", () => histGo(-1));
   $("#btnRedo").addEventListener("click", () => histGo(1));
   $("#btnExportTop").addEventListener("click", () => setTab("out"));
+  document.addEventListener("click", e => { if (e.target.closest("#appPlanBtn")) { renderPlanList(); $("#planDlg").showModal(); $("#planSearch").focus(); } });
+  document.addEventListener("change", e => {
+    if (e.target.id === "appAssign" && e.target.value) {
+      const p = proj(), pl = M.plans[e.target.value]; if (!p) return;
+      p.planId = e.target.value; if (pl) p.target = pl.count; commit(); renderAll();
+    }
+  });
   $("#btnPlan").addEventListener("click", () => { renderPlanList(); $("#planDlg").showModal(); $("#planSearch").focus(); });
   function renderPlanList() {
     const q = ($("#planSearch").value || "").toLowerCase();
@@ -665,7 +697,7 @@
       history.replaceState(null, "", location.pathname);
     } else if (!S.projects.length) newProject("Meine Mappe", blankPages());
     else { S.page = 0; histReset(); renderAll(); }
-    setTab("page");
+    setTab("app");
     window.__editor = { S, loadPlan, exportPdf };
   })();
 })();

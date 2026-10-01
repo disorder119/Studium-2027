@@ -26,6 +26,7 @@
     return { get: () => data, save, replace(n) { data = Object.assign({}, blank, n); save(); } };
   })();
   const S = () => store.get();
+  if (window.Brief) window.Brief.useStore({ get: id => S().req[id], set: (id, idx, on) => { const s = S(); s.req[id] = s.req[id] || {}; if (on) s.req[id][idx] = true; else delete s.req[id][idx]; store.save(); } });
 
   /* ------------------------------------------------------------ Sprache */
   const I18N = {
@@ -608,8 +609,9 @@
         <p class="eyebrow">${esc(p.university)}</p>
         <h2 id="dlgTitle">${esc(p.course)}</h2>
         <dl class="dlg-facts">
-          ${p.languageRequirements && p.languageRequirements.application ? row("Deutsch zur Bewerbung", p.languageRequirements.application) : ""}${row("Studiengang", p.course + (p.courseNote ? " – " + p.courseNote : ""))}${row("Abschluss", p.degree)}${row("Stadt", `${cityName(p.city)} · ${T("km")(p._km)}`)}${row("Startsemester", p.startSemester)}
+          ${row("Studiengang", p.course + (p.courseNote ? " – " + p.courseNote : ""))}${row("Abschluss", p.degree)}${row("Stadt", `${cityName(p.city)} · ${T("km")(p._km)}`)}${row("Startsemester", p.startSemester)}
         </dl>
+        ${window.Brief ? window.Brief.html(p, { noReq: true }) : ""}
         ${L() === "ua" ? `<p class="ua-note">${esc(T("uaNote"))}</p>` : ""}
         <div class="dlg-actions">
           <a class="btn primary" href="${esc(p.officialUrl)}" target="_blank" rel="noopener noreferrer">${esc(T("official"))} ↗</a>
