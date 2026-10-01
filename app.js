@@ -371,7 +371,7 @@
     });
     const color = s => (s >= 80 ? "var(--accent)" : s >= 70 ? "var(--cream-2)" : "var(--dim)");
     stage.innerHTML = `<svg viewBox="0 0 ${W} ${H}" class="germany" role="group" aria-label="Deutschlandkarte mit ${pts.length} Hochschulstädten">
-      <defs><radialGradient id="gland" cx="45%" cy="40%" r="70%"><stop offset="0" stop-color="#1d1813"/><stop offset="1" stop-color="#120f0c"/></radialGradient></defs>
+      <defs><radialGradient id="gland" cx="45%" cy="40%" r="70%"><stop offset="0" stop-color="#f4f7f9"/><stop offset="1" stop-color="#dfe7ec"/></radialGradient></defs>
       <path d="${MAP.d}" class="land" fill="url(#gland)"/>
       <g class="home" transform="translate(${hx.toFixed(1)} ${hy.toFixed(1)})" aria-hidden="true">
         <circle r="${px(7)}" class="home-ring"/><circle r="${px(2.4)}" class="home-dot"/>

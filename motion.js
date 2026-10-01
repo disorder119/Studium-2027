@@ -180,7 +180,7 @@
     if (reduced) return;
     const cv = document.createElement("canvas"); cv.className = "confetti"; cv.setAttribute("aria-hidden", "true");
     cv.width = innerWidth; cv.height = innerHeight; document.body.appendChild(cv);
-    const x = cv.getContext("2d"), cols = ["#d67f48", "#f2a26f", "#ece5d8", "#9aab77", "#e2b062", "#a95d2e"];
+    const x = cv.getContext("2d"), cols = ["#2a7f8e", "#ffc43c", "#4a90d9", "#3f8a5a", "#f08a5d", "#154c57"];
     const ps = Array.from({ length: 160 }, () => ({ x: innerWidth / 2 + (Math.random() - .5) * 200, y: innerHeight * .65, vx: (Math.random() - .5) * 16, vy: -8 - Math.random() * 12, r: 4 + Math.random() * 6, a: Math.random() * 6.28, va: (Math.random() - .5) * .4, c: cols[(Math.random() * cols.length) | 0], life: 0 }));
     let t0 = performance.now();
     const frame = t => {

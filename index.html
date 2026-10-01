@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow">
   <meta name="referrer" content="no-referrer">
-  <meta name="theme-color" content="#0c0a08">
-  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="color-scheme" content="light">
   <meta property="og:title" content="Studium 2027 · Veronika Horytska">
   <meta property="og:description" content="Fristen, Musterbewerbungen und Mappen-Editor für Textil, Mode, Kostüm und Freie Kunst.">
   <meta property="og:type" content="website">
@@ -28,21 +28,21 @@
       <span class="brand-text"><span class="brand-name">Veronika Horytska</span><span class="brand-sub">Studium 2027</span></span>
     </a>
     <nav class="topnav" aria-label="Bereiche">
-      <a href="#mut" data-i18n="nav.plan">Plan</a>
-      <a href="#radar" data-i18n="nav.radar">Fristen</a>
+      <a href="#start" data-i18n="nav.start">Start</a>
       <a href="#programme" data-i18n="nav.programs">Studiengänge</a>
-      <a href="#analyse" data-i18n="nav.analysis">Analyse</a>
-      <a href="#muster" data-i18n="nav.muster">Muster</a>
+      <a href="#radar" data-i18n="nav.radar">Fristen</a>
       <a href="#kosten" data-i18n="nav.kosten">Kosten</a>
-      <a href="#stimmen" data-i18n="nav.stimmen">Stimmen</a>
-      <a href="./editor.html" data-i18n="nav.editor">Editor</a>
+      <a href="./editor.html" data-i18n="nav.editor">Mappe bauen</a>
       <details class="more"><summary data-i18n="nav.more">Mehr</summary><div class="more-menu">
+        <a href="#mut" data-i18n="nav.plan">Dein Plan</a>
+        <a href="#muster" data-i18n="nav.muster">Musterbewerbungen</a>
+        <a href="#analyse" data-i18n="nav.analysis">Analyse deiner Arbeiten</a>
+        <a href="#stimmen" data-i18n="nav.stimmen">Erfahrungen</a>
         <a href="#karte" data-i18n="nav.map">Karte</a>
-        <a href="#cockpit" data-i18n="nav.cockpit">Cockpit</a>
-        <a href="#mappe" data-i18n="nav.portfolio">Mappe</a>
-        <a href="#termine" data-i18n="nav.events">Termine</a>
-        <a href="#ukraine" data-i18n="nav.ukraine">Ukraine</a>
+        <a href="#cockpit" data-i18n="nav.cockpit">Mein Stand</a>
+        <a href="#ukraine" data-i18n="nav.ukraine">Ukraine &amp; § 24</a>
         <a href="#checkliste" data-i18n="nav.checklist">Checkliste</a>
+        <a href="#termine" data-i18n="nav.events">Termine</a>
         <a href="#glossar" data-i18n="nav.glossary">Glossar</a>
         <a href="#quellen" data-i18n="nav.sources">Quellen</a>
       </div></details>
@@ -56,20 +56,20 @@
     </button>
   </header>
   <nav id="mobileNav" class="mobile-nav" aria-label="Bereiche (mobil)" hidden>
-    <a href="#mut" data-i18n="nav.plan">Plan</a>
-    <a href="#radar" data-i18n="nav.radar">Fristen</a>
-    <a href="#karte" data-i18n="nav.map">Karte</a>
+    <a href="#start" data-i18n="nav.start">Start</a>
     <a href="#programme" data-i18n="nav.programs">Studiengänge</a>
-    <a href="#analyse" data-i18n="nav.analysis">Analyse</a>
-    <a href="#muster" data-i18n="nav.muster">Muster</a>
+    <a href="#radar" data-i18n="nav.radar">Fristen</a>
     <a href="#kosten" data-i18n="nav.kosten">Kosten</a>
-    <a href="#stimmen" data-i18n="nav.stimmen">Stimmen</a>
-    <a href="./editor.html" data-i18n="nav.editor">Editor</a>
-    <a href="#cockpit" data-i18n="nav.cockpit">Cockpit</a>
-    <a href="#mappe" data-i18n="nav.portfolio">Mappe</a>
-    <a href="#termine" data-i18n="nav.events">Termine</a>
-    <a href="#ukraine" data-i18n="nav.ukraine">Ukraine</a>
+    <a href="./editor.html" data-i18n="nav.editor">Mappe bauen</a>
+    <a href="#mut" data-i18n="nav.plan">Dein Plan</a>
+    <a href="#muster" data-i18n="nav.muster">Musterbewerbungen</a>
+    <a href="#analyse" data-i18n="nav.analysis">Analyse deiner Arbeiten</a>
+    <a href="#stimmen" data-i18n="nav.stimmen">Erfahrungen</a>
+    <a href="#karte" data-i18n="nav.map">Karte</a>
+    <a href="#cockpit" data-i18n="nav.cockpit">Mein Stand</a>
+    <a href="#ukraine" data-i18n="nav.ukraine">Ukraine &amp; § 24</a>
     <a href="#checkliste" data-i18n="nav.checklist">Checkliste</a>
+    <a href="#termine" data-i18n="nav.events">Termine</a>
     <a href="#glossar" data-i18n="nav.glossary">Glossar</a>
     <a href="#quellen" data-i18n="nav.sources">Quellen</a>
   </nav>
@@ -78,11 +78,11 @@
     <!-- ======================================================== HERO -->
     <section class="hero wrap" id="top" aria-labelledby="heroTitle">
       <div class="hero-copy">
-        <p class="eyebrow">Veronika Horytska</p>
+        <p class="eyebrow">Willkommen, Veronika</p>
         <h1 id="heroTitle">Studium <em>2027</em></h1>
-        <p class="hero-sub" data-i18n="hero.sub">Persönlicher Studien- und Bewerbungsnavigator</p>
-        <p class="hero-lead" data-i18n="hero.lead">Welche Studiengänge passen zu deinen Arbeiten, wo bewirbst du dich, bis wann, was brauchst du – und was ist der nächste Schritt? Alle Fristen stammen aus offiziellen Hochschulquellen.</p>
-        <p class="hero-cta"><a class="btn primary pulse" href="#mut">Dein Plan für 2027</a> <a class="btn ghost" href="./editor.html">Mappe im Editor bauen</a></p>
+        <p class="hero-sub" data-i18n="hero.sub">Dein Weg ins Studium – Schritt für Schritt</p>
+        <p class="hero-lead" data-i18n="hero.lead">Hier findest du alles an einem Ort: passende Studiengänge, Fristen, Kosten und Hilfe bei deiner Mappe. Du musst nichts auf einmal schaffen – fang einfach mit Schritt 1 an.</p>
+        <p class="hero-cta"><a class="btn primary pulse" href="#start">Los geht’s</a> <a class="btn ghost" href="#programme">Studiengänge ansehen</a></p>
         <dl class="stats" id="stats" aria-live="polite"></dl>
       </div>
       <figure class="hero-art" aria-hidden="true">
@@ -92,20 +92,26 @@
       </figure>
     </section>
 
+    <section id="start" class="wrap start" aria-labelledby="startTitle">
+      <div class="start-head">
+        <p class="eyebrow" data-i18n="start.eyebrow">So funktioniert es</p>
+        <h2 id="startTitle" data-i18n="start.title">In vier Schritten zur Bewerbung</h2>
+      </div>
+      <ol class="start-grid">
+        <li><a class="start-card" href="#programme"><span class="start-n">1</span><b>Studiengänge entdecken</b><span class="d">30 Studiengänge in Textil, Mode, Kostüm und Kunst. Markiere, was dir gefällt.</span><span class="go">Ansehen →</span></a></li>
+        <li><a class="start-card" href="#radar"><span class="start-n">2</span><b>Fristen im Blick behalten</b><span class="d">Wann muss was abgeschickt sein? Hier siehst du, was als Nächstes dran ist.</span><span class="go">Fristen →</span></a></li>
+        <li><a class="start-card" href="#kosten"><span class="start-n">3</span><b>Kosten und Geld klären</b><span class="d">Gebühren, BAföG, Wohnen und was für dich mit § 24 gilt, in einfachen Worten.</span><span class="go">Kosten →</span></a></li>
+        <li><a class="start-card" href="./editor.html"><span class="start-n">4</span><b>Mappe zusammenstellen</b><span class="d">Bilder hochladen, Texte schreiben und alles als PDF speichern.</span><span class="go">Editor öffnen →</span></a></li>
+      </ol>
+      <p class="start-hint">Alles, was du anklickst oder einträgst, wird automatisch auf diesem Gerät gespeichert. Du kannst jederzeit zurückkommen.</p>
+    </section>
+
     <section class="wrap today" aria-labelledby="todayTitle">
       <div class="today-head">
         <p class="eyebrow" data-i18n="today.eyebrow">Was muss ich als Nächstes tun?</p>
         <h2 id="todayTitle" class="h3" data-i18n="today.title">Heute im Blick</h2>
       </div>
       <ol class="today-list" id="todayList"></ol>
-      <ol class="guide" aria-label="Sechs Fragen">
-        <li><a href="#programme"><span>1</span><b data-i18n="q1">Was passt zu mir?</b></a></li>
-        <li><a href="#karte"><span>2</span><b data-i18n="q2">Wo kann ich mich bewerben?</b></a></li>
-        <li><a href="#radar"><span>3</span><b data-i18n="q3">Bis wann?</b></a></li>
-        <li><a href="#checkliste"><span>4</span><b data-i18n="q4">Was brauche ich?</b></a></li>
-        <li><a href="#cockpit"><span>5</span><b data-i18n="q5">Was ist mein nächster Schritt?</b></a></li>
-        <li><a href="#programme"><span>6</span><b data-i18n="q6">Wo klicke ich, um zu starten?</b></a></li>
-      </ol>
     </section>
 
     <section id="mut" class="section wrap mut" aria-label="Dein Plan">
@@ -368,8 +374,8 @@
   </footer>
 
   <nav class="tabbar" aria-label="Schnellzugriff">
-    <a href="#mut"><i aria-hidden="true">◈</i><span>Plan</span></a>
-    <a href="#muster"><i aria-hidden="true">▦</i><span>Muster</span></a>
+    <a href="#start"><i aria-hidden="true">⌂</i><span>Start</span></a>
+    <a href="#programme"><i aria-hidden="true">▦</i><span>Studium</span></a>
     <a href="#kosten"><i aria-hidden="true">€</i><span>Kosten</span></a>
     <a href="./editor.html"><i aria-hidden="true">✎</i><span>Editor</span></a>
     <button type="button" data-tab-menu aria-label="Menü"><i aria-hidden="true">≡</i><span>Mehr</span></button>
