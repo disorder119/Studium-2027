@@ -1,6 +1,6 @@
 /* ==========================================================================
    STUDIUM 2027 · „Hier würde ich anfangen“
-   Fünf Bewerbungen, die laut Portfolio-Analyse am besten passen und zeitlich
+   Sechs Bewerbungen, die laut Portfolio-Analyse am besten passen und zeitlich
    machbar sind. Fristen, Sprache und Entfernung kommen aus data.js, damit
    nichts doppelt gepflegt wird. Die Begründung ist eine Einschätzung.
    Veronika stellt ihr Deutsch-Niveau und den VPD-Stand selbst ein; die Karten
@@ -44,7 +44,12 @@
       ua: { tag: "вільне мистецтво з тканиною", why: "Вільне мистецтво текстильними засобами: живопис і текстиль можуть бути одним твором. Важливо: BURG приймає лише роботи за останні два роки, тобто 2025 і 2026." } },
     { id: "hfg-offenbach-kunst", need: "b2", english: true,
       de: { tag: "nah an zu Hause", why: "Der Fachbereich Kunst hat ein eigenes Lehrgebiet Mode, und du kannst zwischen Malerei, Bühne und Mode wechseln. Du könntest in Aschaffenburg wohnen bleiben." },
-      ua: { tag: "близько до дому", why: "На факультеті мистецтва є власний напрям «Мода», і можна переходити між живописом, сценою та модою. Ти могла б і далі жити в Ашаффенбурзі." } }
+      ua: { tag: "близько до дому", why: "На факультеті мистецтва є власний напрям «Мода», і можна переходити між живописом, сценою та модою. Ти могла б і далі жити в Ашаффенбурзі." } },
+    { id: "haw-kostuemdesign", need: "c1", uni: true,
+      de: { tag: "mit deinem Deutsch möglich", why: "Kostümdesign in Hamburg erlaubt viel Erzählung, Figur und Experiment. Der C1-Nachweis schreckt viele ab, für dich ist er kein Hindernis.",
+        warn: "Die aktuelle Runde endet schon am 11.10.2026. Ohne fertige VPD ist das kaum zu schaffen. Die nächste Runde ist laut HAW wieder Ende September/Anfang Oktober 2027." },
+      ua: { tag: "реально з твоєю німецькою", why: "Дизайн костюма в Гамбурзі дає багато простору для історії, фігури й експерименту. Вимога C1 відлякує багатьох, для тебе це не перешкода.",
+        warn: "Поточний набір закінчується вже 11.10.2026. Без готової VPD встигнути майже неможливо. Наступний набір, за словами HAW, знову наприкінці вересня – на початку жовтня 2027." } }
   ];
 
   const TX = {
@@ -88,6 +93,7 @@
   function render() {
     const root = $("#topRoot"); if (!root || !D) return;
     const L = lang(), t = TX[L], st = load();
+    if (st.lvl === undefined) st.lvl = "c1";
     let items = PICKS.map((x, i) => ({ ...x, i, p: D.programs.find(p => p.id === x.id) })).filter(x => x.p).map(x => ({ ...x, c: check(x, st, t) }));
     if (LV[st.lvl]) items = items.slice().sort((a, b) => (b.c.ok === true) - (a.c.ok === true) || a.i - b.i);
     const nOk = items.filter(x => x.c.ok === true).length;

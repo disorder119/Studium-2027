@@ -579,6 +579,8 @@
     ],
     strengths: [
       ["Eine Ikonografie, die man wiedererkennt", "Der breite Hut ist dein Zeichen: in Haubus, Liturgy, Die Jagd und Portrait of Deacons gemalt, als Bronzezeit-, Pidsvichnyk- und Strilez-Hut gebaut. Jurys suchen genau diese Handschrift."],
+      ["Schon veröffentlicht", "Das Magazin Lab Eye hat deine Arbeit gezeigt, und rund 3.000 Menschen folgen dir auf Instagram. Deine Arbeit kommt also schon außerhalb deines Umfelds an. Gehört mit Datum und Link in den Lebenslauf."],
+      ["Sprache und Reife", "Du hast Übersetzung für Deutsch studiert. Motivationsschreiben, Statement und Gespräch, an denen viele internationale Bewerber*innen scheitern, sind für dich eine Stärke."],
       ["Figur als Fläche und als Form", "Die Acrylbilder trennen Fläche und Plastizität (flacher Körper, modelliertes Gesicht). Das ist eine Entscheidung, kein Zufall – und dieselbe Logik zeigt ihr Kostüm: Silhouette zuerst."],
       ["Mensch-Tier-Verwandlung mit Tiefe", "Yak, Yak II, Holding the Young Yak: Mensch und Tier verschmelzen. Ein Thema (Steppe, Ritual, Verwandlung), das nicht illustrativ bleibt."],
       ["Material, das etwas bedeutet", "Rostgefärbte Futter, Wachs, Tinte, altes Nähgarn. Das Futter trägt Handschrift, verborgen vor dem Betrachter. „Kleidung trägt Erinnerung“ ist durch das Material belegt, nicht nur behauptet."],
