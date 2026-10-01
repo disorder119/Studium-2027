@@ -1007,3 +1007,8 @@ body { line-height: 1.65; }
 .vh-confirm::backdrop { background: rgba(31, 41, 51, .45); }
 .vh-confirm p { margin: 0 0 16px; font-size: 16px; line-height: 1.5; }
 .vh-confirm-act { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
+@media (max-width: 620px) {
+  .stats { grid-template-columns: 1fr 1fr; }
+  .stats .stat-wide { grid-column: 1 / -1; }
+  .stats .stat:last-child:nth-child(even) { grid-column: 1 / -1; }
+}
