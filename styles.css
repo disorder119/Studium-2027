@@ -956,3 +956,18 @@ body { line-height: 1.65; }
 .mut-title { font-size: clamp(32px, 4.6vw, 54px); line-height: 1.1; }
 .mut-lead { max-width: 64ch; }
 .top-warn { margin: -4px 0 12px; padding: 8px 12px; max-width: 70ch; border-left: 3px solid var(--warn); background: rgba(183, 121, 31, .07); font-size: 15px; line-height: 1.5; }
+
+/* Empfehlung: eigenes Deutsch-Niveau */
+.top-prefs { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: end; margin: 0 0 16px; padding: 16px 18px; border-radius: var(--radius); background: var(--surface-2); }
+.top-pref { display: flex; flex-direction: column; gap: 4px; min-width: 0; font-size: 14px; font-weight: 600; color: var(--cream-2); }
+.top-pref select { min-height: 44px; min-width: 200px; max-width: 100%; padding: 8px 12px; border: 1px solid var(--line-2); border-radius: var(--radius-s); background: var(--surface); color: var(--cream); font-size: 16px; }
+.top-sum { flex: 1 1 260px; margin: 0; font-size: 16px; font-weight: 600; color: var(--accent-2); }
+.top-sum small { display: block; font-weight: 400; color: var(--muted); font-size: 13px; }
+.top-badges { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; padding: 0; }
+.top-badges li { font-size: 14px; font-weight: 600; padding: 3px 10px; border-radius: 99px; }
+.tb-ok { background: rgba(47, 125, 79, .12); color: var(--ok); }
+.tb-warn { background: rgba(184, 58, 43, .1); color: var(--bad); }
+.tb-info { background: rgba(165, 106, 18, .12); color: var(--warn); }
+.top-card.is-later { background: var(--bg); }
+.top-card.is-later .top-rank { background: var(--closed); }
+@media (max-width: 520px) { .top-pref, .top-pref select { width: 100%; min-width: 0; } }
