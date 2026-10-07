@@ -133,6 +133,10 @@ function migrate(arr){
       carrierReason:shouldUpgrade?auto.reason:(p.carrierReason||auto.reason),
       carrierHint:p.carrierHint||"",
       done:Boolean(p.done||p.status==="zugestellt"),
+      liveStatus:p.liveStatus||"",
+      liveStatusLabel:p.liveStatusLabel||"",
+      liveStatusText:p.liveStatusText||"",
+      liveCheckedAt:p.liveCheckedAt||0,
       createdAt:p.createdAt||p.u||Date.now(),
       updatedAt:p.updatedAt||p.u||Date.now()
     };
@@ -195,10 +199,76 @@ function ensureWidget(){
   return widgetPromise;
 }
 
-function directCarrierFrame(p,box){
+function directPosteItaliane(p,box){
   const url=nativeUrl(p);
   if(!url)throw new Error("Kein direkter Tracking-Link");
   box.innerHTML='<iframe class="nativeTracker" title="'+esc(p.carrierName)+' Tracking" loading="eager" referrerpolicy="no-referrer" src="'+esc(url)+'"></iframe>';
+}
+
+function mondialStage(text){
+  const t=String(text||"").toLowerCase();
+  if(/delivered parcel|parcel delivered to recipient/.test(t))return{key:"zugestellt",label:"Zugestellt"};
+  if(/point relais|pickup point/.test(t))return{key:"abholung",label:"Abholbereit"};
+  if(/delivery agency|distribution|sorting|agency/.test(t))return{key:"zentrum",label:"Im Verteilzentrum"};
+  if(/delivered to mondial relay|shipped|taken over|in transit/.test(t))return{key:"unterwegs",label:"Unterwegs"};
+  if(/preparation|sender/.test(t))return{key:"angekündigt",label:"Vorbereitet"};
+  return{key:"unterwegs",label:text||"Unterwegs"};
+}
+
+async function mountMondialRelay(p,box){
+  const target=nativeUrl(p);
+  const proxy="https://api.allorigins.win/raw?url="+encodeURIComponent(target)+"&ts="+Date.now();
+  box.innerHTML='<div class="trackerLoading">Mondial Relay wird direkt abgefragt …</div>';
+  try{
+    const r=await fetch(proxy,{cache:"no-store"});
+    if(!r.ok)throw new Error("Mondial Relay antwortet gerade nicht");
+    const html=await r.text();
+    const doc=new DOMParser().parseFromString(html,"text/html");
+    const known=[
+      /parcel in preparation at the sender/i,
+      /parcel delivered to mondial relay/i,
+      /parcel available in the delivery agency/i,
+      /parcel available at the point relais|pickup point/i,
+      /delivered parcel/i
+    ];
+    const steps=[...doc.querySelectorAll("li")].map(li=>({
+      text:(li.textContent||"").replace(/\s+/g," ").trim(),
+      active:li.classList.contains("validate")
+    })).filter(x=>known.some(re=>re.test(x.text)));
+    const active=steps.filter(x=>x.active);
+    const current=active[active.length-1]||steps[0];
+    if(!current)throw new Error("Trackingdaten konnten nicht gelesen werden");
+    const st=mondialStage(current.text);
+    p.liveStatus=st.key;
+    p.liveStatusLabel=st.label;
+    p.liveStatusText=current.text;
+    p.liveCheckedAt=Date.now();
+    p.carrierName="Mondial Relay";
+    p.carrierCode=100304;
+    p.carrierConfidence="high";
+    persist();
+
+    const card=document.querySelector('.parcel[data-id="'+CSS.escape(String(p.id))+'"]');
+    if(card){
+      const badge=card.querySelector("[data-live-badge]");
+      if(badge){
+        badge.textContent=st.label.toUpperCase();
+        badge.classList.add("loaded");
+        badge.dataset.state=st.key;
+      }
+      const meta=card.querySelector(".trackerTitle span");
+      if(meta)meta.textContent="Mondial Relay · "+new Date().toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"});
+    }
+
+    box.innerHTML=
+      '<div class="mrStatus">'+
+        '<div class="mrCurrent"><small>Aktueller Status</small><b>'+esc(st.label)+'</b><span>'+esc(current.text)+'</span></div>'+
+        '<div class="mrSteps">'+steps.map(x=>'<div class="mrStep '+(x.active?"ok":"pending")+'"><i>'+(x.active?"✓":"")+'</i><span>'+esc(x.text)+'</span></div>').join("")+'</div>'+
+        '<a class="mrLink" href="'+esc(target)+'" target="_blank" rel="noopener noreferrer">Mondial Relay Original öffnen ↗</a>'+
+      '</div>';
+  }catch(e){
+    box.innerHTML='<div class="trackerError">'+esc(e.message)+'<br><a href="'+esc(target)+'" target="_blank" rel="noopener noreferrer">Mondial Relay direkt öffnen ↗</a></div>';
+  }
 }
 
 async function mountOne(p){
@@ -208,8 +278,12 @@ async function mountOne(p){
   box.dataset.mounted="1";
   box.innerHTML='<div class="trackerLoading">'+esc(p.carrierName)+" wird geprüft …</div>";
 
-  if((p.carrierCode===9071||p.carrierCode===100304)&&p.carrierConfidence==="high"){
-    directCarrierFrame(p,box);
+  if(p.carrierCode===100304&&p.carrierConfidence==="high"){
+    await mountMondialRelay(p,box);
+    return;
+  }
+  if(p.carrierCode===9071&&p.carrierConfidence==="high"){
+    directPosteItaliane(p,box);
     return;
   }
 
@@ -272,7 +346,7 @@ function render(){
         '<div class="name">'+esc(p.name||"Ohne Bezeichnung")+'</div>'+
         '<button class="number copyNumber" data-copy title="Sendungsnummer kopieren">'+esc(p.number)+'</button>'+
         '<div class="fastMeta">'+(fast?'Direkt erkannt · Schnellmodus':'Carrier wird automatisch ermittelt')+'</div></div>'+
-        '<span class="liveBadge '+(p.done?"doneBadge":"")+'" data-live-badge>'+(p.done?"ERLEDIGT":(fast?"FAST":"LIVE"))+'</span>'+
+        '<span class="liveBadge '+(p.done?"doneBadge":"")+'" data-live-badge data-state="'+esc(p.liveStatus||"")+'">'+(p.done?"ERLEDIGT":(p.liveStatusLabel?esc(p.liveStatusLabel.toUpperCase()):(fast?"FAST":"LIVE")))+'</span>'+
       '</div>'+
       (!p.done?'<div class="trackerWrap"><div class="trackerTitle"><b>'+esc((p.carrierCode===9071||p.carrierCode===100304)&&p.carrierConfidence==="high"?"Original-Status":"Live-Status")+'</b><span>'+((p.carrierCode===9071||p.carrierCode===100304)&&p.carrierConfidence==="high"?esc(p.carrierName):(fast?esc(p.carrierName):"17TRACK Fallback"))+'</span></div><div class="trackerHost" data-track-id="'+esc(p.id)+'" id="'+hostId(p)+'"><div class="trackerLoading">Wird beim Anzeigen geladen …</div></div></div>':'')+
       '<div class="actions">'+
@@ -303,6 +377,7 @@ function addParcel(number,name="",hint=""){
   const p={
     id:uid(),number,name,carrierName:prof.name,carrierCode:prof.code,carrierCountry:prof.country,
     carrierConfidence:prof.confidence,carrierReason:prof.reason,carrierHint:hint,
+    liveStatus:"",liveStatusLabel:"",liveStatusText:"",liveCheckedAt:0,
     done:false,createdAt:Date.now(),updatedAt:Date.now()
   };
   parcels.push(p);return p;
