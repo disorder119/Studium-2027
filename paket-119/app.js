@@ -1,11 +1,21 @@
-const STORAGE="paket119.inbox.v4";
-const PREVIOUS=["paket119.inbox.v3","paket119.inbox.v2","paket119.v1"];
+const STORAGE="paket119.data";
+const BACKUP_STORAGE="paket119.data.backup";
+const LEGACY_STORAGE_KEYS=[
+  "paket119.inbox.v4",
+  "paket119.inbox.v3",
+  "paket119.inbox.v2",
+  "paket119.live.v1",
+  "paket119.parcels.v1",
+  "paket119.v1"
+];
 const $=s=>document.querySelector(s);
-const $$=s=>[...document.querySelectorAll(s)];
+const $=s=>[...document.querySelectorAll(s)];
 let filter="open";
 let searchQuery="";
 let ocrFound=[];
-let parcels=load();
+const INITIAL_DATA=load();
+let parcels=INITIAL_DATA.parcels;
+let deletedNumbers=new Set(INITIAL_DATA.deletedNumbers);
 let widgetPromise=null;
 let trackObserver=null;
 
@@ -142,22 +152,131 @@ function migrate(arr){
     };
   }).filter(p=>p.number);
 }
-function load(){
+function parseStored(raw){
+  if(!raw)return{parcels:[],deletedNumbers:[],updatedAt:0};
   try{
-    const own=JSON.parse(localStorage.getItem(STORAGE)||"null");
-    if(Array.isArray(own))return migrate(own);
-    for(const key of PREVIOUS){
-      const old=JSON.parse(localStorage.getItem(key)||"null");
-      if(Array.isArray(old)){
-        const next=migrate(old);
-        localStorage.setItem(STORAGE,JSON.stringify(next));
-        return next;
-      }
+    const value=JSON.parse(raw);
+    if(Array.isArray(value))return{parcels:migrate(value),deletedNumbers:[],updatedAt:0};
+    if(value&&typeof value==="object"){
+      return{
+        parcels:migrate(Array.isArray(value.parcels)?value.parcels:[]),
+        deletedNumbers:Array.isArray(value.deletedNumbers)?value.deletedNumbers.map(clean).filter(Boolean):[],
+        updatedAt:Number(value.updatedAt)||0
+      };
     }
   }catch{}
-  return[];
+  return{parcels:[],deletedNumbers:[],updatedAt:0};
 }
-function persist(){localStorage.setItem(STORAGE,JSON.stringify(parcels))}
+function mergeParcelLists(lists,deleted){
+  const byNumber=new Map();
+  for(const list of lists){
+    for(const p of migrate(list)){
+      if(!p.number||deleted.has(p.number))continue;
+      const old=byNumber.get(p.number);
+      if(!old){byNumber.set(p.number,p);continue}
+      const oldTime=Number(old.updatedAt)||0;
+      const newTime=Number(p.updatedAt)||0;
+      const newer=newTime>=oldTime?p:old;
+      const older=newTime>=oldTime?old:p;
+      byNumber.set(p.number,{
+        ...older,
+        ...newer,
+        id:newer.id||older.id||uid(),
+        name:newer.name||older.name||"",
+        carrierName:newer.carrierName||older.carrierName,
+        carrierCode:newer.carrierCode||older.carrierCode||0,
+        carrierCountry:newer.carrierCountry||older.carrierCountry||"",
+        carrierConfidence:newer.carrierConfidence||older.carrierConfidence||"low",
+        carrierReason:newer.carrierReason||older.carrierReason||"",
+        carrierHint:newer.carrierHint||older.carrierHint||"",
+        liveStatus:newer.liveStatus||older.liveStatus||"",
+        liveStatusLabel:newer.liveStatusLabel||older.liveStatusLabel||"",
+        liveStatusText:newer.liveStatusText||older.liveStatusText||"",
+        liveCheckedAt:Math.max(Number(newer.liveCheckedAt)||0,Number(older.liveCheckedAt)||0),
+        createdAt:Math.min(Number(newer.createdAt)||Date.now(),Number(older.createdAt)||Date.now()),
+        updatedAt:Math.max(oldTime,newTime)
+      });
+    }
+  }
+  return [...byNumber.values()];
+}
+function load(){
+  const stable=parseStored(localStorage.getItem(STORAGE));
+  const backup=parseStored(localStorage.getItem(BACKUP_STORAGE));
+  const deleted=new Set([...stable.deletedNumbers,...backup.deletedNumbers].map(clean).filter(Boolean));
+  const lists=[stable.parcels,backup.parcels];
+  for(const key of LEGACY_STORAGE_KEYS){
+    const parsed=parseStored(localStorage.getItem(key));
+    lists.push(parsed.parcels);
+  }
+  const merged=mergeParcelLists(lists,deleted);
+  const snapshot={schema:1,parcels:merged,deletedNumbers:[...deleted],updatedAt:Date.now()};
+  try{localStorage.setItem(STORAGE,JSON.stringify(snapshot))}catch{}
+  return{parcels:merged,deletedNumbers:[...deleted]};
+}
+function snapshot(){
+  return{schema:1,parcels,deletedNumbers:[...deletedNumbers],updatedAt:Date.now()};
+}
+function persist(){
+  const next=snapshot();
+  try{
+    const current=localStorage.getItem(STORAGE);
+    if(current)localStorage.setItem(BACKUP_STORAGE,current);
+    localStorage.setItem(STORAGE,JSON.stringify(next));
+  }catch{}
+  writeIndexedBackup(next).catch(()=>{});
+}
+function openParcelDb(){
+  return new Promise((resolve,reject)=>{
+    if(!("indexedDB" in window))return reject(new Error("IndexedDB unavailable"));
+    const req=indexedDB.open("paket119",1);
+    req.onupgradeneeded=()=>{
+      const db=req.result;
+      if(!db.objectStoreNames.contains("state"))db.createObjectStore("state");
+    };
+    req.onsuccess=()=>resolve(req.result);
+    req.onerror=()=>reject(req.error);
+  });
+}
+async function writeIndexedBackup(data){
+  const db=await openParcelDb();
+  await new Promise((resolve,reject)=>{
+    const tx=db.transaction("state","readwrite");
+    tx.objectStore("state").put(data,"latest");
+    tx.oncomplete=resolve;
+    tx.onerror=()=>reject(tx.error);
+  });
+  db.close();
+}
+async function readIndexedBackup(){
+  const db=await openParcelDb();
+  const value=await new Promise((resolve,reject)=>{
+    const tx=db.transaction("state","readonly");
+    const req=tx.objectStore("state").get("latest");
+    req.onsuccess=()=>resolve(req.result||null);
+    req.onerror=()=>reject(req.error);
+  });
+  db.close();
+  return value;
+}
+async function restoreIndexedBackup(){
+  try{
+    const saved=await readIndexedBackup();
+    if(!saved||!Array.isArray(saved.parcels))return;
+    const restoredDeleted=new Set([...(saved.deletedNumbers||[]),...deletedNumbers].map(clean).filter(Boolean));
+    const merged=mergeParcelLists([parcels,saved.parcels],restoredDeleted);
+    const changed=merged.length!==parcels.length||merged.some((p,i)=>p.number!==parcels[i]?.number||p.updatedAt!==parcels[i]?.updatedAt);
+    deletedNumbers=restoredDeleted;
+    if(changed){
+      parcels=merged;
+      persist();
+      render();
+      toast("Gespeicherte Pakete wiederhergestellt");
+    }else{
+      writeIndexedBackup(snapshot()).catch(()=>{});
+    }
+  }catch{}
+}
 function toast(s){const e=document.createElement("div");e.className="toast";e.textContent=s;document.body.append(e);setTimeout(()=>e.remove(),1800)}
 function hostId(p){return"trk_"+String(p.id).replace(/[^a-zA-Z0-9_-]/g,"_")}
 function filtered(){
@@ -364,6 +483,7 @@ function render(){
 function addParcel(number,name="",hint=""){
   number=clean(number);
   if(!number)return null;
+  deletedNumbers.delete(number);
   const existing=parcels.find(p=>p.number===number);
   const prof=carrierProfile(number,hint);
   if(existing){
@@ -570,7 +690,7 @@ $("#addBulk").addEventListener("click",()=>{
     if(parcels.length>before)added++;else dupes++;
   }
   persist();$("#bulkInput").value="";filter="open";
-  $(".tab").forEach(x=>x.classList.toggle("on",x.dataset.filter==="open"));
+  $$(".tab").forEach(x=>x.classList.toggle("on",x.dataset.filter==="open"));
   render();
   $("#bulkHint").textContent=added+" gespeichert"+(dupes?" · "+dupes+" Duplikat(e) übersprungen":"");
   toast(added+" Paket"+(added===1?"":"e")+" gespeichert");
@@ -580,7 +700,11 @@ $("#clearDone").addEventListener("click",()=>{
   const count=parcels.filter(p=>p.done).length;
   if(!count)return toast("Keine erledigten Pakete");
   if(confirm(count+" erledigte Paket"+(count===1?"":"e")+" löschen?")){
-    parcels=parcels.filter(p=>!p.done);persist();render();toast(count+" gelöscht");
+    for(const p of parcels.filter(p=>p.done))deletedNumbers.add(p.number);
+    parcels=parcels.filter(p=>!p.done);
+    persist();
+    render();
+    toast(count+" gelöscht");
   }
 });
 
@@ -591,7 +715,7 @@ $("#addForm").addEventListener("submit",e=>{
   const p=addParcel(raw,$("#name").value.trim());
   if(!p)return;
   e.target.reset();persist();filter="open";
-  $$(".tab").forEach(x=>x.classList.toggle("on",x.dataset.filter==="open"));
+  $$$(".tab").forEach(x=>x.classList.toggle("on",x.dataset.filter==="open"));
   render();toast(existed?"Schon gespeichert · nach oben geholt":(p.carrierConfidence==="high"?p.carrierName+" erkannt":"Paket gespeichert"));
 });
 $("#refreshAll").addEventListener("click",()=>refreshAll());
@@ -602,7 +726,7 @@ $("#addCandidates").addEventListener("click",()=>{
   let count=0;
   for(const x of selected){const before=parcels.length;addParcel(x.number,"",x.hint);if(parcels.length>before)count++}
   persist();$("#ocrBox").hidden=true;$("#screenshots").value="";filter="open";
-  $$(".tab").forEach(x=>x.classList.toggle("on",x.dataset.filter==="open"));
+  $$$(".tab").forEach(x=>x.classList.toggle("on",x.dataset.filter==="open"));
   render();toast(count+" Paket"+(count===1?"":"e")+" gespeichert");
 });
 $("#list").addEventListener("click",e=>{
@@ -623,7 +747,13 @@ $("#list").addEventListener("click",e=>{
     p.done=!p.done;p.updatedAt=Date.now();persist();render();toast(p.done?"Als erledigt markiert":"Wieder geöffnet");
   }
   if(e.target.closest("[data-remove]")){
-    if(confirm("Paket löschen?")){parcels=parcels.filter(x=>x.id!==p.id);persist();render()}
+    if(confirm("Paket löschen?")){
+      deletedNumbers.add(p.number);
+      parcels=parcels.filter(x=>x.id!==p.id);
+      persist();
+      render();
+      toast("Paket gelöscht");
+    }
   }
 });
 $("#saveEdit").addEventListener("click",()=>{
@@ -633,10 +763,18 @@ $("#saveEdit").addEventListener("click",()=>{
 });
 $("#deleteParcel").addEventListener("click",()=>{
   const id=$("#editId").value;
-  if(confirm("Paket wirklich löschen?")){parcels=parcels.filter(x=>x.id!==id);persist();render();$("#editDialog").close()}
+  const p=parcels.find(x=>x.id===id);
+  if(confirm("Paket wirklich löschen?")){
+    if(p)deletedNumbers.add(p.number);
+    parcels=parcels.filter(x=>x.id!==id);
+    persist();
+    render();
+    $("#editDialog").close();
+    toast("Paket gelöscht");
+  }
 });
-$$(".tab").forEach(b=>b.addEventListener("click",()=>{
-  $$(".tab").forEach(x=>x.classList.remove("on"));b.classList.add("on");filter=b.dataset.filter;render();
+$$$(".tab").forEach(b=>b.addEventListener("click",()=>{
+  $$$(".tab").forEach(x=>x.classList.remove("on"));b.classList.add("on");filter=b.dataset.filter;render();
 }));
 $("#infoBtn").addEventListener("click",()=>$("#infoDialog").showModal());
 $$("[data-close]").forEach(b=>b.addEventListener("click",()=>b.closest("dialog").close()));
@@ -660,4 +798,6 @@ document.addEventListener("visibilitychange",()=>{
 ensureWidget().catch(()=>{});
 updateNetworkState();
 render();
+persist();
+restoreIndexedBackup();
 setInterval(()=>{if(document.visibilityState==="visible"&&navigator.onLine)refreshAll({quiet:true})},15*60*1000);
