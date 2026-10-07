@@ -191,7 +191,7 @@ async function mountOne(p){
   const box=document.getElementById(hostId(p));
   if(!box||box.dataset.mounted==="1")return;
   box.dataset.mounted="1";
-  box.innerHTML='<div class="trackerLoading">'+esc(p.carrierName)+" wird geprüft …</div>';
+  box.innerHTML='<div class="trackerLoading">'+esc(p.carrierName)+" wird geprüft …</div>";
 
   if(p.carrierCode===9071&&p.carrierConfidence==="high"){
     directPosteItaliane(p,box);
