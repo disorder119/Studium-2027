@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'paket-119-tests/live-widget-smoke.mjs'
+      - 'paket-119/**'
       - '.github/workflows/paket-119-live-check.yml'
   workflow_dispatch:
 
