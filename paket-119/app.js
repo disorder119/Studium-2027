@@ -9,13 +9,12 @@ const LEGACY_STORAGE_KEYS=[
   "paket119.v1"
 ];
 const $=s=>document.querySelector(s);
-const $=s=>[...document.querySelectorAll(s)];
+const $$=s=>[...document.querySelectorAll(s)];
 let filter="open";
 let searchQuery="";
 let ocrFound=[];
-const INITIAL_DATA=load();
-let parcels=INITIAL_DATA.parcels;
-let deletedNumbers=new Set(INITIAL_DATA.deletedNumbers);
+let parcels=[];
+let deletedNumbers=new Set();
 let widgetPromise=null;
 let trackObserver=null;
 
@@ -214,6 +213,10 @@ function load(){
   try{localStorage.setItem(STORAGE,JSON.stringify(snapshot))}catch{}
   return{parcels:merged,deletedNumbers:[...deleted]};
 }
+const INITIAL_DATA=load();
+parcels=INITIAL_DATA.parcels;
+deletedNumbers=new Set(INITIAL_DATA.deletedNumbers);
+
 function snapshot(){
   return{schema:1,parcels,deletedNumbers:[...deletedNumbers],updatedAt:Date.now()};
 }
