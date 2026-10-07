@@ -436,11 +436,34 @@ async function preprocessForOcr(file){
   return c;
 }
 
+function looksLikeDate8(n){
+  if(!/^\d{8}$/.test(n))return false;
+  const d=Number(n.slice(0,2)),m=Number(n.slice(2,4)),y=Number(n.slice(4));
+  if(d>=1&&d<=31&&m>=1&&m<=12&&y>=2000&&y<=2099)return true;
+  const y2=Number(n.slice(0,4)),m2=Number(n.slice(4,6)),d2=Number(n.slice(6,8));
+  return y2>=2000&&y2<=2099&&m2>=1&&m2<=12&&d2>=1&&d2<=31;
+}
+function labeledCandidates(text){
+  const t=String(text||"").toUpperCase().replace(/[–—]/g,"-");
+  const out=[];
+  for(const re of [
+    /SENDUNGSNUMMER\s*[:#-]?\s*([A-Z0-9 -]{6,32})/g,
+    /TRACKING\s*(?:NUMBER|NO\.?|NR\.?)\s*[:#-]?\s*([A-Z0-9 -]{6,32})/g,
+    /NUM[EÉ]RO\s+(?:DE\s+)?(?:COLIS|SUIVI|EXP[EÉ]DITION)\s*[:#-]?\s*([A-Z0-9 -]{6,32})/g,
+    /NUMERO\s+(?:DI\s+)?(?:SPEDIZIONE|TRACKING)\s*[:#-]?\s*([A-Z0-9 -]{6,32})/g
+  ]){
+    for(const m of t.matchAll(re)){
+      const n=clean(m[1].split(/\s{2,}|\n/)[0]);
+      if(n.length>=8&&n.length<=30&&!looksLikeDate8(n))out.push(n);
+    }
+  }
+  return [...new Set(out)];
+}
 function extractCandidates(text){
   const raw=String(text||"").toUpperCase().replace(/[–—]/g,"-");
   const compact=raw.replace(/[\s-]+/g," ");
   const joined=raw.replace(/[\s-]+/g,"");
-  const found=new Set();
+  const found=new Set(labeledCandidates(raw));
   const add=m=>{const n=clean(m);if(n.length>=8&&n.length<=40)found.add(n)};
   for(const re of [
     /1Z[A-Z0-9]{16}/g,
@@ -455,7 +478,8 @@ function extractCandidates(text){
   for(const m of compact.matchAll(/(?:\d[\s-]*){11,20}/g))add(m[0]);
   return [...found].filter(n=>{
     if(/^1Z[A-Z0-9]{16}$/.test(n)||/^H\d{19}$/.test(n)||/^00340\d{15}$/.test(n)||/^[A-Z]{2}\d{9}(?:DE|FR|IT|AT)$/.test(n)||/^JJD[A-Z0-9]{10,24}$/.test(n))return true;
-    return /^\d{8}$/.test(n)||/^\d{11,14}$/.test(n)||/^\d{20}$/.test(n);
+    if(/^\d{8}$/.test(n))return !looksLikeDate8(n);
+    return /^\d{11,14}$/.test(n)||/^\d{20}$/.test(n);
   });
 }
 async function barcodeCandidates(file){
