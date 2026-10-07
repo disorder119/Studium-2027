@@ -28,7 +28,7 @@ const CARRIERS={
   inpostIt:{name:"InPost",code:100469,country:"IT"},
   brt:{name:"BRT / Bartolini",code:100026,country:"IT"},
   postAt:{name:"Österreichische Post",code:1161,country:"AT"},
-  ups:{name:"UPS",code:0,country:"EU"}
+  ups:{name:"UPS",code:100002,country:"EU"}
 };
 
 function uid(){return crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random().toString(16).slice(2)}
