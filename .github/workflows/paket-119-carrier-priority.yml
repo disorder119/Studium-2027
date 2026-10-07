@@ -1,0 +1,23 @@
+name: Paket 119 carrier priority probe
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'paket-119-tests/carrier-priority.mjs'
+      - '.github/workflows/paket-119-carrier-priority.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - run: node paket-119-tests/carrier-priority.mjs
