@@ -33,16 +33,35 @@ function candidates(n){
   return["dhl","dpd","gls","hermes","ups"];
 }
 async function dhl(n){
-  const u=new URL("https://www.dhl.de/int-verfolgen/data/search");
-  u.searchParams.set("piececode",n);u.searchParams.set("noRedirect","true");u.searchParams.set("language","de");u.searchParams.set("cid","app");
-  const r=await get(u,{headers:{"User-Agent":UA,"Accept":"application/json","Accept-Language":"de-DE,de;q=0.9"}});
-  if(!r.ok)throw new Error("NOT_FOUND");
-  const d=await r.json();const x=Array.isArray(d.sendungen)?d.sendungen[0]:null;
-  const det=x&&x.sendungsdetails;if(!det)throw new Error("NOT_FOUND");
-  const flow=det.sendungsverlauf||{};const events=Array.isArray(flow.events)?flow.events:[];
-  const latest=events[0]||{};const text=flow.kurzStatus||latest.status||latest.eventStatus||latest.text||det.status||"Status verfügbar";
-  const eta=det.produkt&&det.produkt.erwarteteZustellung?det.produkt.erwarteteZustellung:null;
-  return reply("dhl",text,{carrierName:"DHL",etaText:eta,events:events.slice(0,8).map(function(e){return{text:e.status||e.eventStatus||e.text||"",date:e.datum||e.timestamp||null,location:e.ort||e.location||null}})});
+  const key=process.env.DHL_API_KEY;
+  if(!key)throw new Error("NO_CREDENTIALS");
+  const u=new URL("https://api-eu.dhl.com/track/shipments");
+  u.searchParams.set("trackingNumber",n);
+  u.searchParams.set("language","de");
+  const r=await get(u,{headers:{"DHL-API-Key":key,"Accept":"application/json"}});
+  if(r.status===404)throw new Error("NOT_FOUND");
+  if(r.status===401||r.status===403)throw new Error("NO_CREDENTIALS");
+  if(!r.ok)throw new Error("DHL_HTTP_"+r.status);
+  const d=await r.json();
+  const s=d&&d.shipments&&d.shipments[0];
+  if(!s)throw new Error("NOT_FOUND");
+  const cur=s.status||{};
+  const text=cur.description||cur.status||"Status verfügbar";
+  const frame=s.estimatedDeliveryTimeFrame||s.estimatedTimeOfDeliveryTimeFrame||{};
+  return reply("dhl",text,{
+    carrierName:"DHL",
+    etaText:s.estimatedTimeOfDelivery||null,
+    etaFrom:frame.estimatedFrom||null,
+    etaTo:frame.estimatedThrough||null,
+    location:cur.location&&cur.location.address&&cur.location.address.addressLocality||null,
+    events:(s.events||[]).slice(0,8).map(function(e){
+      return {
+        text:e.description||e.status||"",
+        date:e.timestamp||null,
+        location:e.location&&e.location.address&&e.location.address.addressLocality||null
+      }
+    })
+  });
 }
 async function dpd(n){
   const u=new URL("https://my.dpd.de/redirect.aspx");u.searchParams.set("action","12");u.searchParams.set("parcelno",n);
@@ -100,5 +119,5 @@ export default async function handler(req,res){
   const n=clean(req.body&&req.body.number);if(!good(n))return res.status(400).json({ok:false,error:"Ungültige Sendungsnummer"});
   const tried=[];for(const c of candidates(n)){tried.push(c);try{return res.status(200).json(await handlers[c](n))}catch(e){}}
   for(const c of ["dhl","dpd","gls","hermes"]){if(tried.includes(c))continue;tried.push(c);try{return res.status(200).json(await handlers[c](n))}catch(e){}}
-  try{return res.status(200).json(await track17(n))}catch(e){return res.status(422).json({ok:false,error:"Kein Live-Status gefunden",tried:tried})}
+  try{return res.status(200).json(await track17(n))}catch(e){return res.status(422).json({ok:false,error:"Kein Live-Status gefunden",detail:"DPD/GLS wurden direkt geprüft. DHL benötigt DHL_API_KEY; UPS benötigt UPS-Zugangsdaten. Hermes kann aus Cloud-Netzen blockiert werden und fällt dann auf 17TRACK zurück.",tried:tried})}
 }
