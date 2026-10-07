@@ -812,9 +812,49 @@ $("#deleteParcel").addEventListener("click",()=>{
 $$(".tab").forEach(b=>b.addEventListener("click",()=>{
   $$(".tab").forEach(x=>x.classList.remove("on"));b.classList.add("on");filter=b.dataset.filter;render();
 }));
+$("#exportBackup").addEventListener("click",()=>{
+  const payload={app:"Paket 119",version:1,exportedAt:new Date().toISOString(),parcels};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;a.download="paket-119-backup-"+new Date().toISOString().slice(0,10)+".json";
+  document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  toast("Backup exportiert");
+});
+$("#importBackup").addEventListener("click",()=>$("#importBackupFile").click());
+$("#importBackupFile").addEventListener("change",async e=>{
+  const file=e.target.files&&e.target.files[0];if(!file)return;
+  try{
+    const data=JSON.parse(await file.text());
+    const incoming=Array.isArray(data)?data:(Array.isArray(data.parcels)?data.parcels:[]);
+    if(!incoming.length)throw new Error("Keine Pakete im Backup");
+    const migrated=migrate(incoming);
+    const map=new Map(parcels.map(p=>[p.number,p]));
+    for(const p of migrated)map.set(p.number,{...map.get(p.number),...p});
+    parcels=[...map.values()];
+    persist();render();toast(migrated.length+" Paket"+(migrated.length===1?"":"e")+" importiert");
+  }catch(err){toast("Backup ungültig")}
+  e.target.value="";
+});
 $("#infoBtn").addEventListener("click",()=>$("#infoDialog").showModal());
 $$("[data-close]").forEach(b=>b.addEventListener("click",()=>b.closest("dialog").close()));
-if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("./sw.js",{scope:"./"}).catch(()=>{}));
+if("serviceWorker" in navigator){
+  addEventListener("load",async()=>{
+    try{
+      const hadController=!!navigator.serviceWorker.controller;
+      const reg=await navigator.serviceWorker.register("./sw.js",{scope:"./",updateViaCache:"none"});
+      await reg.update();
+      if(hadController){
+        let reloading=false;
+        navigator.serviceWorker.addEventListener("controllerchange",()=>{
+          if(reloading)return;
+          reloading=true;
+          location.reload();
+        },{once:true});
+      }
+    }catch{}
+  });
+}
 
 function updateNetworkState(){
   const s=$("#syncState");
