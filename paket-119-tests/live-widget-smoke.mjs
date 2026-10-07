@@ -11,7 +11,7 @@ for(let i=0;i<20;i++){
       hasTitle:body.includes("<title>Paket 119</title>"),
       hasFast:body.includes("Vinted-Schnellmodus"),
       hasPreconnect:body.includes("res.17track.net"),
-      hasScreenshot:body.includes("Screenshots erkennen")
+      hasScreenshot:body.includes("Screenshots erkennen"),hasBulk:body.includes("Mehrere Nummern auf einmal einfügen"),hasSearch:body.includes("Pakete durchsuchen")
     };
     console.log("LIVE_FAST_CHECK="+JSON.stringify(last));
     if(r.ok&&last.hasTitle&&last.hasFast&&last.hasPreconnect&&last.hasScreenshot)process.exit(0);
