@@ -718,7 +718,7 @@ $("#addForm").addEventListener("submit",e=>{
   const p=addParcel(raw,$("#name").value.trim());
   if(!p)return;
   e.target.reset();persist();filter="open";
-  $$$(".tab").forEach(x=>x.classList.toggle("on",x.dataset.filter==="open"));
+  $$(".tab").forEach(x=>x.classList.toggle("on",x.dataset.filter==="open"));
   render();toast(existed?"Schon gespeichert · nach oben geholt":(p.carrierConfidence==="high"?p.carrierName+" erkannt":"Paket gespeichert"));
 });
 $("#refreshAll").addEventListener("click",()=>refreshAll());
@@ -729,7 +729,7 @@ $("#addCandidates").addEventListener("click",()=>{
   let count=0;
   for(const x of selected){const before=parcels.length;addParcel(x.number,"",x.hint);if(parcels.length>before)count++}
   persist();$("#ocrBox").hidden=true;$("#screenshots").value="";filter="open";
-  $$$(".tab").forEach(x=>x.classList.toggle("on",x.dataset.filter==="open"));
+  $$(".tab").forEach(x=>x.classList.toggle("on",x.dataset.filter==="open"));
   render();toast(count+" Paket"+(count===1?"":"e")+" gespeichert");
 });
 $("#list").addEventListener("click",e=>{
@@ -776,8 +776,8 @@ $("#deleteParcel").addEventListener("click",()=>{
     toast("Paket gelöscht");
   }
 });
-$$$(".tab").forEach(b=>b.addEventListener("click",()=>{
-  $$$(".tab").forEach(x=>x.classList.remove("on"));b.classList.add("on");filter=b.dataset.filter;render();
+$$(".tab").forEach(b=>b.addEventListener("click",()=>{
+  $$(".tab").forEach(x=>x.classList.remove("on"));b.classList.add("on");filter=b.dataset.filter;render();
 }));
 $("#infoBtn").addEventListener("click",()=>$("#infoDialog").showModal());
 $$("[data-close]").forEach(b=>b.addEventListener("click",()=>b.closest("dialog").close()));
