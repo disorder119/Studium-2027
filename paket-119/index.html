@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="./styles.css">
 <title>Paket 119</title>
 <script defer src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-<script src="./api-config.js"></script>\n<script defer src="./app.js"></script>
+<script defer src="./app.js"></script>
 </head>
 <body>
 <main class="app">
@@ -22,13 +22,13 @@
       <img src="./icon.svg" alt="">
       <div><div class="eyebrow">PARCEL INBOX</div><h1>Paket 119</h1></div>
     </div>
-    <button class="iconbtn" id="refreshAll" aria-label="Alle aktualisieren">↻</button>
+    <button class="iconbtn" id="refreshAll" aria-label="Alle Live-Status aktualisieren">↻</button>
   </header>
 
   <section class="stats">
-    <div><b id="activeCount">0</b><span>aktiv</span></div>
-    <div><b id="todayCount">0</b><span>heute</span></div>
-    <div><b id="doneCount">0</b><span>zugestellt</span></div>
+    <div><b id="allCount">0</b><span>gespeichert</span></div>
+    <div><b id="openCount">0</b><span>offen</span></div>
+    <div><b id="doneCount">0</b><span>erledigt</span></div>
   </section>
 
   <section class="panel">
@@ -40,11 +40,16 @@
       <label>Name <span class="optional">optional</span>
         <input id="name" placeholder="z. B. Prada Boots">
       </label>
-      <button class="primary" type="submit">Speichern & automatisch prüfen</button>
+      <button class="primary" type="submit">Speichern & Live-Tracking laden</button>
     </form>
+
     <div class="or"><span>oder</span></div>
     <input id="screenshots" type="file" accept="image/*" multiple hidden>
-    <button class="scanBtn" id="scanBtn" type="button"><span>▣</span><span><b>Screenshots erkennen</b><small>Mehrere Bilder gleichzeitig möglich</small></span></button>
+    <button class="scanBtn" id="scanBtn" type="button">
+      <span>▣</span>
+      <span><b>Screenshots erkennen</b><small>Mehrere Bilder gleichzeitig möglich</small></span>
+    </button>
+
     <div id="ocrBox" class="ocrBox" hidden>
       <div class="ocrHead"><b id="ocrTitle">Screenshots werden gelesen …</b><span id="ocrProgress">0%</span></div>
       <div class="progress"><i id="ocrBar"></i></div>
@@ -54,19 +59,19 @@
   </section>
 
   <nav class="tabs" aria-label="Filter">
-    <button class="tab on" data-filter="active">Aktiv</button>
-    <button class="tab" data-filter="today">Heute</button>
-    <button class="tab" data-filter="done">Zugestellt</button>
+    <button class="tab on" data-filter="open">Offen</button>
+    <button class="tab" data-filter="done">Erledigt</button>
     <button class="tab" data-filter="all">Alle</button>
   </nav>
 
-  <div id="syncState" class="syncState"></div>
+  <div id="syncState" class="syncState">Live-Status wird direkt über 17TRACK geladen · kein API-Key und kein zusätzlicher Account nötig.</div>
 
   <section id="empty" class="empty">
     <img src="./icon.svg" alt="">
     <h2>Noch keine Pakete</h2>
-    <p>Sendungsnummer einfügen oder Screenshots auswählen. Carrier und Status werden automatisch zugeordnet.</p>
+    <p>Sendungsnummer einfügen oder Screenshots auswählen. Die Live-Verfolgung erscheint direkt in der Paketkarte.</p>
   </section>
+
   <section id="list" class="list"></section>
 
   <footer>
@@ -87,9 +92,10 @@
 <dialog id="infoDialog">
   <div class="dialogHead"><b>So funktioniert Paket 119</b><button class="closeBtn" data-close>×</button></div>
   <div class="copy">
-    <p><b>Carrier-Erkennung:</b> erfolgt anhand der Nummer und – sobald das Live-Backend aktiv ist – über 17TRACK.</p>
-    <p><b>Screenshots:</b> werden direkt auf deinem Gerät per OCR gelesen. Erkannte Kandidaten werden vor dem Speichern angezeigt.</p>
-    <p><b>Speicherung:</b> Namen, Nummern und Status liegen lokal in deinem Browser. Für Live-Tracking wird nur die Sendungsnummer an den Tracking-Dienst geschickt.</p>
+    <p><b>Live-Tracking:</b> Jede offene Sendung wird über das offizielle 17TRACK-Web-Widget direkt in ihrer Paketkarte angezeigt. 17TRACK erkennt den Versanddienst automatisch und zeigt die verfügbaren Tracking-Ereignisse.</p>
+    <p><b>Kein zusätzlicher Account:</b> Für diese eingebettete Tracking-Ansicht brauchst du keinen 17TRACK-API-Key und keinen weiteren Hosting-Dienst.</p>
+    <p><b>Screenshots:</b> Bilder werden direkt auf deinem Gerät per OCR gelesen. Mehrere Screenshots können gleichzeitig ausgewählt werden.</p>
+    <p><b>Speicherung:</b> Deine Paketliste und eigenen Namen bleiben lokal im Browser. Für die Live-Verfolgung wird die Sendungsnummer an 17TRACK übertragen.</p>
   </div>
 </dialog>
 </body>
