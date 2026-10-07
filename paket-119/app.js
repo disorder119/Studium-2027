@@ -93,8 +93,14 @@ function nativeUrl(p){
   switch(p.carrierCode){
     case 7041:return "https://www.dhl.de/de/privatkunden/pakete-empfangen/verfolgen.html?piececode="+n+"&lang=de";
     case 100007:return "https://my.dpd.de/redirect.aspx?action=12&parcelno="+n;
+    case 100072:return "https://www.dpd.com/fr/fr/suivre-mon-colis/";
+    case 100002:return "https://www.ups.com/track?loc=de_DE&tracknum="+n+"&requester=WT/";
+    case 100001:return "https://www.dhl.de/de/privatkunden/dhl-sendungsverfolgung.html?piececode="+n;
+    case 100304:return "https://www.mondialrelay.fr/r";
     case 101070:
     case 100005:return "https://www.gls-pakete.de/sendungsverfolgung?match="+n;
+    case 101272:return "https://www.gls-france.com/";
+    case 100024:return "https://www.gls-italy.com/";
     case 100031:
     case 100018:return "https://www.myhermes.de/empfangen/sendungsverfolgung/sendungsinformation/#"+n;
     case 100273:return "https://www.chronopost.fr/tracking-no-cms/suivi-page?listeNumerosLT="+n;
@@ -214,7 +220,15 @@ async function mountOne(p){
       YQ_Height:300,
       YQ_Fc:fastCode,
       YQ_Lang:"de",
-      YQ_Num:p.number
+      YQ_Num:p.number,
+      onLoaded:()=>{
+        const card=document.querySelector('.parcel[data-id="'+CSS.escape(String(p.id))+'"]');
+        if(!card)return;
+        const badge=card.querySelector("[data-live-badge]");
+        const meta=card.querySelector(".trackerTitle span");
+        if(badge){badge.textContent="LIVE ✓";badge.classList.add("loaded")}
+        if(meta)meta.textContent=(p.carrierName||"17TRACK")+" · geladen "+new Date().toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"});
+      }
     });
   }catch(e){
     box.innerHTML='<div class="trackerError">'+esc(e.message)+'<br>Tippe auf „Original“, um direkt beim Versanddienst nachzusehen.</div>';
@@ -253,9 +267,9 @@ function render(){
       '<div class="parcelTop">'+
         '<div><div class="carrier">'+esc(p.carrierName)+(p.carrierCountry?' · '+esc(p.carrierCountry):'')+'</div>'+
         '<div class="name">'+esc(p.name||"Ohne Bezeichnung")+'</div>'+
-        '<div class="number">'+esc(p.number)+'</div>'+
+        '<button class="number copyNumber" data-copy title="Sendungsnummer kopieren">'+esc(p.number)+'</button>'+
         '<div class="fastMeta">'+(fast?'Direkt erkannt · Schnellmodus':'Carrier wird automatisch ermittelt')+'</div></div>'+
-        '<span class="liveBadge '+(p.done?"doneBadge":"")+'">'+(p.done?"ERLEDIGT":(fast?"FAST":"LIVE"))+'</span>'+
+        '<span class="liveBadge '+(p.done?"doneBadge":"")+'" data-live-badge>'+(p.done?"ERLEDIGT":(fast?"FAST":"LIVE"))+'</span>'+
       '</div>'+
       (!p.done?'<div class="trackerWrap"><div class="trackerTitle"><b>'+esc(p.carrierCode===9071&&p.carrierConfidence==="high"?"Original-Status":"Live-Status")+'</b><span>'+(fast?esc(p.carrierName):"17TRACK Fallback")+'</span></div><div class="trackerHost" data-track-id="'+esc(p.id)+'" id="'+hostId(p)+'"><div class="trackerLoading">Wird beim Anzeigen geladen …</div></div></div>':'')+
       '<div class="actions">'+
@@ -491,6 +505,12 @@ $("#addCandidates").addEventListener("click",()=>{
 $("#list").addEventListener("click",e=>{
   const card=e.target.closest(".parcel");if(!card)return;
   const p=parcels.find(x=>x.id===card.dataset.id);if(!p)return;
+  if(e.target.closest("[data-copy]")){
+    const value=p.number;
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(value).then(()=>toast("Sendungsnummer kopiert")).catch(()=>{});
+    }
+  }
   if(e.target.closest("[data-refresh]"))refreshOne(p);
   if(e.target.closest("[data-native]")){const u=nativeUrl(p);if(u)window.open(u,"_blank","noopener,noreferrer")}
   if(e.target.closest("[data-edit]")){
@@ -519,6 +539,22 @@ $("#infoBtn").addEventListener("click",()=>$("#infoDialog").showModal());
 $$("[data-close]").forEach(b=>b.addEventListener("click",()=>b.closest("dialog").close()));
 if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("./sw.js",{scope:"./"}).catch(()=>{}));
 
+function updateNetworkState(){
+  const s=$("#syncState");
+  if(!navigator.onLine){
+    s.textContent="Offline · gespeicherte Pakete bleiben sichtbar; Live-Tracking lädt wieder, sobald Internet da ist.";
+    s.classList.add("offline");
+  }else{
+    s.textContent="Vinted-Schnellmodus: Carrier zuerst erkennen · direkter Anbieter wo möglich · 17TRACK nur als Fallback.";
+    s.classList.remove("offline");
+  }
+}
+addEventListener("online",()=>{updateNetworkState();refreshAll({quiet:true})});
+addEventListener("offline",updateNetworkState);
+document.addEventListener("visibilitychange",()=>{
+  if(document.visibilityState==="visible"&&navigator.onLine)refreshAll({quiet:true});
+});
 ensureWidget().catch(()=>{});
+updateNetworkState();
 render();
-setInterval(()=>{if(document.visibilityState==="visible")refreshAll({quiet:true})},15*60*1000);
+setInterval(()=>{if(document.visibilityState==="visible"&&navigator.onLine)refreshAll({quiet:true})},15*60*1000);
