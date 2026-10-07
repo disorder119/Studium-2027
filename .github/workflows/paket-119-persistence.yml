@@ -1,0 +1,31 @@
+name: Paket 119 persistence test
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'paket-119/**'
+      - 'paket-119-tests/persistence.mjs'
+      - '.github/workflows/paket-119-persistence.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  persistence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - name: Check frontend syntax
+        run: node --check paket-119/app.js
+      - name: Install Playwright
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Test save reload delete and migration
+        run: node paket-119-tests/persistence.mjs
