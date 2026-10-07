@@ -1,0 +1,23 @@
+name: Paket 119 inspect result shape
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'paket-119-tests/result-shape.mjs'
+      - '.github/workflows/paket-119-result-shape.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - run: node paket-119-tests/result-shape.mjs
