@@ -65,3 +65,5 @@ for(const [name,n] of Object.entries(samples))results.push(await test(name,n));
 console.log("NETWORK_RESULTS="+JSON.stringify(results));
 const statusCases=["Elektronisch angekündigt","Paket ist unterwegs","In Zustellung","Zur Abholung bereit","Zugestellt","Delivery exception"];
 console.log("STATUS_MAPPING="+JSON.stringify(statusCases.map(x=>({input:x,normalized:mapStatus(x)}))));
+
+// trigger 2026-10-07
