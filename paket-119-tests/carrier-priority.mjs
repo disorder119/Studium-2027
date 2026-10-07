@@ -42,7 +42,7 @@ for(const [name,url] of probes){
 try{
   const r=await fetch("https://res.17track.net/asset/carrier/info/apicarrier.all.json");
   const list=await r.json();
-  const wanted=["DHL","DPD","GLS","Hermes","Mondial Relay","Chronopost","Colissimo","La Poste","Vinted Go","InPost","Poste Italiane","BRT","Bartolini","Austrian Post","Österreichische Post"];
+  const wanted=["DHL","DPD","GLS","Hermes","UPS","Mondial Relay","Chronopost","Colissimo","La Poste","Vinted Go","InPost","Poste Italiane","BRT","Bartolini","Austrian Post","Österreichische Post"];
   const arr=Array.isArray(list)?list:(list&&Array.isArray(list.data)?list.data:[]);
   const matches=arr.filter(x=>{
     const s=JSON.stringify(x).toLowerCase();
