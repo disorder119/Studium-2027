@@ -798,6 +798,6 @@ document.addEventListener("visibilitychange",()=>{
 ensureWidget().catch(()=>{});
 updateNetworkState();
 render();
-persist();
-restoreIndexedBackup();
+restoreIndexedBackup().finally(()=>persist());
+addEventListener("pagehide",persist);
 setInterval(()=>{if(document.visibilityState==="visible"&&navigator.onLine)refreshAll({quiet:true})},15*60*1000);
