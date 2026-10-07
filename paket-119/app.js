@@ -85,6 +85,7 @@ function carrierProfile(number,hint=""){
   if(/^\d{14}$/.test(n))return {...CARRIERS.dpdDe,confidence:"high",reason:"Nummernmuster"};
   if(/^\d{11}$/.test(n))return {...CARRIERS.gls,confidence:"medium",reason:"wahrscheinliches GLS-Muster"};
   if(/^100\d{9}$/.test(n))return {...CARRIERS.vintedGo,confidence:"medium",reason:"mögliches Vinted-Go-Muster"};
+  if(/^\d{8}$/.test(n))return {...CARRIERS.mondial,confidence:"high",reason:"8-stelliges Mondial-Relay/Vinted-Muster"};
   return {name:"Carrier automatisch",code:0,country:"",confidence:"low",reason:"17TRACK Fallback"};
 }
 
@@ -96,7 +97,7 @@ function nativeUrl(p){
     case 100072:return "https://www.dpd.com/fr/fr/suivre-mon-colis/";
     case 100002:return "https://www.ups.com/track?loc=de_DE&tracknum="+n+"&requester=WT/";
     case 100001:return "https://www.dhl.de/de/privatkunden/dhl-sendungsverfolgung.html?piececode="+n;
-    case 100304:return "https://www.mondialrelay.fr/r";
+    case 100304:return "https://www.mondialrelay.com/en-gb/parcel-tracking/?country=DE&ens=V1FRTODE&exp="+n+"&language=EN";
     case 101070:
     case 100005:return "https://www.gls-pakete.de/sendungsverfolgung?match="+n;
     case 101272:return "https://www.gls-france.com/";
@@ -120,7 +121,7 @@ function migrate(arr){
     const number=clean(p.number);
     const auto=carrierProfile(number,p.carrierHint||"");
     const keepCode=Number(p.carrierCode)||0;
-    const shouldUpgrade=!keepCode||!p.carrierName||/^Auto|Carrier automatisch/.test(p.carrierName);
+    const shouldUpgrade=!keepCode||!p.carrierName||/^Auto|Carrier automatisch/.test(p.carrierName)||(/^\d{8}$/.test(number)&&keepCode!==100304);
     return {
       id:p.id||uid(),
       number,
@@ -194,8 +195,10 @@ function ensureWidget(){
   return widgetPromise;
 }
 
-function directPosteItaliane(p,box){
-  box.innerHTML='<iframe class="nativeTracker" title="Poste Italiane Tracking" loading="eager" referrerpolicy="no-referrer" src="'+esc(nativeUrl(p))+'"></iframe>';
+function directCarrierFrame(p,box){
+  const url=nativeUrl(p);
+  if(!url)throw new Error("Kein direkter Tracking-Link");
+  box.innerHTML='<iframe class="nativeTracker" title="'+esc(p.carrierName)+' Tracking" loading="eager" referrerpolicy="no-referrer" src="'+esc(url)+'"></iframe>';
 }
 
 async function mountOne(p){
@@ -205,8 +208,8 @@ async function mountOne(p){
   box.dataset.mounted="1";
   box.innerHTML='<div class="trackerLoading">'+esc(p.carrierName)+" wird geprüft …</div>";
 
-  if(p.carrierCode===9071&&p.carrierConfidence==="high"){
-    directPosteItaliane(p,box);
+  if((p.carrierCode===9071||p.carrierCode===100304)&&p.carrierConfidence==="high"){
+    directCarrierFrame(p,box);
     return;
   }
 
@@ -271,7 +274,7 @@ function render(){
         '<div class="fastMeta">'+(fast?'Direkt erkannt · Schnellmodus':'Carrier wird automatisch ermittelt')+'</div></div>'+
         '<span class="liveBadge '+(p.done?"doneBadge":"")+'" data-live-badge>'+(p.done?"ERLEDIGT":(fast?"FAST":"LIVE"))+'</span>'+
       '</div>'+
-      (!p.done?'<div class="trackerWrap"><div class="trackerTitle"><b>'+esc(p.carrierCode===9071&&p.carrierConfidence==="high"?"Original-Status":"Live-Status")+'</b><span>'+(fast?esc(p.carrierName):"17TRACK Fallback")+'</span></div><div class="trackerHost" data-track-id="'+esc(p.id)+'" id="'+hostId(p)+'"><div class="trackerLoading">Wird beim Anzeigen geladen …</div></div></div>':'')+
+      (!p.done?'<div class="trackerWrap"><div class="trackerTitle"><b>'+esc((p.carrierCode===9071||p.carrierCode===100304)&&p.carrierConfidence==="high"?"Original-Status":"Live-Status")+'</b><span>'+((p.carrierCode===9071||p.carrierCode===100304)&&p.carrierConfidence==="high"?esc(p.carrierName):(fast?esc(p.carrierName):"17TRACK Fallback"))+'</span></div><div class="trackerHost" data-track-id="'+esc(p.id)+'" id="'+hostId(p)+'"><div class="trackerLoading">Wird beim Anzeigen geladen …</div></div></div>':'')+
       '<div class="actions">'+
         (!p.done?'<button class="refreshOne" data-refresh>↻ Prüfen</button>':'')+
         (original?'<button class="nativeBtn" data-native>Original</button>':'')+
@@ -371,12 +374,13 @@ function extractCandidates(text){
     /[A-Z]{2}\d{9}(?:DE|FR|IT|AT)/g,
     /JJD[A-Z0-9]{10,24}/g,
     /\d{14}/g,
-    /\d{11,12}/g
+    /\d{11,12}/g,
+    /\b\d{8}\b/g
   ])for(const m of joined.matchAll(re))add(m[0]);
   for(const m of compact.matchAll(/(?:\d[\s-]*){11,20}/g))add(m[0]);
   return [...found].filter(n=>{
     if(/^1Z[A-Z0-9]{16}$/.test(n)||/^H\d{19}$/.test(n)||/^00340\d{15}$/.test(n)||/^[A-Z]{2}\d{9}(?:DE|FR|IT|AT)$/.test(n)||/^JJD[A-Z0-9]{10,24}$/.test(n))return true;
-    return /^\d{11,14}$/.test(n)||/^\d{20}$/.test(n);
+    return /^\d{8}$/.test(n)||/^\d{11,14}$/.test(n)||/^\d{20}$/.test(n);
   });
 }
 async function barcodeCandidates(file){
