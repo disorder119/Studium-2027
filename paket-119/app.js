@@ -3,6 +3,7 @@ const PREVIOUS=["paket119.inbox.v3","paket119.inbox.v2","paket119.v1"];
 const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
 let filter="open";
+let searchQuery="";
 let ocrFound=[];
 let parcels=load();
 let widgetPromise=null;
@@ -152,6 +153,11 @@ function filtered(){
   let q=[...parcels].sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
   if(filter==="open")q=q.filter(p=>!p.done);
   if(filter==="done")q=q.filter(p=>p.done);
+  const needle=norm(searchQuery).replace(/\s+/g,"");
+  if(needle)q=q.filter(p=>{
+    const hay=norm([p.name,p.number,p.carrierName,p.carrierCountry].filter(Boolean).join(" ")).replace(/\s+/g,"");
+    return hay.includes(needle);
+  });
   return q;
 }
 
@@ -304,6 +310,40 @@ async function refreshAll({quiet=false}={}){
   if(!quiet)toast("Sichtbare Pakete werden aktualisiert");
 }
 
+function extractManyFromText(text){
+  const found=new Set(extractCandidates(text));
+  const lines=String(text||"").split(/[\n,;]+/);
+  for(const line of lines){
+    for(const token of line.toUpperCase().match(/[A-Z0-9][A-Z0-9 -]{6,42}[A-Z0-9]/g)||[]){
+      const n=clean(token);
+      if(n.length<8||n.length>40)continue;
+      if(!/\d{6}/.test(n))continue;
+      if(/^(HTTP|HTTPS|WWW)/.test(n))continue;
+      if(/^[A-Z0-9]+$/.test(n))found.add(n);
+    }
+  }
+  return [...found];
+}
+
+async function preprocessForOcr(file){
+  const bmp=await createImageBitmap(file);
+  const scale=Math.min(2.2,Math.max(1.4,1800/Math.max(bmp.width,bmp.height)));
+  const c=document.createElement("canvas");
+  c.width=Math.round(bmp.width*scale);c.height=Math.round(bmp.height*scale);
+  const ctx=c.getContext("2d",{willReadFrequently:true});
+  ctx.drawImage(bmp,0,0,c.width,c.height);
+  const img=ctx.getImageData(0,0,c.width,c.height);
+  const d=img.data;
+  for(let i=0;i<d.length;i+=4){
+    const y=.299*d[i]+.587*d[i+1]+.114*d[i+2];
+    const v=y>170?255:y<85?0:Math.max(0,Math.min(255,(y-128)*1.7+128));
+    d[i]=d[i+1]=d[i+2]=v;
+  }
+  ctx.putImageData(img,0,0);
+  if(bmp.close)bmp.close();
+  return c;
+}
+
 function extractCandidates(text){
   const raw=String(text||"").toUpperCase().replace(/[–—]/g,"-");
   const compact=raw.replace(/[\s-]+/g," ");
@@ -361,12 +401,22 @@ async function scanScreenshots(files){
     for(let i=0;i<files.length;i++){
       $("#ocrTitle").textContent="Bild "+(i+1)+" von "+files.length+" wird gelesen …";
       const result=await worker.recognize(files[i]);
-      const text=result&&result.data&&result.data.text||"";
+      let text=result&&result.data&&result.data.text||"";
       const bars=await barcodeCandidates(files[i]);
-      const numbers=[...new Set([...bars,...extractCandidates(text)])];
+      let numbers=[...new Set([...bars,...extractCandidates(text)])];
+      let retried=false;
+      if(!numbers.length){
+        $("#ocrTitle").textContent="Bild "+(i+1)+" wird kontrastverstärkt erneut gelesen …";
+        const processed=await preprocessForOcr(files[i]);
+        const second=await worker.recognize(processed);
+        const secondText=second&&second.data&&second.data.text||"";
+        text+="\n"+secondText;
+        numbers=[...new Set([...bars,...extractCandidates(text)])];
+        retried=true;
+      }
       for(const n of numbers){
         const prof=carrierProfile(n,text);
-        const item={number:n,carrier:prof.name,carrierCode:prof.code,country:prof.country,confidence:prof.confidence,hint:text,source:(bars.includes(n)?"Barcode + ":"")+"OCR · Bild "+(i+1)};
+        const item={number:n,carrier:prof.name,carrierCode:prof.code,country:prof.country,confidence:prof.confidence,hint:text,source:(bars.includes(n)?"Barcode + ":"")+"OCR"+(retried?" 2×":"")+" · Bild "+(i+1)};
         const previous=seen.get(n);
         if(!previous||prof.confidence==="high")seen.set(n,item);
       }
@@ -381,13 +431,51 @@ async function scanScreenshots(files){
   }finally{try{if(worker)await worker.terminate()}catch{}}
 }
 
+$("#pasteClipboard").addEventListener("click",async()=>{
+  try{
+    const t=await navigator.clipboard.readText();
+    $("#bulkInput").value=t;
+    $("#bulkHint").textContent=extractManyFromText(t).length+" mögliche Sendungsnummer(n) erkannt.";
+  }catch{
+    $("#bulkHint").textContent="Zwischenablage konnte nicht direkt gelesen werden – Text einfach ins Feld einfügen.";
+  }
+});
+$("#bulkInput").addEventListener("input",e=>{
+  $("#bulkHint").textContent=extractManyFromText(e.target.value).length+" mögliche Sendungsnummer(n) erkannt · Duplikate werden übersprungen.";
+});
+$("#addBulk").addEventListener("click",()=>{
+  const numbers=extractManyFromText($("#bulkInput").value);
+  if(!numbers.length)return toast("Keine Sendungsnummer erkannt");
+  let added=0,dupes=0;
+  for(const n of numbers){
+    const before=parcels.length;
+    addParcel(n);
+    if(parcels.length>before)added++;else dupes++;
+  }
+  persist();$("#bulkInput").value="";filter="open";
+  $(".tab").forEach(x=>x.classList.toggle("on",x.dataset.filter==="open"));
+  render();
+  $("#bulkHint").textContent=added+" gespeichert"+(dupes?" · "+dupes+" Duplikat(e) übersprungen":"");
+  toast(added+" Paket"+(added===1?"":"e")+" gespeichert");
+});
+$("#searchInput").addEventListener("input",e=>{searchQuery=e.target.value;render()});
+$("#clearDone").addEventListener("click",()=>{
+  const count=parcels.filter(p=>p.done).length;
+  if(!count)return toast("Keine erledigten Pakete");
+  if(confirm(count+" erledigte Paket"+(count===1?"":"e")+" löschen?")){
+    parcels=parcels.filter(p=>!p.done);persist();render();toast(count+" gelöscht");
+  }
+});
+
 $("#addForm").addEventListener("submit",e=>{
   e.preventDefault();
-  const p=addParcel($("#number").value,$("#name").value.trim());
+  const raw=$("#number").value;
+  const existed=parcels.some(x=>x.number===clean(raw));
+  const p=addParcel(raw,$("#name").value.trim());
   if(!p)return;
   e.target.reset();persist();filter="open";
   $$(".tab").forEach(x=>x.classList.toggle("on",x.dataset.filter==="open"));
-  render();toast(p.carrierConfidence==="high"?p.carrierName+" erkannt":"Paket gespeichert");
+  render();toast(existed?"Schon gespeichert · nach oben geholt":(p.carrierConfidence==="high"?p.carrierName+" erkannt":"Paket gespeichert"));
 });
 $("#refreshAll").addEventListener("click",()=>refreshAll());
 $("#scanBtn").addEventListener("click",()=>$("#screenshots").click());
