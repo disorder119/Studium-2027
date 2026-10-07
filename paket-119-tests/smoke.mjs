@@ -67,3 +67,23 @@ const statusCases=["Elektronisch angekündigt","Paket ist unterwegs","In Zustell
 console.log("STATUS_MAPPING="+JSON.stringify(statusCases.map(x=>({input:x,normalized:mapStatus(x)}))));
 
 // trigger 2026-10-07
+
+
+try {
+  const cors=await fetch("https://api.17track.net/track/v2.4/gettrackinfo",{
+    method:"OPTIONS",
+    headers:{
+      "Origin":"https://disorder119.github.io",
+      "Access-Control-Request-Method":"POST",
+      "Access-Control-Request-Headers":"content-type,17token"
+    }
+  });
+  console.log("CORS_17TRACK="+JSON.stringify({
+    status:cors.status,
+    allowOrigin:cors.headers.get("access-control-allow-origin"),
+    allowMethods:cors.headers.get("access-control-allow-methods"),
+    allowHeaders:cors.headers.get("access-control-allow-headers")
+  }));
+} catch(e) {
+  console.log("CORS_17TRACK="+JSON.stringify({error:String(e)}));
+}
