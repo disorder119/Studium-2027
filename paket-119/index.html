@@ -10,9 +10,15 @@
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="apple-touch-icon" href="./icon.svg">
 <link rel="icon" href="./icon.svg">
+<link rel="preconnect" href="https://www.17track.net" crossorigin>
+<link rel="dns-prefetch" href="//www.17track.net">
+<link rel="preconnect" href="https://res.17track.net" crossorigin>
+<link rel="dns-prefetch" href="//res.17track.net">
+<link rel="preload" href="https://www.17track.net/externalcall.js" as="script">
 <link rel="stylesheet" href="./styles.css">
 <title>Paket 119</title>
 <script defer src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script defer src="https://www.17track.net/externalcall.js"></script>
 <script defer src="./app.js"></script>
 </head>
 <body>
@@ -64,7 +70,7 @@
     <button class="tab" data-filter="all">Alle</button>
   </nav>
 
-  <div id="syncState" class="syncState">Live-Status wird direkt über 17TRACK geladen · kein API-Key und kein zusätzlicher Account nötig.</div>
+  <div id="syncState" class="syncState">Vinted-Schnellmodus: Carrier zuerst erkennen · direkter Anbieter wo möglich · 17TRACK nur als Fallback.</div>
 
   <section id="empty" class="empty">
     <img src="./icon.svg" alt="">
@@ -92,9 +98,9 @@
 <dialog id="infoDialog">
   <div class="dialogHead"><b>So funktioniert Paket 119</b><button class="closeBtn" data-close>×</button></div>
   <div class="copy">
-    <p><b>Live-Tracking:</b> Jede offene Sendung wird über das offizielle 17TRACK-Web-Widget direkt in ihrer Paketkarte angezeigt. 17TRACK erkennt den Versanddienst automatisch und zeigt die verfügbaren Tracking-Ereignisse.</p>
+    <p><b>Schnellmodus:</b> Die App erkennt zuerst typische Vinted-Carrier aus Deutschland, Frankreich, Italien und Österreich. Bei sicherer Erkennung wird 17TRACK direkt mit dem passenden Carrier-Code gestartet, ohne die langsame globale Carrier-Suche. Poste Italiane wird direkt beim Anbieter eingebettet.</p>
     <p><b>Kein zusätzlicher Account:</b> Für diese eingebettete Tracking-Ansicht brauchst du keinen 17TRACK-API-Key und keinen weiteren Hosting-Dienst.</p>
-    <p><b>Screenshots:</b> Bilder werden direkt auf deinem Gerät per OCR gelesen. Mehrere Screenshots können gleichzeitig ausgewählt werden.</p>
+    <p><b>Screenshots:</b> Bilder werden direkt auf deinem Gerät per OCR gelesen. Dabei werden jetzt zusätzlich Carrier-Namen wie Mondial Relay, Chronopost, Colissimo, Vinted Go, Poste Italiane, InPost, BRT, DPD, GLS, Hermes und DHL erkannt.</p>
     <p><b>Speicherung:</b> Deine Paketliste und eigenen Namen bleiben lokal im Browser. Für die Live-Verfolgung wird die Sendungsnummer an 17TRACK übertragen.</p>
   </div>
 </dialog>
