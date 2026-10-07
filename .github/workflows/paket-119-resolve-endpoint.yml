@@ -1,0 +1,23 @@
+name: Paket 119 resolve track endpoint
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'paket-119-tests/resolve-track-endpoint.mjs'
+      - '.github/workflows/paket-119-resolve-endpoint.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - run: node paket-119-tests/resolve-track-endpoint.mjs
