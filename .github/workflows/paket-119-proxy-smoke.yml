@@ -1,0 +1,23 @@
+name: Paket 119 proxy smoke
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'paket-119-tests/proxy-smoke.mjs'
+      - '.github/workflows/paket-119-proxy-smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  proxy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - run: node paket-119-tests/proxy-smoke.mjs
