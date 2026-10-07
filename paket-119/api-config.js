@@ -1,0 +1,1 @@
+window.PAKET119_API_BASE="";

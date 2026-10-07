@@ -1,0 +1,109 @@
+name: Deploy Paket 119 backend to Wix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'paket-119-wix/**'
+      - '.github/workflows/paket-119-wix-deploy.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: paket-119-wix-backend
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      WIX_API_KEY: ${{ secrets.WIX_API_KEY }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+
+      - name: Require Wix deployment key
+        shell: bash
+        run: |
+          if [ -z "$WIX_API_KEY" ]; then
+            echo "::error::WIX_API_KEY GitHub secret is missing."
+            exit 1
+          fi
+
+      - name: Authenticate Wix CLI
+        run: npx --yes @wix/cli@latest login --api-key "$WIX_API_KEY"
+
+      - name: Install Astro project
+        working-directory: paket-119-wix
+        run: npm install
+
+      - name: Link to Wix on first deployment
+        working-directory: paket-119-wix
+        shell: bash
+        run: |
+          if [ ! -f wix.config.json ]; then
+            npm create @wix/new@latest -- headless link --business-name "Paket 119 Backend"
+          fi
+
+      - name: TypeScript check
+        working-directory: paket-119-wix
+        run: npx tsc --noEmit
+
+      - name: Build
+        working-directory: paket-119-wix
+        run: npx wix build
+
+      - name: Release to Wix
+        working-directory: paket-119-wix
+        shell: bash
+        run: |
+          set -o pipefail
+          yes | npx wix release 2>&1 | tee wix-release.log || {
+            status=$?
+            if grep -qiE 'published|released|site url|live url' wix-release.log; then exit 0; fi
+            exit $status
+          }
+
+      - name: Discover live backend URL
+        working-directory: paket-119-wix
+        shell: bash
+        run: |
+          set -e
+          grep -Eo 'https://[^[:space:]<>"'"'"']+' wix-release.log | sed 's/[),.;]*$//' | sort -u > candidate-urls.txt || true
+          backend=""
+          while IFS= read -r url; do
+            base="${url%/}"
+            if curl -fsS --max-time 15 "$base/api/health" | grep -q '"ok":true'; then
+              backend="$base"
+              break
+            fi
+          done < candidate-urls.txt
+          if [ -z "$backend" ]; then
+            echo "::error::Could not discover the published Wix backend URL."
+            cat wix-release.log
+            exit 1
+          fi
+          echo "PAKET119_BACKEND=$backend" >> "$GITHUB_ENV"
+
+      - name: Persist Wix project configuration and frontend API URL
+        shell: bash
+        run: |
+          printf 'window.PAKET119_API_BASE="%s";\n' "$PAKET119_BACKEND" > paket-119/api-config.js
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add paket-119/api-config.js paket-119-wix/wix.config.json paket-119-wix/astro.config.mjs paket-119-wix/package.json paket-119-wix/package-lock.json || true
+          if git diff --cached --quiet; then
+            echo "Configuration already current."
+            exit 0
+          fi
+          git commit -m "Connect Paket 119 to Wix backend"
+          git pull --rebase origin main
+          git push
