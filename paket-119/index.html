@@ -105,8 +105,27 @@
   <div class="dialogHead"><b>Paket bearbeiten</b><button class="closeBtn" data-close>×</button></div>
   <input id="editId" type="hidden">
   <label>Name<input id="editName" placeholder="Eigener Name"></label>
-  <div class="readonly"><small>Sendungsnummer</small><code id="editNumber"></code></div>
-  <button class="primary" id="saveEdit" type="button">Namen speichern</button>
+  <label>Sendungsnummer<input id="editNumber" autocapitalize="characters" autocomplete="off"></label>
+  <label>Versanddienst
+    <select id="editCarrier">
+      <option value="auto">Automatisch erkennen</option>
+      <option value="dhl">DHL Paket</option>
+      <option value="dhlExpress">DHL Express</option>
+      <option value="dpdDe">DPD</option>
+      <option value="gls">GLS</option>
+      <option value="hermesDe">Hermes</option>
+      <option value="mondial">Mondial Relay</option>
+      <option value="chrono">Chronopost</option>
+      <option value="colissimo">Colissimo / La Poste</option>
+      <option value="vintedGo">Vinted Go</option>
+      <option value="posteIt">Poste Italiane</option>
+      <option value="inpostIt">InPost</option>
+      <option value="brt">BRT / Bartolini</option>
+      <option value="postAt">Österreichische Post</option>
+      <option value="ups">UPS</option>
+    </select>
+  </label>
+  <button class="primary" id="saveEdit" type="button">Änderungen speichern</button>
   <button class="danger" id="deleteParcel" type="button">Paket löschen</button>
 </dialog>
 
@@ -117,6 +136,7 @@
     <p><b>Kein zusätzlicher Account:</b> Für diese eingebettete Tracking-Ansicht brauchst du keinen 17TRACK-API-Key und keinen weiteren Hosting-Dienst.</p>
     <p><b>Screenshots:</b> Bilder werden direkt auf deinem Gerät per OCR gelesen. Mehrere Screenshots sind möglich; wenn der erste OCR-Durchlauf keine Nummer erkennt, wird das Bild automatisch kontrastverstärkt erneut gelesen.</p>
     <p><b>Masseneingabe:</b> Du kannst auch mehrere Sendungsnummern oder eine komplette Nachricht einfügen. Erkannte Nummern werden gesammelt gespeichert, Duplikate übersprungen.</p>
+    <p><b>Korrigieren:</b> Unter „Umbenennen“ kannst du auch eine falsch erkannte Sendungsnummer korrigieren oder den Versanddienst manuell festlegen. Standard bleibt die automatische Erkennung.</p>
     <p><b>Speicherung:</b> Deine Paketliste und eigenen Namen bleiben lokal im Browser. Für die Live-Verfolgung wird die Sendungsnummer an 17TRACK übertragen.</p>
   </div>
 </dialog>
