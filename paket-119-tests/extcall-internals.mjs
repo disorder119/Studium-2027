@@ -10,7 +10,7 @@ for(const src of srcs.slice(0,20)){
     const abs=new URL(src,url).href;
     const rr=await fetch(abs,{headers:{"User-Agent":"Mozilla/5.0"}});
     const t=await rr.text();
-    const hits=[...new Set([...t.matchAll(/https?:\/\/[^"'\\s)]+|\/api\/[^"'\\s)]+|\/track\/[^"'\\s)]+/g)].map(m=>m[0])].slice(0,100);
+    const hits=[...new Set([...t.matchAll(/https?:\/\/[^"'\\s)]+|\/api\/[^"'\\s)]+|\/track\/[^"'\\s)]+/g)].map(m=>m[0]))].slice(0,100);
     if(hits.length||/ajax|fetch\(|axios|XMLHttpRequest|trackinfo|tracking/i.test(t)){
       console.log("SCRIPT="+JSON.stringify({url:abs,status:rr.status,len:t.length,hits,ctx:t.match(/.{0,600}(?:ajax|fetch\(|axios|XMLHttpRequest|trackinfo|tracking).{0,1200}/i)?.[0]||""}));
     }
