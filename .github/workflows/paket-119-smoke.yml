@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'paket-119-tests/**'
+      - 'paket-119-api/**'
       - '.github/workflows/paket-119-smoke.yml'
   workflow_dispatch:
 
@@ -20,5 +21,7 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: '22'
+      - name: Check backend syntax
+        run: node --check paket-119-api/api/track.js
       - name: Probe carrier endpoints with fake tracking numbers
         run: node paket-119-tests/smoke.mjs
