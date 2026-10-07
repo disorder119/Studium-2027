@@ -1,0 +1,23 @@
+name: Paket 119 direct carrier CORS
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'paket-119-tests/carrier-cors.mjs'
+      - '.github/workflows/paket-119-carrier-cors.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - run: node paket-119-tests/carrier-cors.mjs
