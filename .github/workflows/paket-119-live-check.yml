@@ -1,0 +1,24 @@
+name: Paket 119 live page check
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'paket-119-tests/live-widget-smoke.mjs'
+      - '.github/workflows/paket-119-live-check.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - name: Verify live Paket 119 page
+        run: node paket-119-tests/live-widget-smoke.mjs
