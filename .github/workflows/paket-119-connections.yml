@@ -1,0 +1,30 @@
+name: Paket 119 connection check
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/paket-119-connections.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check configured connections
+        env:
+          WIX_API_KEY: ${{ secrets.WIX_API_KEY }}
+          TRACK17_API_KEY: ${{ secrets.TRACK17_API_KEY }}
+          DHL_API_KEY: ${{ secrets.DHL_API_KEY }}
+          UPS_CLIENT_ID: ${{ secrets.UPS_CLIENT_ID }}
+          UPS_CLIENT_SECRET: ${{ secrets.UPS_CLIENT_SECRET }}
+        run: |
+          present() { if [ -n "$2" ]; then echo "$1=PRESENT"; else echo "$1=MISSING"; fi; }
+          present WIX_API_KEY "$WIX_API_KEY"
+          present TRACK17_API_KEY "$TRACK17_API_KEY"
+          present DHL_API_KEY "$DHL_API_KEY"
+          present UPS_CLIENT_ID "$UPS_CLIENT_ID"
+          present UPS_CLIENT_SECRET "$UPS_CLIENT_SECRET"
