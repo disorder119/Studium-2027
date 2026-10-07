@@ -782,6 +782,7 @@ $("#saveEdit").addEventListener("click",()=>{
   const selected=$("#editCarrier").value;
   p.name=$("#editName").value.trim();
   p.number=newNumber;
+  deletedNumbers.delete(newNumber);
   if(selected==="auto"){
     const prof=carrierProfile(newNumber);
     p.carrierName=prof.name;p.carrierCode=prof.code;p.carrierCountry=prof.country;
@@ -830,7 +831,10 @@ $("#importBackupFile").addEventListener("change",async e=>{
     if(!incoming.length)throw new Error("Keine Pakete im Backup");
     const migrated=migrate(incoming);
     const map=new Map(parcels.map(p=>[p.number,p]));
-    for(const p of migrated)map.set(p.number,{...map.get(p.number),...p});
+    for(const p of migrated){
+      deletedNumbers.delete(p.number);
+      map.set(p.number,{...map.get(p.number),...p});
+    }
     parcels=[...map.values()];
     persist();render();toast(migrated.length+" Paket"+(migrated.length===1?"":"e")+" importiert");
   }catch(err){toast("Backup ungültig")}
@@ -842,16 +846,16 @@ if("serviceWorker" in navigator){
   addEventListener("load",async()=>{
     try{
       const hadController=!!navigator.serviceWorker.controller;
-      const reg=await navigator.serviceWorker.register("./sw.js",{scope:"./",updateViaCache:"none"});
-      await reg.update();
+      let reloading=false;
       if(hadController){
-        let reloading=false;
         navigator.serviceWorker.addEventListener("controllerchange",()=>{
           if(reloading)return;
           reloading=true;
           location.reload();
         },{once:true});
       }
+      const reg=await navigator.serviceWorker.register("./sw.js",{scope:"./",updateViaCache:"none"});
+      await reg.update();
     }catch{}
   });
 }
