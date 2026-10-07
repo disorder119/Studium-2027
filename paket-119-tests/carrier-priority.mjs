@@ -1,6 +1,7 @@
 
 const origin="https://disorder119.github.io";
 const probes=[
+  ["DHL_DE_PAGE","https://www.dhl.de/de/privatkunden/pakete-empfangen/verfolgen.html?piececode=00340000000000000000&lang=de"],
   ["DHL_DE_JSON","https://www.dhl.de/int-verfolgen/data/search?piececode=00340000000000000000&noRedirect=true&language=de&cid=app"],
   ["DPD_DE","https://my.dpd.de/redirect.aspx?action=12&parcelno=00000000000000"],
   ["GLS_DE_JSON","https://gls-group.com/app/service/open/rest/DE/de/rstt029?match=00000000000&type=&caller=witt002&millis="+Date.now()],
@@ -8,7 +9,7 @@ const probes=[
   ["MONDIAL_RELAY","https://www.mondialrelay.fr/suivi-de-colis/"],
   ["CHRONOPOST","https://www.chronopost.fr/tracking-no-cms/suivi-page?listeNumerosLT=XY000000000FR"],
   ["COLISSIMO","https://www.laposte.fr/outils/suivre-vos-envois?code=CC000000000FR"],
-  ["VINTED_GO","https://tracking.vintedgo.com/"],
+  ["VINTED_GO","https://www.vintedgo.com/en/tracking/routes"],
   ["INPOST_IT","https://inpost.it/it/track-parcel"],
   ["POSTE_IT","https://www.poste.it/cerca/index.html#/risultati-spedizioni/CC000000000IT"],
   ["BRT_IT","https://www.brt.it/it/tracking/"],
