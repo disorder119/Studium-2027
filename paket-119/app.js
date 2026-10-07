@@ -98,6 +98,14 @@ function carrierProfile(number,hint=""){
   return {name:"Carrier automatisch",code:0,country:"",confidence:"low",reason:"17TRACK Fallback"};
 }
 
+function carrierKeyFor(p){
+  if(!p||!p.carrierCode)return"auto";
+  for(const [key,value] of Object.entries(CARRIERS)){
+    if(Number(value.code)===Number(p.carrierCode))return key;
+  }
+  return"auto";
+}
+
 function nativeUrl(p){
   const n=encodeURIComponent(p.number);
   switch(p.carrierCode){
@@ -744,7 +752,11 @@ $("#list").addEventListener("click",e=>{
   if(e.target.closest("[data-refresh]"))refreshOne(p);
   if(e.target.closest("[data-native]")){const u=nativeUrl(p);if(u)window.open(u,"_blank","noopener,noreferrer")}
   if(e.target.closest("[data-edit]")){
-    $("#editId").value=p.id;$("#editName").value=p.name||"";$("#editNumber").textContent=p.number;$("#editDialog").showModal();
+    $("#editId").value=p.id;
+    $("#editName").value=p.name||"";
+    $("#editNumber").value=p.number;
+    $("#editCarrier").value=carrierKeyFor(p);
+    $("#editDialog").showModal();
   }
   if(e.target.closest("[data-done]")){
     p.done=!p.done;p.updatedAt=Date.now();persist();render();toast(p.done?"Als erledigt markiert":"Wieder geöffnet");
@@ -761,8 +773,29 @@ $("#list").addEventListener("click",e=>{
 });
 $("#saveEdit").addEventListener("click",()=>{
   const p=parcels.find(x=>x.id===$("#editId").value);
-  if(p){p.name=$("#editName").value.trim();p.updatedAt=Date.now();persist();render()}
-  $("#editDialog").close();
+  if(!p)return $("#editDialog").close();
+  const newNumber=clean($("#editNumber").value);
+  if(!newNumber)return toast("Sendungsnummer fehlt");
+  const duplicate=parcels.find(x=>x.id!==p.id&&x.number===newNumber);
+  if(duplicate)return toast("Diese Sendungsnummer ist schon gespeichert");
+
+  const selected=$("#editCarrier").value;
+  p.name=$("#editName").value.trim();
+  p.number=newNumber;
+  if(selected==="auto"){
+    const prof=carrierProfile(newNumber);
+    p.carrierName=prof.name;p.carrierCode=prof.code;p.carrierCountry=prof.country;
+    p.carrierConfidence=prof.confidence;p.carrierReason=prof.reason;p.carrierHint="";
+  }else{
+    const prof=CARRIERS[selected];
+    if(prof){
+      p.carrierName=prof.name;p.carrierCode=prof.code;p.carrierCountry=prof.country;
+      p.carrierConfidence="high";p.carrierReason="Manuell";p.carrierHint="";
+    }
+  }
+  p.liveStatus="";p.liveStatusLabel="";p.liveStatusText="";p.liveCheckedAt=0;
+  p.updatedAt=Date.now();
+  persist();render();$("#editDialog").close();toast("Paket aktualisiert");
 });
 $("#deleteParcel").addEventListener("click",()=>{
   const id=$("#editId").value;
