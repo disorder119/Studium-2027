@@ -1,7 +1,7 @@
 const STORAGE="paket119.inbox.v2";
 const OLD_STORAGE="paket119.v1";
 const API_SETTING="paket119.apiBase";
-const API_DEFAULT="";
+const API_DEFAULT=String(window.PAKET119_API_BASE||"");
 const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
 const STATUS_LABEL={angekündigt:"Angekündigt",unterwegs:"Unterwegs",heute:"Kommt heute",abholung:"Abholbereit",problem:"Problem",zugestellt:"Zugestellt",unbekannt:"Unbekannt"};
