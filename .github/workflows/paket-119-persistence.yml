@@ -6,6 +6,7 @@ on:
     paths:
       - 'paket-119/**'
       - 'paket-119-tests/persistence.mjs'
+      - 'paket-119-tests/ui-regression.mjs'
       - '.github/workflows/paket-119-persistence.yml'
   workflow_dispatch:
 
