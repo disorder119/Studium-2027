@@ -18,6 +18,18 @@ try{
   const context=await browser.newContext({viewport:{width:390,height:844},serviceWorkers:"block"});
   const page=await context.newPage();
   page.on("pageerror",error=>errors.push(error.message));
+  await page.addInitScript(()=>{
+    window.YQV5={trackSingle:function(o){
+      const el=document.getElementById(o.YQ_ContainerId);
+      if(el)el.textContent="TRACKER MOCK "+o.YQ_Num;
+      if(o.onLoaded)o.onLoaded();
+    }};
+    window.Tesseract={createWorker:async function(){
+      return {setParameters:async()=>{},
+        recognize:async()=>({data:{text:"DHL Sendungsnummer: 00340000000000000000"}}),
+        terminate:async()=>{}};
+    }};
+  });
   await page.route("**/externalcall.js",r=>r.fulfill({
     status:200,contentType:"application/javascript",
     body:"window.YQV5={trackSingle:function(o){let e=document.getElementById(o.YQ_ContainerId);if(e)e.textContent='TRACKER MOCK '+o.YQ_Num;if(o.onLoaded)o.onLoaded();}};"
@@ -56,6 +68,9 @@ try{
   const png="iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9WN8FboAAAAASUVORK5CYII=";
   await page.locator("#screenshots").setInputFiles({name:"dhl.png",mimeType:"image/png",buffer:Buffer.from(png,"base64")});
   await page.locator("#ocrCandidates .candidate").first().waitFor({timeout:15000});
+  const candidateCount=await page.locator("#ocrCandidates .candidate").count();
+  if(candidateCount!==1)throw Error("OCR created false fragments: "+candidateCount);
+  console.log("OCR_FRAGMENT_FILTER=PASS");
   await page.locator("#addCandidates").click();
   const dhl="00340000000000000000";
   const ocr=await page.evaluate(n=>{
