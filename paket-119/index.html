@@ -61,10 +61,17 @@
 
     <div class="or"><span>oder</span></div>
     <input id="screenshots" type="file" accept="image/*" multiple hidden>
-    <button class="scanBtn" id="scanBtn" type="button">
-      <span>▣</span>
-      <span><b>Screenshots erkennen</b><small>Mehrere Bilder gleichzeitig möglich</small></span>
-    </button>
+    <input id="cameraScan" type="file" accept="image/*" capture="environment" hidden>
+    <div class="scanGrid">
+      <button class="scanBtn" id="scanBtn" type="button">
+        <span>▣</span>
+        <span><b>Screenshots</b><small>Mehrere Bilder gleichzeitig</small></span>
+      </button>
+      <button class="scanBtn" id="cameraBtn" type="button">
+        <span>⌁</span>
+        <span><b>Label scannen</b><small>Kamera direkt öffnen</small></span>
+      </button>
+    </div>
 
     <div id="ocrBox" class="ocrBox" hidden>
       <div class="ocrHead"><b id="ocrTitle">Screenshots werden gelesen …</b><span id="ocrProgress">0%</span></div>
@@ -136,7 +143,8 @@
     <p><b>Kein zusätzlicher Account:</b> Für diese eingebettete Tracking-Ansicht brauchst du keinen 17TRACK-API-Key und keinen weiteren Hosting-Dienst.</p>
     <p><b>Screenshots:</b> Bilder werden direkt auf deinem Gerät per OCR gelesen. Mehrere Screenshots sind möglich; wenn der erste OCR-Durchlauf keine Nummer erkennt, wird das Bild automatisch kontrastverstärkt erneut gelesen.</p>
     <p><b>Masseneingabe:</b> Du kannst auch mehrere Sendungsnummern oder eine komplette Nachricht einfügen. Erkannte Nummern werden gesammelt gespeichert, Duplikate übersprungen.</p>
-    <p><b>Korrigieren:</b> Unter „Umbenennen“ kannst du auch eine falsch erkannte Sendungsnummer korrigieren oder den Versanddienst manuell festlegen. Standard bleibt die automatische Erkennung.</p>
+    <p><b>Korrigieren:</b> Unter „Bearbeiten“ kannst du eine falsch erkannte Sendungsnummer korrigieren oder den Versanddienst manuell festlegen. Standard bleibt die automatische Erkennung.</p>
+    <p><b>Favoriten:</b> Mit ★ kannst du wichtige Pakete oben anheften. Das Live-Tracking ist standardmäßig eingeklappt, damit auch viele Sendungen übersichtlich bleiben.</p>
     <p><b>Speicherung:</b> Deine Paketliste und eigenen Namen bleiben lokal im Browser. Für die Live-Verfolgung wird die Sendungsnummer an 17TRACK übertragen.</p>
     <div class="infoActions">
       <button class="secondary" id="exportBackup" type="button">Backup exportieren</button>
