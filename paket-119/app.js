@@ -17,6 +17,7 @@ let parcels=[];
 let deletedNumbers=new Set();
 let widgetPromise=null;
 let trackObserver=null;
+const expandedTrackers=new Set();
 
 const CARRIERS={
   dhl:{name:"DHL Paket",code:7041,country:"DE"},
@@ -154,6 +155,7 @@ function migrate(arr){
       liveStatusLabel:p.liveStatusLabel||"",
       liveStatusText:p.liveStatusText||"",
       liveCheckedAt:p.liveCheckedAt||0,
+      pinned:Boolean(p.pinned),
       createdAt:p.createdAt||p.u||Date.now(),
       updatedAt:p.updatedAt||p.u||Date.now()
     };
@@ -200,6 +202,7 @@ function mergeParcelLists(lists,deleted){
         liveStatusLabel:newer.liveStatusLabel||older.liveStatusLabel||"",
         liveStatusText:newer.liveStatusText||older.liveStatusText||"",
         liveCheckedAt:Math.max(Number(newer.liveCheckedAt)||0,Number(older.liveCheckedAt)||0),
+        pinned:Boolean(newer.pinned||older.pinned),
         createdAt:Math.min(Number(newer.createdAt)||Date.now(),Number(older.createdAt)||Date.now()),
         updatedAt:Math.max(oldTime,newTime)
       });
@@ -291,7 +294,7 @@ async function restoreIndexedBackup(){
 function toast(s){const e=document.createElement("div");e.className="toast";e.textContent=s;document.body.append(e);setTimeout(()=>e.remove(),1800)}
 function hostId(p){return"trk_"+String(p.id).replace(/[^a-zA-Z0-9_-]/g,"_")}
 function filtered(){
-  let q=[...parcels].sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
+  let q=[...parcels].sort((a,b)=>(Number(b.pinned)-Number(a.pinned))||((b.updatedAt||0)-(a.updatedAt||0)));
   if(filter==="open")q=q.filter(p=>!p.done);
   if(filter==="done")q=q.filter(p=>p.done);
   const needle=norm(searchQuery).replace(/\s+/g,"");
@@ -433,6 +436,8 @@ async function mountOne(p){
         if(!card)return;
         const badge=card.querySelector("[data-live-badge]");
         const meta=card.querySelector(".trackerTitle span");
+        p.liveCheckedAt=Date.now();
+        persist();
         if(badge){badge.textContent="LIVE ✓";badge.classList.add("loaded")}
         if(meta)meta.textContent=(p.carrierName||"17TRACK")+" · geladen "+new Date().toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"});
       }
@@ -444,7 +449,7 @@ async function mountOne(p){
 
 function observeTrackers(){
   if(trackObserver)trackObserver.disconnect();
-  const hosts=$$(".trackerHost");
+  const hosts=$(".trackerHost[data-expanded="1"]");
   if(!hosts.length)return;
   if(!("IntersectionObserver" in window)){
     hosts.forEach(el=>{const p=parcels.find(x=>x.id===el.dataset.trackId);if(p)mountOne(p)});
@@ -461,6 +466,15 @@ function observeTrackers(){
   hosts.forEach(el=>trackObserver.observe(el));
 }
 
+function relativeTime(ts){
+  if(!ts)return"";
+  const mins=Math.max(0,Math.round((Date.now()-Number(ts))/60000));
+  if(mins<1)return"gerade eben";
+  if(mins<60)return"vor "+mins+" Min.";
+  const h=Math.round(mins/60);
+  if(h<24)return"vor "+h+" Std.";
+  return"vor "+Math.round(h/24)+" T.";
+}
 function render(){
   $("#allCount").textContent=parcels.length;
   $("#openCount").textContent=parcels.filter(p=>!p.done).length;
@@ -470,19 +484,23 @@ function render(){
   $("#list").innerHTML=q.map(p=>{
     const original=nativeUrl(p);
     const fast=p.carrierConfidence==="high"&&p.carrierCode;
-    return '<article class="parcel" data-id="'+esc(p.id)+'">'+
+    const expanded=expandedTrackers.has(p.id);
+    const checked=p.liveCheckedAt?relativeTime(p.liveCheckedAt):"";
+    return '<article class="parcel '+(p.pinned?"pinned":"")+'" data-id="'+esc(p.id)+'">'+
       '<div class="parcelTop">'+
-        '<div><div class="carrier">'+esc(p.carrierName)+(p.carrierCountry?' · '+esc(p.carrierCountry):'')+'</div>'+
+        '<div class="parcelIdentity"><div class="carrier">'+esc(p.carrierName)+(p.carrierCountry?' · '+esc(p.carrierCountry):'')+'</div>'+
         '<div class="name">'+esc(p.name||"Ohne Bezeichnung")+'</div>'+
         '<button class="number copyNumber" data-copy title="Sendungsnummer kopieren">'+esc(p.number)+'</button>'+
-        '<div class="fastMeta">'+(fast?'Direkt erkannt · Schnellmodus':'Carrier wird automatisch ermittelt')+'</div></div>'+
-        '<span class="liveBadge '+(p.done?"doneBadge":"")+'" data-live-badge data-state="'+esc(p.liveStatus||"")+'">'+(p.done?"ERLEDIGT":(p.liveStatusLabel?esc(p.liveStatusLabel.toUpperCase()):(fast?"FAST":"LIVE")))+'</span>'+
+        '<div class="fastMeta">'+(checked?'Zuletzt geprüft '+esc(checked):(fast?'Direkt erkannt · Schnellmodus':'Carrier wird automatisch ermittelt'))+'</div></div>'+
+        '<div class="parcelBadges"><button class="pinBtn '+(p.pinned?"on":"")+'" data-pin title="Oben anheften">'+(p.pinned?"★":"☆")+'</button>'+
+        '<span class="liveBadge '+(p.done?"doneBadge":"")+'" data-live-badge data-state="'+esc(p.liveStatus||"")+'">'+(p.done?"ERLEDIGT":(p.liveStatusLabel?esc(p.liveStatusLabel.toUpperCase()):(fast?"FAST":"LIVE")))+'</span></div>'+
       '</div>'+
-      (!p.done?'<div class="trackerWrap"><div class="trackerTitle"><b>'+esc((p.carrierCode===9071||p.carrierCode===100304)&&p.carrierConfidence==="high"?"Original-Status":"Live-Status")+'</b><span>'+((p.carrierCode===9071||p.carrierCode===100304)&&p.carrierConfidence==="high"?esc(p.carrierName):(fast?esc(p.carrierName):"17TRACK Fallback"))+'</span></div><div class="trackerHost" data-track-id="'+esc(p.id)+'" id="'+hostId(p)+'"><div class="trackerLoading">Wird beim Anzeigen geladen …</div></div></div>':'')+
+      (!p.done?'<button class="trackerToggle '+(expanded?"open":"")+'" data-toggle-track><span>'+(expanded?"Status einklappen":"Live-Status anzeigen")+'</span><b>'+(expanded?"⌃":"⌄")+'</b></button>':'')+
+      (!p.done&&expanded?'<div class="trackerWrap"><div class="trackerTitle"><b>'+esc((p.carrierCode===9071||p.carrierCode===100304)&&p.carrierConfidence==="high"?"Original-Status":"Live-Status")+'</b><span>'+((p.carrierCode===9071||p.carrierCode===100304)&&p.carrierConfidence==="high"?esc(p.carrierName):(fast?esc(p.carrierName):"17TRACK Fallback"))+'</span></div><div class="trackerHost" data-expanded="1" data-track-id="'+esc(p.id)+'" id="'+hostId(p)+'"><div class="trackerLoading">Wird geladen …</div></div></div>':'')+
       '<div class="actions">'+
         (!p.done?'<button class="refreshOne" data-refresh>↻ Prüfen</button>':'')+
         (original?'<button class="nativeBtn" data-native>Original</button>':'')+
-        '<button class="editBtn" data-edit>Umbenennen</button>'+
+        '<button class="editBtn" data-edit>Bearbeiten</button>'+
         '<button class="doneBtn '+(p.done?"undo":"")+'" data-done>'+(p.done?"Zurück":"Erledigt")+'</button>'+
         '<button class="removeBtn" data-remove>×</button>'+
       '</div>'+
@@ -490,7 +508,6 @@ function render(){
   }).join("");
   requestAnimationFrame(observeTrackers);
 }
-
 function addParcel(number,name="",hint=""){
   number=clean(number);
   if(!number)return null;
@@ -508,12 +525,15 @@ function addParcel(number,name="",hint=""){
   const p={
     id:uid(),number,name,carrierName:prof.name,carrierCode:prof.code,carrierCountry:prof.country,
     carrierConfidence:prof.confidence,carrierReason:prof.reason,carrierHint:hint,
-    liveStatus:"",liveStatusLabel:"",liveStatusText:"",liveCheckedAt:0,
+    liveStatus:"",liveStatusLabel:"",liveStatusText:"",liveCheckedAt:0,pinned:false,
     done:false,createdAt:Date.now(),updatedAt:Date.now()
   };
   parcels.push(p);return p;
 }
 async function refreshOne(p){
+  expandedTrackers.add(p.id);
+  render();
+  await new Promise(r=>requestAnimationFrame(r));
   const box=document.getElementById(hostId(p));
   if(box){
     box.dataset.mounted="0";
@@ -732,6 +752,11 @@ $("#addForm").addEventListener("submit",e=>{
 $("#refreshAll").addEventListener("click",()=>refreshAll());
 $("#scanBtn").addEventListener("click",()=>$("#screenshots").click());
 $("#screenshots").addEventListener("change",e=>scanScreenshots(e.target.files));
+$("#cameraBtn").addEventListener("click",()=>$("#cameraScan").click());
+$("#cameraScan").addEventListener("change",e=>{
+  scanScreenshots(e.target.files);
+  e.target.value="";
+});
 $("#addCandidates").addEventListener("click",()=>{
   const selected=$$("[data-candidate]:checked").map(el=>ocrFound[Number(el.dataset.candidate)]).filter(Boolean);
   let count=0;
@@ -749,7 +774,14 @@ $("#list").addEventListener("click",e=>{
       navigator.clipboard.writeText(value).then(()=>toast("Sendungsnummer kopiert")).catch(()=>{});
     }
   }
-  if(e.target.closest("[data-refresh]"))refreshOne(p);
+  if(e.target.closest("[data-pin]")){
+    p.pinned=!p.pinned;p.updatedAt=Date.now();persist();render();toast(p.pinned?"Oben angeheftet":"Anheftung entfernt");return;
+  }
+  if(e.target.closest("[data-toggle-track]")){
+    if(expandedTrackers.has(p.id))expandedTrackers.delete(p.id);else expandedTrackers.add(p.id);
+    render();return;
+  }
+  if(e.target.closest("[data-refresh]")){refreshOne(p);return;}
   if(e.target.closest("[data-native]")){const u=nativeUrl(p);if(u)window.open(u,"_blank","noopener,noreferrer")}
   if(e.target.closest("[data-edit]")){
     $("#editId").value=p.id;
@@ -759,11 +791,12 @@ $("#list").addEventListener("click",e=>{
     $("#editDialog").showModal();
   }
   if(e.target.closest("[data-done]")){
-    p.done=!p.done;p.updatedAt=Date.now();persist();render();toast(p.done?"Als erledigt markiert":"Wieder geöffnet");
+    p.done=!p.done;if(p.done)expandedTrackers.delete(p.id);p.updatedAt=Date.now();persist();render();toast(p.done?"Als erledigt markiert":"Wieder geöffnet");
   }
   if(e.target.closest("[data-remove]")){
     if(confirm("Paket löschen?")){
       deletedNumbers.add(p.number);
+      expandedTrackers.delete(p.id);
       parcels=parcels.filter(x=>x.id!==p.id);
       persist();
       render();
