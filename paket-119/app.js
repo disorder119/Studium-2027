@@ -574,18 +574,17 @@ async function refreshAll({quiet=false}={}){
   if(!quiet)toast("Geöffnete Live-Verfolgungen werden neu geladen");
 }
 function extractManyFromText(text){
-  const found=new Set(extractCandidates(text));
-  const lines=String(text||"").split(/[\n,;]+/);
-  for(const line of lines){
-    for(const token of line.toUpperCase().match(/[A-Z0-9][A-Z0-9 -]{6,42}[A-Z0-9]/g)||[]){
-      const n=clean(token);
-      if(n.length<8||n.length>40)continue;
-      if(!/\d{6}/.test(n))continue;
-      if(/^(HTTP|HTTPS|WWW)/.test(n))continue;
-      if(/^[A-Z0-9]+$/.test(n))found.add(n);
+  const found=new Set();
+  for(const rawLine of String(text||"").split(/[\r\n,;]+/)){
+    const line=rawLine.trim();
+    for(const candidate of extractCandidates(line))found.add(candidate);
+    const unbroken=line.toUpperCase();
+    if(/^[A-Z0-9]{8,40}$/.test(unbroken)&&/\d{6}/.test(unbroken)&&!looksLikeDate8(unbroken)){
+      found.add(unbroken);
     }
   }
-  return [...found];
+  const valid=[...found];
+  return valid.filter(n=>!valid.some(other=>other.length>n.length&&other.includes(n)));
 }
 
 async function preprocessForOcr(file){
