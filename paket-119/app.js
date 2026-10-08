@@ -82,11 +82,11 @@ function explicitCarrier(text){
 function carrierProfile(number,hint=""){
   const n=clean(number);
   const explicit=explicitCarrier(hint);
-  if(explicit)return explicit;
 
   if(/^1Z[A-Z0-9]{16}$/.test(n))return {...CARRIERS.ups,confidence:"high",reason:"Nummer"};
   if(/^H\d{19}$/.test(n))return {...CARRIERS.hermesDe,confidence:"high",reason:"Nummer"};
   if(/^00340\d{15}$/.test(n))return {...CARRIERS.dhl,confidence:"high",reason:"Nummer"};
+  if(explicit)return explicit;
   if(/^JJD[A-Z0-9]{10,24}$/i.test(n))return {...CARRIERS.dhl,confidence:"high",reason:"Nummer"};
   if(/^[A-Z]{2}\d{9}DE$/.test(n))return {...CARRIERS.dhl,confidence:"high",reason:"Ländercode DE"};
   if(/^[A-Z]{2}\d{9}IT$/.test(n))return {...CARRIERS.posteIt,confidence:"high",reason:"Ländercode IT"};
