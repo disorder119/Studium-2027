@@ -544,16 +544,35 @@ async function refreshOne(p){
   toast("Status aktualisiert");
 }
 async function refreshAll({quiet=false}={}){
+  if(!navigator.onLine){
+    if(!quiet)toast("Offline – Live-Tracking nicht verfügbar");
+    return;
+  }
+  const open=filtered().filter(p=>!p.done);
+  if(!open.length){
+    if(!quiet)toast("Keine offenen Pakete in dieser Ansicht");
+    return;
+  }
+  if(!quiet&&!open.some(p=>expandedTrackers.has(p.id))){
+    open.slice(0,3).forEach(p=>expandedTrackers.add(p.id));
+    render();
+  }
   const visible=$$(".trackerHost");
-  if(!visible.length){if(!quiet)toast("Keine offenen Pakete");return}
+  if(!visible.length){
+    if(!quiet)toast("Live-Status einer Paketkarte öffnen");
+    return;
+  }
   visible.forEach(box=>{
     box.dataset.mounted="0";
-    box.innerHTML='<div class="trackerLoading">Wird aktualisiert …</div>';
+    box.replaceChildren();
+    const loading=document.createElement("div");
+    loading.className="trackerLoading";
+    loading.textContent="Live-Verfolgung wird neu geladen …";
+    box.appendChild(loading);
   });
   observeTrackers();
-  if(!quiet)toast("Sichtbare Pakete werden aktualisiert");
+  if(!quiet)toast("Geöffnete Live-Verfolgungen werden neu geladen");
 }
-
 function extractManyFromText(text){
   const found=new Set(extractCandidates(text));
   const lines=String(text||"").split(/[\n,;]+/);
