@@ -329,6 +329,7 @@ function ensureWidget(){
       }
     },50);
   });
+  widgetPromise=widgetPromise.catch(error=>{widgetPromise=null;throw error});
   return widgetPromise;
 }
 
