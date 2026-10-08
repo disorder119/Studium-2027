@@ -34,7 +34,10 @@ try{
   await page.locator('#addForm button[type="submit"]').click();
   await page.locator(".parcel").filter({hasText:ups}).waitFor();
   await page.locator(".parcel").filter({hasText:ups}).locator("[data-toggle-track]").click();
-  await page.getByText("TRACKER MOCK "+ups).waitFor({timeout:5000});
+  await page.waitForTimeout(1000);
+  const diag=await page.evaluate(()=>({host:document.querySelector(".trackerHost")?.outerHTML||null,widget:typeof window.YQV5?.trackSingle,expanded:document.querySelector("[data-toggle-track]")?.outerHTML||null}));
+  console.log("TRACKER_DIAG="+JSON.stringify(diag));
+  if(!diag.host?.includes("TRACKER MOCK "+ups))throw Error("tracking widget not mounted "+JSON.stringify(diag));
   console.log("TRACKER_MOUNT=PASS");
   await page.locator(".parcel").filter({hasText:ups}).locator("[data-edit]").click();
   await page.fill("#editName","Prada Schuhe");
