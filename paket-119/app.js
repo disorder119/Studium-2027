@@ -633,7 +633,7 @@ function labeledCandidates(text){
 function extractCandidates(text){
   const raw=String(text||"").toUpperCase().replace(/[–—]/g,"-");
   const compact=raw.replace(/[\s-]+/g," ");
-  const joined=raw.replace(/[\s-]+/g,"");
+  const joined=raw.split(/\r?\n/).map(line=>line.replace(/[\s-]+/g,"")).join(" ");
   const found=new Set(labeledCandidates(raw));
   const add=m=>{const n=clean(m);if(n.length>=8&&n.length<=40)found.add(n)};
   for(const re of [
@@ -646,7 +646,9 @@ function extractCandidates(text){
     /\d{11,12}/g,
     /\b\d{8}\b/g
   ])for(const m of joined.matchAll(re))add(m[0]);
-  for(const m of compact.matchAll(/(?:\d[\s-]*){11,20}/g))add(m[0]);
+  for(const line of raw.split(/\r?\n/)){
+    for(const m of line.matchAll(/(?:\d[ \t-]*){11,20}/g))add(m[0]);
+  }
   const valid=[...found].filter(n=>{
     if(/^1Z[A-Z0-9]{16}$/.test(n)||/^H\d{19}$/.test(n)||/^00340\d{15}$/.test(n)||/^[A-Z]{2}\d{9}(?:DE|FR|IT|AT)$/.test(n)||/^JJD[A-Z0-9]{10,24}$/.test(n))return true;
     if(/^\d{8}$/.test(n))return !looksLikeDate8(n);
