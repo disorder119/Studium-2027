@@ -647,11 +647,12 @@ function extractCandidates(text){
     /\b\d{8}\b/g
   ])for(const m of joined.matchAll(re))add(m[0]);
   for(const m of compact.matchAll(/(?:\d[\s-]*){11,20}/g))add(m[0]);
-  return [...found].filter(n=>{
+  const valid=[...found].filter(n=>{
     if(/^1Z[A-Z0-9]{16}$/.test(n)||/^H\d{19}$/.test(n)||/^00340\d{15}$/.test(n)||/^[A-Z]{2}\d{9}(?:DE|FR|IT|AT)$/.test(n)||/^JJD[A-Z0-9]{10,24}$/.test(n))return true;
     if(/^\d{8}$/.test(n))return !looksLikeDate8(n);
     return /^\d{11,14}$/.test(n)||/^\d{20}$/.test(n);
   });
+  return valid.filter(n=>!valid.some(other=>other.length>n.length&&other.includes(n)));
 }
 async function barcodeCandidates(file){
   if(!("BarcodeDetector" in window)||!("createImageBitmap" in window))return[];
