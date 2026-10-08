@@ -1,25 +1,32 @@
 
-const url="https://disorder119.github.io/Studium-2027/paket-119/?v=fast-4de686";
+const base="https://disorder119.github.io/Studium-2027/paket-119/";
 let last={};
-for(let i=0;i<20;i++){
+for(let i=0;i<24;i++){
   try{
-    const r=await fetch(url,{headers:{"Cache-Control":"no-cache","User-Agent":"Paket119FastSmoke/1.0"}});
-    const body=await r.text();
+    const [pageRes,appRes]=await Promise.all([
+      fetch(base+"?v=compact-v15",{headers:{"Cache-Control":"no-cache","User-Agent":"Paket119CompactSmoke/1.0"}}),
+      fetch(base+"app.js?v=compact-v15",{headers:{"Cache-Control":"no-cache","User-Agent":"Paket119CompactSmoke/1.0"}})
+    ]);
+    const [body,app]=await Promise.all([pageRes.text(),appRes.text()]);
     last={
-      status:r.status,
-      len:body.length,
+      pageStatus:pageRes.status,
+      appStatus:appRes.status,
       hasTitle:body.includes("<title>Paket 119</title>"),
-      hasFast:body.includes("Vinted-Schnellmodus"),
-      hasPreconnect:body.includes("res.17track.net"),
-      hasScreenshot:body.includes("Screenshots erkennen"),hasBulk:body.includes("Mehrere Nummern auf einmal einfügen"),hasSearch:body.includes("Pakete durchsuchen")
+      hasCamera:body.includes("Label scannen")&&body.includes('id="cameraScan"'),
+      hasBulk:body.includes("Mehrere Nummern auf einmal einfügen"),
+      hasSearch:body.includes("Pakete durchsuchen"),
+      eager17track:body.includes('<script defer src="https://www.17track.net/externalcall.js"></script>'),
+      hasLazy17track:app.includes('s.src="https://www.17track.net/externalcall.js"'),
+      hasPins:app.includes("expandedTrackers")&&app.includes("data-pin"),
+      hasCollapse:app.includes("Live-Status anzeigen")&&app.includes("data-toggle-track")
     };
-    console.log("LIVE_FAST_CHECK="+JSON.stringify(last));
-    if(r.ok&&last.hasTitle&&last.hasFast&&last.hasPreconnect&&last.hasScreenshot)process.exit(0);
+    console.log("LIVE_COMPACT_CHECK="+JSON.stringify(last));
+    if(pageRes.ok&&appRes.ok&&last.hasTitle&&last.hasCamera&&last.hasBulk&&last.hasSearch&&!last.eager17track&&last.hasLazy17track&&last.hasPins&&last.hasCollapse)process.exit(0);
   }catch(e){
     last={error:String(e)};
-    console.log("LIVE_FAST_CHECK="+JSON.stringify(last));
+    console.log("LIVE_COMPACT_CHECK="+JSON.stringify(last));
   }
   await new Promise(r=>setTimeout(r,5000));
 }
-console.error("Fast mode not live",last);
+console.error("Compact Paket 119 build not live",last);
 process.exit(1);
