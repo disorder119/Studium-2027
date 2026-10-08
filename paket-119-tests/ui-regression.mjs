@@ -62,9 +62,9 @@ try{
   await page.locator("#addBulk").click();
   const data=await page.evaluate(n=>{
     const j=JSON.parse(localStorage.getItem("paket119.data")||"{}");
-    return {carrier:j.parcels?.find(p=>p.number===n)?.carrierCode,includesDate:j.parcels?.some(p=>p.number==="20261008")};
+    return {carrier:j.parcels?.find(p=>p.number===n)?.carrierCode,includesDate:j.parcels?.some(p=>p.number==="20261008"),total:j.parcels?.length};
   },dpd);
-  if(data.carrier!==0||data.includesDate)throw Error("ambiguous carrier or date validation wrong "+JSON.stringify(data));
+  if(data.carrier!==0||data.includesDate||data.total!==2)throw Error("bulk created spurious parcels "+JSON.stringify(data));
   console.log("BULK_VALIDATION=PASS");
   const png="iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9WN8FboAAAAASUVORK5CYII=";
   await page.locator("#screenshots").setInputFiles({name:"dhl.png",mimeType:"image/png",buffer:Buffer.from(png,"base64")});
