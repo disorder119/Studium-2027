@@ -57,6 +57,7 @@ try{
   await page.getByText("Prada Schuhe").waitFor();
   console.log("RENAME=PASS");
   const dpd="00000000000000";
+  await page.locator("details.bulkBox > summary").click();
   await page.locator("#bulkInput").fill(dpd+"\n20261008");
   await page.locator("#addBulk").click();
   const data=await page.evaluate(n=>{
