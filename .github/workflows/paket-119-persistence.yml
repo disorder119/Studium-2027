@@ -29,3 +29,5 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Test save reload delete and migration
         run: node paket-119-tests/persistence.mjs
+      - name: Test local mobile interface and screenshot OCR
+        run: node paket-119-tests/ui-regression.mjs
