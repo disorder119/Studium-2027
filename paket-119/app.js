@@ -449,7 +449,7 @@ async function mountOne(p){
 
 function observeTrackers(){
   if(trackObserver)trackObserver.disconnect();
-  const hosts=$(".trackerHost[data-expanded='1']");
+  const hosts=$$(".trackerHost[data-expanded='1']");
   if(!hosts.length)return;
   if(!("IntersectionObserver" in window)){
     hosts.forEach(el=>{const p=parcels.find(x=>x.id===el.dataset.trackId);if(p)mountOne(p)});
