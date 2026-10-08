@@ -908,7 +908,6 @@ addEventListener("offline",updateNetworkState);
 document.addEventListener("visibilitychange",()=>{
   if(document.visibilityState==="visible"&&navigator.onLine)refreshAll({quiet:true});
 });
-ensureWidget().catch(()=>{});
 updateNetworkState();
 render();
 restoreIndexedBackup().finally(()=>persist());
