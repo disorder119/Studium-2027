@@ -92,10 +92,10 @@ function carrierProfile(number,hint=""){
   if(/^[A-Z]{2}\d{9}IT$/.test(n))return {...CARRIERS.posteIt,confidence:"high",reason:"Ländercode IT"};
   if(/^[A-Z]{2}\d{9}AT$/.test(n))return {...CARRIERS.postAt,confidence:"high",reason:"Ländercode AT"};
   if(/^[A-Z]{2}\d{9}FR$/.test(n))return {...CARRIERS.colissimo,confidence:"high",reason:"Ländercode FR"};
-  if(/^\d{14}$/.test(n))return {...CARRIERS.dpdDe,confidence:"high",reason:"Nummernmuster"};
+  if(/^\d{14}$/.test(n))return {name:"DPD / Hermes möglich",code:0,country:"DE",confidence:"low",reason:"Mehrdeutige Nummer – automatische Prüfung"};
   if(/^\d{11}$/.test(n))return {...CARRIERS.gls,confidence:"medium",reason:"wahrscheinliches GLS-Muster"};
   if(/^100\d{9}$/.test(n))return {...CARRIERS.vintedGo,confidence:"medium",reason:"mögliches Vinted-Go-Muster"};
-  if(/^\d{8}$/.test(n))return {...CARRIERS.mondial,confidence:"high",reason:"8-stelliges Mondial-Relay/Vinted-Muster"};
+  if(/^\d{8}$/.test(n))return {name:"Mondial Relay möglich",code:0,country:"",confidence:"low",reason:"Acht Ziffern sind nicht eindeutig"};
   return {name:"Carrier automatisch",code:0,country:"",confidence:"low",reason:"17TRACK Fallback"};
 }
 
@@ -149,7 +149,7 @@ function migrate(arr){
       carrierCountry:shouldUpgrade?auto.country:(p.carrierCountry||auto.country),
       carrierConfidence:shouldUpgrade?auto.confidence:(p.carrierConfidence||auto.confidence),
       carrierReason:shouldUpgrade?auto.reason:(p.carrierReason||auto.reason),
-      carrierHint:p.carrierHint||"",
+      carrierHint:explicitCarrier(p.carrierHint||"")?.name||"",
       done:Boolean(p.done||p.status==="zugestellt"),
       liveStatus:p.liveStatus||"",
       liveStatusLabel:p.liveStatusLabel||"",
@@ -491,7 +491,7 @@ function render(){
         '<div class="parcelIdentity"><div class="carrier">'+esc(p.carrierName)+(p.carrierCountry?' · '+esc(p.carrierCountry):'')+'</div>'+
         '<div class="name">'+esc(p.name||"Ohne Bezeichnung")+'</div>'+
         '<button class="number copyNumber" data-copy title="Sendungsnummer kopieren">'+esc(p.number)+'</button>'+
-        '<div class="fastMeta">'+(checked?'Zuletzt geprüft '+esc(checked):(fast?'Direkt erkannt · Schnellmodus':'Carrier wird automatisch ermittelt'))+'</div></div>'+
+        '<div class="fastMeta">'+(checked?'Tracking geöffnet '+esc(checked):(fast?'Direkt erkannt · Schnellmodus':'Carrier wird automatisch ermittelt'))+'</div></div>'+
         '<div class="parcelBadges"><button class="pinBtn '+(p.pinned?"on":"")+'" data-pin title="Oben anheften">'+(p.pinned?"★":"☆")+'</button>'+
         '<span class="liveBadge '+(p.done?"doneBadge":"")+'" data-live-badge data-state="'+esc(p.liveStatus||"")+'">'+(p.done?"ERLEDIGT":(p.liveStatusLabel?esc(p.liveStatusLabel.toUpperCase()):(fast?"FAST":"LIVE")))+'</span></div>'+
       '</div>'+
@@ -518,13 +518,13 @@ function addParcel(number,name="",hint=""){
     if(name&&!existing.name)existing.name=name;
     if(hint&&prof.confidence==="high"){
       existing.carrierName=prof.name;existing.carrierCode=prof.code;existing.carrierCountry=prof.country;
-      existing.carrierConfidence=prof.confidence;existing.carrierReason=prof.reason;existing.carrierHint=hint;
+      existing.carrierConfidence=prof.confidence;existing.carrierReason=prof.reason;existing.carrierHint=prof.reason==="Screenshot"?prof.name:"";
     }
     existing.done=false;existing.updatedAt=Date.now();return existing;
   }
   const p={
     id:uid(),number,name,carrierName:prof.name,carrierCode:prof.code,carrierCountry:prof.country,
-    carrierConfidence:prof.confidence,carrierReason:prof.reason,carrierHint:hint,
+    carrierConfidence:prof.confidence,carrierReason:prof.reason,carrierHint:prof.reason==="Screenshot"?prof.name:"",
     liveStatus:"",liveStatusLabel:"",liveStatusText:"",liveCheckedAt:0,pinned:false,
     done:false,createdAt:Date.now(),updatedAt:Date.now()
   };
@@ -684,7 +684,7 @@ async function scanScreenshots(files){
       }
       for(const n of numbers){
         const prof=carrierProfile(n,text);
-        const item={number:n,carrier:prof.name,carrierCode:prof.code,country:prof.country,confidence:prof.confidence,hint:text,source:(bars.includes(n)?"Barcode + ":"")+"OCR"+(retried?" 2×":"")+" · Bild "+(i+1)};
+        const item={number:n,carrier:prof.name,carrierCode:prof.code,country:prof.country,confidence:prof.confidence,hint:prof.reason==="Screenshot"?prof.name:"",source:(bars.includes(n)?"Barcode + ":"")+"OCR"+(retried?" 2×":"")+" · Bild "+(i+1)};
         const previous=seen.get(n);
         if(!previous||prof.confidence==="high")seen.set(n,item);
       }
